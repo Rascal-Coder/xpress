@@ -1,36 +1,34 @@
 import type { PluginOption } from 'vite';
 
 import type {
-  AppcationPluginOptions,
+  ApplicationPluginOptions,
   CommonPluginOptions,
   ConditionPlugin,
   LibraryPluginOptions,
 } from '../typing';
 
-import { join } from 'node:path';
-
-import { getPackage } from '@xpress/node-utils';
-
-import react from '@vitejs/plugin-react';
-import i18next from 'i18next';
-import i18nextHttpBackend from 'i18next-http-backend';
+import viteReact from '@vitejs/plugin-react';
+// import viteVueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
+// import viteVue from '@vitejs/plugin-vue';
+// import viteVueJsx from '@vitejs/plugin-vue-jsx';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
-import viteTurboConsolePlugin from 'unplugin-turbo-console/vite';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
 import { createHtmlPlugin as viteHtmlPlugin } from 'vite-plugin-html';
-import { viteMockServe as viteMockPlugin } from 'vite-plugin-mock';
+import { VitePWA } from 'vite-plugin-pwa';
 
+import { viteArchiverPlugin } from './archiver';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
+import { viteImportMapPlugin } from './importmap';
 import { viteInjectAppLoadingPlugin } from './inject-app-loading';
+import { viteMetadataPlugin } from './inject-metadata';
+import { viteNitroMockPlugin } from './nitro-mock';
 
 /**
  * 获取条件成立的 vite 插件
  * @param conditionPlugins
  */
-async function getConditionEstablishedPlugins(
-  conditionPlugins: ConditionPlugin[],
-) {
+async function loadConditionPlugins(conditionPlugins: ConditionPlugin[]) {
   const plugins: PluginOption[] = [];
   for (const conditionPlugin of conditionPlugins) {
     if (conditionPlugin.condition) {
@@ -44,20 +42,18 @@ async function getConditionEstablishedPlugins(
 /**
  * 根据条件获取通用的vite插件
  */
-async function getCommonConditionPlugins(
+async function loadCommonPlugins(
   options: CommonPluginOptions,
 ): Promise<ConditionPlugin[]> {
-  const { isBuild, visualizer } = options;
+  const { injectMetadata, isBuild, visualizer } = options;
   return [
     {
       condition: true,
-      plugins: () => [
-        react({
-          babel: {
-            plugins: [['@babel/plugin-transform-react-jsx']],
-          },
-        }),
-      ],
+      plugins: () => [viteReact({})],
+    },
+    {
+      condition: injectMetadata,
+      plugins: async () => [await viteMetadataPlugin()],
     },
     {
       condition: isBuild && !!visualizer,
@@ -73,50 +69,61 @@ async function getCommonConditionPlugins(
 /**
  * 根据条件获取应用类型的vite插件
  */
-async function getApplicationConditionPlugins(
-  options: AppcationPluginOptions,
+async function loadApplicationPlugins(
+  options: ApplicationPluginOptions,
 ): Promise<PluginOption[]> {
   // 单独取，否则commonOptions拿不到
   const isBuild = options.isBuild;
+  const env = options.env;
 
   const {
+    archiver,
+    archiverPluginOptions,
     compress,
     compressTypes,
     extraAppConfig,
     html,
-    i18n,
+    importmap,
+    importmapOptions,
     injectAppLoading,
-    mock,
-    turboConsole,
+    nitroMock,
+    nitroMockOptions,
+    pwa,
+    pwaOptions,
     ...commonOptions
   } = options;
 
-  const commonPlugins = await getCommonConditionPlugins(commonOptions);
+  const commonPlugins = await loadCommonPlugins(commonOptions);
 
-  return await getConditionEstablishedPlugins([
+  return await loadConditionPlugins([
     ...commonPlugins,
     {
-      condition: i18n,
+      condition: nitroMock,
       plugins: async () => {
-        const pkg = await getPackage('@vben/locales');
-        const include = `${join(pkg?.dir ?? '', isBuild ? 'dist' : 'src', 'langs')}/*.json`;
-        return [
-          {
-            config() {
-              i18next.use(i18nextHttpBackend).init({
-                backend: {
-                  loadPath: include,
-                },
-              });
-            },
-            name: 'vite-plugin-i18n',
-          },
-        ];
+        return [await viteNitroMockPlugin(nitroMockOptions)];
       },
     },
+
     {
       condition: injectAppLoading,
-      plugins: async () => [await viteInjectAppLoadingPlugin()],
+      plugins: async () => [await viteInjectAppLoadingPlugin(!!isBuild, env)],
+    },
+    {
+      condition: pwa,
+      plugins: () =>
+        VitePWA({
+          injectRegister: false,
+          workbox: {
+            globPatterns: [],
+          },
+          ...pwaOptions,
+          manifest: {
+            display: 'standalone',
+            start_url: '/',
+            theme_color: '#ffffff',
+            ...pwaOptions?.manifest,
+          },
+        }),
     },
     {
       condition: isBuild && !!compress,
@@ -140,24 +147,22 @@ async function getApplicationConditionPlugins(
       plugins: () => [viteHtmlPlugin({ minify: true })],
     },
     {
+      condition: isBuild && importmap,
+      plugins: () => {
+        return [viteImportMapPlugin(importmapOptions)];
+      },
+    },
+    {
       condition: isBuild && extraAppConfig,
       plugins: async () => [
         await viteExtraAppConfigPlugin({ isBuild: true, root: process.cwd() }),
       ],
     },
     {
-      condition: !isBuild && !!turboConsole,
-      plugins: () => [viteTurboConsolePlugin()],
-    },
-    {
-      condition: !!mock,
-      plugins: () => [
-        viteMockPlugin({
-          enable: true,
-          ignore: /^_/,
-          mockPath: 'mock',
-        }),
-      ],
+      condition: archiver,
+      plugins: async () => {
+        return [await viteArchiverPlugin(archiverPluginOptions)];
+      },
     },
   ]);
 }
@@ -165,14 +170,14 @@ async function getApplicationConditionPlugins(
 /**
  * 根据条件获取库类型的vite插件
  */
-async function getLibraryConditionPlugins(
+async function loadLibraryPlugins(
   options: LibraryPluginOptions,
 ): Promise<PluginOption[]> {
   // 单独取，否则commonOptions拿不到
   const isBuild = options.isBuild;
   const { dts, ...commonOptions } = options;
-  const commonPlugins = await getCommonConditionPlugins(commonOptions);
-  return await getConditionEstablishedPlugins([
+  const commonPlugins = await loadCommonPlugins(commonOptions);
+  return await loadConditionPlugins([
     ...commonPlugins,
     {
       condition: isBuild && !!dts,
@@ -182,12 +187,11 @@ async function getLibraryConditionPlugins(
 }
 
 export {
-  getApplicationConditionPlugins,
-  getLibraryConditionPlugins,
+  loadApplicationPlugins,
+  loadLibraryPlugins,
+  viteArchiverPlugin,
   viteCompressPlugin,
   viteDtsPlugin,
   viteHtmlPlugin,
-  viteMockPlugin,
-  viteTurboConsolePlugin,
   viteVisualizerPlugin,
 };

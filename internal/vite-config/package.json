@@ -5,31 +5,43 @@
   "keywords": [],
   "license": "ISC",
   "author": "",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "stub": "pnpm unbuild --stub"
   },
-  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
   "dependencies": {
-    "@jspm/generator": "^2.4.1",
-    "axios": "^1.7.7",
-    "cheerio": "^1.0.0",
-    "dayjs": "^1.11.13",
-    "html-minifier-terser": "^7.2.0"
+    "@jspm/generator": "catalog:",
+    "archiver": "catalog:",
+    "cheerio": "catalog:",
+    "get-port": "catalog:",
+    "html-minifier-terser": "catalog:",
+    "nitropack": "catalog:",
+    "vite-plugin-pwa": "catalog:"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.25.9",
-    "@types/html-minifier-terser": "^7.0.2",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@pnpm/workspace.read-manifest": "catalog:",
+    "@types/archiver": "catalog:",
+    "@types/html-minifier-terser": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
     "@xpress/node-utils": "workspace:*",
-    "dotenv": "^16.4.5",
-    "i18next": "^23.16.5",
-    "i18next-http-backend": "^2.6.2",
-    "rollup-plugin-visualizer": "^5.12.0",
-    "unplugin-turbo-console": "^1.10.4",
-    "vite": "^5.4.11",
-    "vite-plugin-compression": "^0.5.1",
-    "vite-plugin-dts": "^4.3.0",
-    "vite-plugin-html": "^3.2.2",
-    "vite-plugin-mock": "^3.0.2"
+    "dayjs": "catalog:",
+    "dotenv": "catalog:",
+    "rollup-plugin-visualizer": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-compression": "catalog:",
+    "vite-plugin-dts": "catalog:",
+    "vite-plugin-html": "catalog:"
   }
 }

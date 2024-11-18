@@ -1,4 +1,4 @@
-import type { UserConfig } from 'vite';
+import type { ConfigEnv, UserConfig } from 'vite';
 
 import type { DefineLibraryOptions } from '../typing';
 
@@ -6,18 +6,20 @@ import { readPackageJSON } from '@xpress/node-utils';
 
 import { defineConfig, mergeConfig } from 'vite';
 
-import { getLibraryConditionPlugins } from '../plugins';
+import { loadLibraryPlugins } from '../plugins';
 import { getCommonConfig } from './common';
 
-function defineLibraryConfig(options: DefineLibraryOptions = {}) {
-  return defineConfig(async ({ command, mode }) => {
+function defineLibraryConfig(userConfigPromise?: DefineLibraryOptions) {
+  return defineConfig(async (config: ConfigEnv) => {
+    const options = await userConfigPromise?.(config);
+    const { command, mode } = config;
+    const { library = {}, vite = {} } = options || {};
     const root = process.cwd();
-    const { library = {}, vite = {} } = options;
     const isBuild = command === 'build';
 
-    const plugins = await getLibraryConditionPlugins({
+    const plugins = await loadLibraryPlugins({
       dts: false,
-      injectLibCss: true,
+      injectMetadata: true,
       isBuild,
       mode,
       ...library,
@@ -26,10 +28,11 @@ function defineLibraryConfig(options: DefineLibraryOptions = {}) {
     const { dependencies = {}, peerDependencies = {} } =
       await readPackageJSON(root);
 
-    const external = [
+    const externalPackages = [
       ...Object.keys(dependencies),
       ...Object.keys(peerDependencies),
     ];
+
     const packageConfig: UserConfig = {
       build: {
         lib: {
@@ -38,14 +41,18 @@ function defineLibraryConfig(options: DefineLibraryOptions = {}) {
           formats: ['es'],
         },
         rollupOptions: {
-          external,
+          external: (id) => {
+            return externalPackages.some(
+              (pkg) => id === pkg || id.startsWith(`${pkg}/`),
+            );
+          },
         },
       },
       plugins,
     };
     const commonConfig = await getCommonConfig();
-    const mergedConfig = mergeConfig(commonConfig, packageConfig);
-    return mergeConfig(mergedConfig, vite);
+    const mergedConmonConfig = mergeConfig(commonConfig, packageConfig);
+    return mergeConfig(mergedConmonConfig, vite);
   });
 }
 

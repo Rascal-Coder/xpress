@@ -1,14 +1,49 @@
 import type { PluginVisualizerOptions } from 'rollup-plugin-visualizer';
-import type { PluginOption, UserConfig } from 'vite';
+import type { ConfigEnv, PluginOption, UserConfig } from 'vite';
 import type { PluginOptions } from 'vite-plugin-dts';
+import type { Options as PwaPluginOptions } from 'vite-plugin-pwa';
 
-import viteTurboConsolePlugin from 'unplugin-turbo-console/vite';
-
-export interface IImportMap {
+interface IImportMap {
   imports?: Record<string, string>;
   scopes?: {
     [scope: string]: Record<string, string>;
   };
+}
+interface PrintPluginOptions {
+  /**
+   * 打印的数据
+   */
+  infoMap?: Record<string, string | undefined>;
+}
+
+interface NitroMockPluginOptions {
+  /**
+   * mock server 包名
+   */
+  mockServerPackage?: string;
+
+  /**
+   * mock 服务端口
+   */
+  port?: number;
+
+  /**
+   * mock 日志是否打印
+   */
+  verbose?: boolean;
+}
+
+interface ArchiverPluginOptions {
+  /**
+   * 输出文件名
+   * @default dist
+   */
+  name?: string;
+  /**
+   * 输出目录
+   * @default .
+   */
+  outputDir?: string;
 }
 
 /**
@@ -37,8 +72,10 @@ interface ConditionPlugin {
 }
 
 interface CommonPluginOptions {
-  /** 是否开启devtools */
-  devtools?: boolean;
+  /** 环境变量 */
+  env?: Record<string, any>;
+  /** 是否注入metadata */
+  injectMetadata?: boolean;
   /** 是否构建模式 */
   isBuild?: boolean;
   /** 构建模式 */
@@ -47,23 +84,37 @@ interface CommonPluginOptions {
   visualizer?: boolean | PluginVisualizerOptions;
 }
 
-interface AppcationPluginOptions extends CommonPluginOptions {
-  /** 开启 gzip 压缩 */
+interface ApplicationPluginOptions extends CommonPluginOptions {
+  /** 开启后，会在打包dist同级生成dist.zip */
+  archiver?: boolean;
+  /** 压缩归档插件配置 */
+  archiverPluginOptions?: ArchiverPluginOptions;
+  /** 开启 gzip|brotli 压缩 */
   compress?: boolean;
   /** 压缩类型 */
   compressTypes?: ('brotli' | 'gzip')[];
   /** 在构建的时候抽离配置文件 */
   extraAppConfig?: boolean;
-  /** html 插件配置 */
+  /** 是否开启html插件  */
   html?: boolean;
-  /** 是否开启i18n */
-  i18n?: boolean;
+  /** 是否开启 importmap CDN  */
+  importmap?: boolean;
+  /** importmap 插件配置 */
+  importmapOptions?: ImportmapPluginOptions;
   /** 是否注入app loading */
   injectAppLoading?: boolean;
-  /** mock 插件配置 */
-  mock?: boolean;
-  /** turbo-console 插件配置 */
-  turboConsole?: boolean | Parameters<typeof viteTurboConsolePlugin>[0];
+  /** 是否开启nitro mock */
+  nitroMock?: boolean;
+  /** nitro mock 插件配置 */
+  nitroMockOptions?: NitroMockPluginOptions;
+  /** 开启控制台自定义打印 */
+  print?: boolean;
+  /** 打印插件配置 */
+  printInfoMap?: PrintPluginOptions['infoMap'];
+  /** 是否开启pwa */
+  pwa?: boolean;
+  /** pwa 插件配置 */
+  pwaOptions?: Partial<PwaPluginOptions>;
 }
 
 interface LibraryPluginOptions extends CommonPluginOptions {
@@ -71,32 +122,33 @@ interface LibraryPluginOptions extends CommonPluginOptions {
   dts?: boolean | PluginOptions;
 }
 
-interface AppcationOptions extends AppcationPluginOptions {}
+type ApplicationOptions = ApplicationPluginOptions;
 
-interface LibraryOptions extends LibraryPluginOptions {}
+type LibraryOptions = LibraryPluginOptions;
 
-interface DefineAppcationOptions {
-  appcation?: AppcationOptions;
+type DefineApplicationOptions = (config?: ConfigEnv) => Promise<{
+  application?: ApplicationOptions;
   vite?: UserConfig;
-}
+}>;
 
-interface DefineLibraryOptions {
+type DefineLibraryOptions = (config?: ConfigEnv) => Promise<{
   library?: LibraryOptions;
   vite?: UserConfig;
-}
+}>;
 
-type DefineConfig = {
-  type?: 'appcation' | 'auto' | 'library';
-} & DefineAppcationOptions &
-  DefineLibraryOptions;
+type DefineConfig = DefineApplicationOptions | DefineLibraryOptions;
 
 export type {
-  AppcationPluginOptions,
+  ApplicationPluginOptions,
+  ArchiverPluginOptions,
   CommonPluginOptions,
   ConditionPlugin,
-  DefineAppcationOptions,
+  DefineApplicationOptions,
   DefineConfig,
   DefineLibraryOptions,
+  IImportMap,
   ImportmapPluginOptions,
   LibraryPluginOptions,
+  NitroMockPluginOptions,
+  PrintPluginOptions,
 };

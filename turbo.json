@@ -23,6 +23,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "@xpress/backend-mock#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".nitro/**", ".output/**"]
+    },
     "test:e2e": {},
     "dev": {
       "dependsOn": [],

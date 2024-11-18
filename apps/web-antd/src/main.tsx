@@ -1,3 +1,5 @@
+import { unmountGlobalLoading } from '@xpress/utils';
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -16,3 +18,6 @@ root.render(
     <App />
   </StrictMode>,
 );
+
+// 移除并销毁loading
+unmountGlobalLoading();

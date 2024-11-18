@@ -22,8 +22,8 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@clack/prompts": "^0.8.1",
+    "@clack/prompts": "catalog:",
     "@xpress/node-utils": "workspace:*",
-    "cac": "^6.7.14"
+    "cac": "catalog:"
   }
 }
