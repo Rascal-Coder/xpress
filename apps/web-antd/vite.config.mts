@@ -1,10 +1,21 @@
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig } from '@xpress/vite-config';
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-  server: {
-    port: 5566,
+  appcation: {
+    compress: false,
+    compressTypes: ['brotli', 'gzip'],
+    visualizer: false,
+  },
+  vite: {
+    server: {
+      proxy: {
+        '/xpress-api': {
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/vben-api/, ''),
+          target: 'http://localhost:3000',
+          ws: true,
+        },
+      },
+    },
   },
 });
