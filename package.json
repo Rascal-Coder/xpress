@@ -1,0 +1,55 @@
+{
+  "name": "xpress",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "check": "pnpm run check:circular && pnpm run check:dep && pnpm run check:type",
+    "check:dep": "xpress check-dep",
+    "check:circular": "xpress check-circular",
+    "check:type": "turbo run typecheck",
+    "clean": "node scripts/clean.mjs",
+    "update:deps": "npx taze -r -w",
+    "format": "xpress lint --format",
+    "lint": "xpress lint",
+    "postinstall": "pnpm -r run stub --if-present",
+    "preinstall": "npx only-allow pnpm",
+    "reinstall": "pnpm clean --del-lock --verbose && pnpm install",
+    "publint": "xpress publint",
+    "commit": "czg",
+    "dev": "turbo-run dev"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@xpress/cli": "workspace:*",
+    "@xpress/commitlint-config": "workspace:*",
+    "@xpress/eslint-config": "workspace:*",
+    "@xpress/prettier-config": "workspace:*",
+    "@xpress/stylelint-config": "workspace:*",
+    "@xpress/tailwind-config": "workspace:*",
+    "@xpress/tsconfig": "workspace:*",
+    "@xpress/turbo-run": "workspace:*",
+    "turbo": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:"
+  },
+  "engines": {
+    "node": ">=20.10.0",
+    "pnpm": ">=9.12.0"
+  },
+  "packageManager": "pnpm@9.13.2",
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "*"
+      }
+    },
+    "neverBuiltDependencies": [
+      "canvas",
+      "node-gyp"
+    ]
+  }
+}

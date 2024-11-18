@@ -1,0 +1,44 @@
+{
+  "folders": [
+    {
+      "name": "@xpress/web-antd",
+      "path": "apps/web-antd",
+    },
+    {
+      "name": "@xpress/commitlint-config",
+      "path": "internal/lint-configs/commitlint-config",
+    },
+    {
+      "name": "@xpress/eslint-config",
+      "path": "internal/lint-configs/eslint-config",
+    },
+    {
+      "name": "@xpress/prettier-config",
+      "path": "internal/lint-configs/prettier-config",
+    },
+    {
+      "name": "@xpress/stylelint-config",
+      "path": "internal/lint-configs/stylelint-config",
+    },
+    {
+      "name": "@xpress/node-utils",
+      "path": "internal/node-utils",
+    },
+    {
+      "name": "@xpress/tailwind-config",
+      "path": "internal/tailwind-config",
+    },
+    {
+      "name": "@xpress/tsconfig",
+      "path": "internal/tsconfig",
+    },
+    {
+      "name": "@xpress/cli",
+      "path": "scripts/cli",
+    },
+    {
+      "name": "@xpress/turbo-run",
+      "path": "scripts/turbo-run",
+    },
+  ],
+}

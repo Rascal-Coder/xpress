@@ -1,0 +1,228 @@
+{
+  // 指定 Tailwind CSS 配置文件位置
+  "tailwindCSS.experimental.configFile": "internal/tailwind-config/src/index.ts",
+
+  // ===== 工作区设置 =====
+  "workbench.list.smoothScrolling": true, // 启用平滑滚动
+  "workbench.tree.indent": 10, // 树视图缩进像素
+  "workbench.editor.highlightModifiedTabs": true, // 高亮显示已修改的标签页
+  "workbench.editor.closeOnFileDelete": true, // 文件删除时关闭编辑器
+  "workbench.editor.limit.enabled": true, // 启用编辑器数量限制
+  "workbench.editor.limit.perEditorGroup": true, // 按编辑器组限制
+  "workbench.editor.limit.value": 5, // 最大打开编辑器数量
+
+  // ===== 编辑器设置 =====
+  "editor.tabSize": 2, // 设置缩进为2个空格
+  "editor.detectIndentation": false, // 禁用自动检测文件缩进
+  "editor.cursorBlinking": "expand", // 光标闪烁动画效果为展开式
+  "editor.largeFileOptimizations": false, // 禁用大文件优化（可能影响性能）
+  "editor.accessibilitySupport": "off", // 关闭辅助功能支持
+  "editor.cursorSmoothCaretAnimation": "on", // 启用光标平滑移动动画
+  "editor.guides.bracketPairs": "active", // 显示活动括号对的指南线
+  "editor.inlineSuggest.enabled": true, // 启用内联建议（如 GitHub Copilot）
+  "editor.suggestSelection": "recentlyUsedByPrefix", // 建议选择基于最近使用的前缀
+  "editor.acceptSuggestionOnEnter": "smart", // 智能接受建议（按Enter键）
+  "editor.suggest.snippetsPreventQuickSuggestions": false, // 允许在代码片段中显示快速建议
+  "editor.stickyScroll.enabled": true, // 启用粘性滚动（显示当前上下文）
+  "editor.hover.sticky": true, // 启用悬停提示固定显示
+  "editor.suggest.insertMode": "replace", // 建议插入模式为替换
+  "editor.bracketPairColorization.enabled": true, // 启用括号对着色
+  "editor.autoClosingBrackets": "beforeWhitespace", // 在空白字符前自动闭合括号
+  "editor.autoClosingDelete": "always", // 始终启用自动闭合删除
+  "editor.autoClosingOvertype": "always", // 始终启用自动闭合覆盖
+  "editor.autoClosingQuotes": "beforeWhitespace", // 在空白字符前自动闭合引号
+  "editor.wordSeparators": "`~!@#%^&*()=+[{]}\\|;:'\",.<>/?", // 设置单词分隔符
+
+  // 保存时的自动修复设置
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit", // 显式启用 ESLint 自动修复
+    "source.fixAll.stylelint": "explicit", // 显式启用 StyleLint 自动修复
+    "source.organizeImports": "never" // 禁用自动组织导入
+  },
+
+  // 默认格式化工具设置
+  "editor.defaultFormatter": "esbenp.prettier-vscode", // 设置默认格式化工具为 Prettier
+
+  // 针对不同文件类型的格式化工具设置
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // HTML文件使用Prettier格式化
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // CSS文件使用Prettier格式化
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // SCSS文件使用Prettier格式化
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // JavaScript文件使用Prettier格式化
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // TypeScript文件使用Prettier格式化
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // JSON文件使用Prettier格式化
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // Markdown文件使用Prettier格式化
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // JSONC文件使用Prettier格式化
+  },
+
+  // ===== 扩展设置 =====
+  "extensions.ignoreRecommendations": true, // 忽略 VSCode 的扩展推荐
+
+  // ===== 终端设置 =====
+  "terminal.integrated.cursorBlinking": true, // 启用终端光标闪烁
+  "terminal.integrated.persistentSessionReviveProcess": "never", // 禁用终端会话恢复
+  "terminal.integrated.tabs.enabled": true, // 启用终端标签页
+  "terminal.integrated.scrollback": 10000, // 终端历史记录行数
+  "terminal.integrated.stickyScroll.enabled": true, // 启用终端粘性滚动
+
+  // ===== 文件设置 =====
+  "files.eol": "\n", // 使用 LF 作为行尾字符
+  "files.insertFinalNewline": true, // 文件末尾插入新行
+  "files.simpleDialog.enable": true, // 使用简单对话框
+  // 文件类型关联设置
+  "files.associations": {
+    "*.ejs": "html", // 将.ejs文件关联为HTML
+    "*.art": "html", // 将.art文件关联为HTML
+    "**/tsconfig.json": "jsonc", // 将tsconfig.json识别为JSONC
+    "*.json": "jsonc", // 将.json文件识别为JSONC
+    "package.json": "json" // 将package.json识别为JSON
+  },
+
+  // 在文件浏览器中需要隐藏的文件和文件夹
+  "files.exclude": {
+    "**/.eslintcache": true, // 隐藏ESLint缓存
+    "**/bower_components": true, // 隐藏bower组件
+    "**/.turbo": true, // 隐藏Turbo缓存
+    "**/.idea": true, // 隐藏IDE配置
+    "**/tmp": true, // 隐藏临时文件
+    "**/.git": true, // 隐藏git文件
+    "**/.svn": true, // 隐藏SVN文件
+    "**/.hg": true, // 隐藏Mercurial文件
+    "**/CVS": true, // 隐藏CVS文件
+    "**/.stylelintcache": true, // 隐藏StyleLint缓存
+    "**/.DS_Store": true, // 隐藏macOS系统文件
+    "**/vite.config.mts.*": true, // 隐藏Vite配置文件
+    "**/tea.yaml": true // 隐藏tea配置文件
+  },
+
+  // 文件监视排除
+  "files.watcherExclude": {
+    "**/.git/objects/**": true, // 排除git对象
+    "**/.git/subtree-cache/**": true, // 排除git子树缓存
+    "**/.vscode/**": true, // 排除VSCode配置
+    "**/node_modules/**": true, // 排除node_modules
+    "**/tmp/**": true, // 排除临时文件
+    "**/bower_components/**": true, // 排除bower组件
+    "**/dist/**": true, // 排除构建输出
+    "**/yarn.lock": true // 排除yarn锁文件
+  },
+
+  // ===== 搜索设置 =====
+  "search.searchEditor.singleClickBehaviour": "peekDefinition", // 搜索编辑器中单击行为
+  "search.followSymlinks": false, // 禁用符号链接跟踪
+  // 搜索排除设置
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/*.log": true,
+    "**/*.log*": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/elehukouben": true,
+    "**/.git": true,
+    "**/.github": true,
+    "**/.gitignore": true,
+    "**/.svn": true,
+    "**/.DS_Store": true,
+    "**/.vitepress/cache": true,
+    "**/.idea": true,
+    "**/.vscode": false,
+    "**/.yarn": true,
+    "**/tmp": true,
+    "*.xml": true,
+    "out": true,
+    "dist": true,
+    "node_modules": true,
+    "CHANGELOG.md": true,
+    "**/pnpm-lock.yaml": true,
+    "**/yarn.lock": true
+  },
+
+  // ===== 调试和差异设置 =====
+  "debug.onTaskErrors": "debugAnyway", // 任务错误时继续调试
+  "diffEditor.ignoreTrimWhitespace": false, // 在差异编辑器中显示空白字符的差异
+  "npm.packageManager": "pnpm", // 使用pnpm作为包管理器
+
+  // ===== CSS相关设置 =====
+  "css.validate": false, // 禁用CSS内置验证
+  "less.validate": false, // 禁用LESS内置验证
+  "scss.validate": false, // 禁用SCSS内置验证
+
+  // ===== 代码片段设置 =====
+  "emmet.showSuggestionsAsSnippets": true, // 将代码片段建议显示为代码片段
+  "emmet.triggerExpansionOnTab": false, // 禁用Tab键触发代码片段扩展
+
+  "errorLens.enabledDiagnosticLevels": ["warning", "error"], // 启用警告和错误诊断级别
+  "errorLens.excludeBySource": ["cSpell", "Grammarly", "eslint"], // 排除特定源的错误
+
+  "stylelint.enable": true, // 启用StyleLint
+  "stylelint.packageManager": "pnpm", // 使用pnpm作为包管理器
+  "stylelint.validate": ["css", "less", "postcss", "scss"], // 验证StyleLint
+  "stylelint.customSyntax": "postcss-html", // 使用postcss-html作为自定义语法
+  "stylelint.snippet": ["css", "less", "postcss", "scss"], // 启用代码片段
+
+  "typescript.inlayHints.enumMemberValues.enabled": true, // 启用枚举成员值内联提示
+  "typescript.preferences.preferTypeOnlyAutoImports": true, // 优先使用类型自动导入
+  "typescript.preferences.includePackageJsonAutoImports": "on", // 包括package.json自动导入
+
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "json5"
+  ],
+
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+
+  "cssVariables.lookupFiles": ["packages/core/base/design/src/**/*.css"],
+
+  "i18n-ally.localesPaths": [
+    "packages/locales/src/langs",
+    "playground/src/locales/langs",
+    "apps/*/src/locales/langs"
+  ],
+  "i18n-ally.pathMatcher": "{locale}/{namespace}.{ext}",
+  "i18n-ally.enabledParsers": ["json"],
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "zh-CN",
+  "i18n-ally.enabledFrameworks": ["react"],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.namespace": true,
+
+  // 控制相关文件嵌套展示
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "$(capture).test.ts, $(capture).test.tsx, $(capture).spec.ts, $(capture).spec.tsx, $(capture).d.ts",
+    "*.tsx": "$(capture).test.ts, $(capture).test.tsx, $(capture).spec.ts, $(capture).spec.tsx,$(capture).d.ts",
+    "*.env": "$(capture).env.*",
+    "README.md": "README*,CHANGELOG*,LICENSE,CNAME",
+    "package.json": "pnpm-lock.yaml,pnpm-workspace.yaml,.gitattributes,.gitignore,.gitpod.yml,.npmrc,.browserslistrc,.node-version,.git*,.tazerc.json",
+    "eslint.config.mjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,stylelint.config.*,.lintstagedrc.mjs,cspell.json",
+    "tailwind.config.mjs": "postcss.*"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib", // 指定TypeScript SDK的路径
+  "oxc.enable": false, // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
+  "pnpmCatalogLens-re.enabled": true
+}

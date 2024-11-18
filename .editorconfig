@@ -1,0 +1,31 @@
+# 表明这是最顶层的 EditorConfig 配置文件
+root = true
+
+# 对所有文件生效的配置
+[*]
+# 设置文件编码为 UTF-8
+charset=utf-8
+# 使用 LF 作为换行符
+end_of_line=lf
+# 文件末尾添加空行
+insert_final_newline=true
+# 使用空格作为缩进
+indent_style=space
+# 缩进大小为2个空格
+indent_size=2
+# 每行最大长度为100个字符
+max_line_length = 100
+# 删除行尾空格
+trim_trailing_whitespace = true
+# 使用单引号作为引号类型
+quote_type = single
+
+# 针对 YAML 和 JSON 文件的特殊配置
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+# Markdown 文件的特殊配置
+[*.md]
+# Markdown 文件不删除行尾空格，因为可能会影响格式
+trim_trailing_whitespace = false
