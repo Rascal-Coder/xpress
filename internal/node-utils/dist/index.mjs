@@ -1,13 +1,19 @@
-import jiti from "file:///C:/Users/Admin/Desktop/xpress/node_modules/.pnpm/jiti@1.21.6/node_modules/jiti/lib/index.js";
+import { createJiti } from "../../../node_modules/.pnpm/jiti@2.4.0/node_modules/jiti/lib/jiti.mjs";
 
-/** @type {import("C:/Users/Admin/Desktop/xpress/internal/node-utils/src/index")} */
-const _module = jiti(null, {
-  "esmResolve": true,
+const jiti = createJiti(import.meta.url, {
   "interopDefault": true,
   "alias": {
     "@xpress/node-utils": "C:/Users/Admin/Desktop/xpress/internal/node-utils"
+  },
+  "transformOptions": {
+    "babel": {
+      "plugins": []
+    }
   }
-})("C:/Users/Admin/Desktop/xpress/internal/node-utils/src/index.ts");
+})
+
+/** @type {import("C:/Users/Admin/Desktop/xpress/internal/node-utils/src/index.js")} */
+const _module = await jiti.import("C:/Users/Admin/Desktop/xpress/internal/node-utils/src/index.ts");
 
 export const gitAdd = _module.gitAdd;
 export const getStagedFiles = _module.getStagedFiles;
