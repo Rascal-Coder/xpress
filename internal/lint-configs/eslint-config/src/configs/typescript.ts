@@ -41,7 +41,6 @@ export async function typescript(): Promise<Linter.Config[]> {
         // 继承推荐配置和严格配置的规则
         ...pluginTs.configs['eslint-recommended'].overrides?.[0].rules,
         ...pluginTs.configs.strict.rules,
-
         // TypeScript 注释相关规则
         '@typescript-eslint/ban-ts-comment': [
           'error',
@@ -52,7 +51,6 @@ export async function typescript(): Promise<Linter.Config[]> {
             'ts-nocheck': 'allow-with-description', // 允许带描述的 @ts-nocheck
           },
         ],
-
         // 关闭类型定义一致性检查（interface vs type）
         '@typescript-eslint/consistent-type-definitions': 'off',
 
@@ -69,6 +67,8 @@ export async function typescript(): Promise<Linter.Config[]> {
             allow: ['arrowFunctions', 'functions', 'methods'], // 允许空的箭头函数、普通函数和方法
           },
         ],
+
+        '@typescript-eslint/no-empty-object-type': 'off',
 
         // 关闭 any 类型检查
         '@typescript-eslint/no-explicit-any': 'off',
