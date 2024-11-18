@@ -1,6 +1,10 @@
 {
   "folders": [
     {
+      "name": "@xpress/backend-mock",
+      "path": "apps/backend-mock",
+    },
+    {
       "name": "@xpress/web-antd",
       "path": "apps/web-antd",
     },
@@ -31,6 +35,14 @@
     {
       "name": "@xpress/tsconfig",
       "path": "internal/tsconfig",
+    },
+    {
+      "name": "@xpress/vite-config",
+      "path": "internal/vite-config",
+    },
+    {
+      "name": "@xpress/utils",
+      "path": "packages/utils",
     },
     {
       "name": "@xpress/cli",
