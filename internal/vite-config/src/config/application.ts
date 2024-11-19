@@ -43,7 +43,6 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       ...envConfig,
       ...application,
     });
-
     const applicationConfig: UserConfig = {
       base,
       build: {

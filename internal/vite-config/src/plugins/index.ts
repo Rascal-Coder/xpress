@@ -8,9 +8,6 @@ import type {
 } from '../typing';
 
 import viteReact from '@vitejs/plugin-react';
-// import viteVueI18nPlugin from '@intlify/unplugin-vue-i18n/vite';
-// import viteVue from '@vitejs/plugin-vue';
-// import viteVueJsx from '@vitejs/plugin-vue-jsx';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
@@ -23,6 +20,7 @@ import { viteImportMapPlugin } from './importmap';
 import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteNitroMockPlugin } from './nitro-mock';
+import { vitePrintPlugin } from './print';
 
 /**
  * 获取条件成立的 vite 插件
@@ -86,15 +84,17 @@ async function loadApplicationPlugins(
     importmap,
     importmapOptions,
     injectAppLoading,
+    loadingTemplate,
     nitroMock,
     nitroMockOptions,
+    print,
+    printInfoMap,
     pwa,
     pwaOptions,
     ...commonOptions
   } = options;
 
   const commonPlugins = await loadCommonPlugins(commonOptions);
-
   return await loadConditionPlugins([
     ...commonPlugins,
     {
@@ -106,7 +106,13 @@ async function loadApplicationPlugins(
 
     {
       condition: injectAppLoading,
-      plugins: async () => [await viteInjectAppLoadingPlugin(!!isBuild, env)],
+      plugins: async () => [
+        await viteInjectAppLoadingPlugin(!!isBuild, env, loadingTemplate),
+      ],
+    },
+    {
+      condition: print,
+      plugins: async () => [await vitePrintPlugin(printInfoMap)],
     },
     {
       condition: pwa,

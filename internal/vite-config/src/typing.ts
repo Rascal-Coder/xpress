@@ -9,12 +9,6 @@ interface IImportMap {
     [scope: string]: Record<string, string>;
   };
 }
-interface PrintPluginOptions {
-  /**
-   * 打印的数据
-   */
-  infoMap?: Record<string, string | undefined>;
-}
 
 interface NitroMockPluginOptions {
   /**
@@ -103,6 +97,8 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
   importmapOptions?: ImportmapPluginOptions;
   /** 是否注入app loading */
   injectAppLoading?: boolean;
+  /** loading模板  */
+  loadingTemplate?: string;
   /** 是否开启nitro mock */
   nitroMock?: boolean;
   /** nitro mock 插件配置 */
@@ -110,7 +106,7 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
   /** 开启控制台自定义打印 */
   print?: boolean;
   /** 打印插件配置 */
-  printInfoMap?: PrintPluginOptions['infoMap'];
+  printInfoMap?: Record<string, string | undefined>;
   /** 是否开启pwa */
   pwa?: boolean;
   /** pwa 插件配置 */
@@ -150,5 +146,4 @@ export type {
   ImportmapPluginOptions,
   LibraryPluginOptions,
   NitroMockPluginOptions,
-  PrintPluginOptions,
 };

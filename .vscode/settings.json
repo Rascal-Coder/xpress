@@ -224,5 +224,4 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib", // 指定TypeScript SDK的路径
   "oxc.enable": false, // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
-  "pnpmCatalogLens-re.enabled": true
 }
