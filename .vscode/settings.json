@@ -59,6 +59,9 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode" // TypeScript文件使用Prettier格式化
   },
+  // "[typescriptreact]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode" // JSON文件使用Prettier格式化
   },
@@ -223,5 +226,5 @@
     "tailwind.config.mjs": "postcss.*"
   },
   "typescript.tsdk": "node_modules/typescript/lib", // 指定TypeScript SDK的路径
-  "oxc.enable": false, // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
+  "oxc.enable": false // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
 }

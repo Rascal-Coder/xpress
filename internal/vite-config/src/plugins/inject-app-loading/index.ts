@@ -80,20 +80,18 @@ async function viteInjectAppLoadingPlugin(
  * @returns Promise<string> 返回模板的HTML内容
  */
 async function getLoadingRawByHtmlTemplate(loadingTemplate: string) {
-  // 首先尝试在项目根目录查找自定义的loading模板
-  let appLoadingPath = join(process.cwd(), loadingTemplate);
-  console.log('appLoadingPath', appLoadingPath);
+  let projectLoadingPath = join(
+    process.cwd(),
+    'loadingTemplate',
+    loadingTemplate,
+  );
 
-  // 如果项目根目录没有自定义模板，则使用插件默认的模板
-  if (!fs.existsSync(appLoadingPath)) {
-    // 获取当前文件所在目录
+  if (!fs.existsSync(projectLoadingPath)) {
     const __dirname = fileURLToPath(new URL('.', import.meta.url));
-    // 使用默认的loading模板
-    appLoadingPath = join(__dirname, './default-loading.html');
+    projectLoadingPath = join(__dirname, './default-loading.html');
   }
 
-  // 读取并返回模板内容
-  return await fsp.readFile(appLoadingPath, 'utf8');
+  return await fsp.readFile(projectLoadingPath, 'utf8');
 }
 
 export { viteInjectAppLoadingPlugin };

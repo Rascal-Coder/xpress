@@ -10,13 +10,20 @@ interface LintCommandOptions {
 }
 
 async function runLint({ format }: LintCommandOptions) {
-  // process.env.FORCE_COLOR = '3';
+  const eslintCommand = [
+    'eslint',
+    'apps/web-*/**/*.{js,jsx,ts,tsx}',
+    'packages/**/*.{js,jsx,ts,tsx}',
+    'internal/**/*.{js,jsx,ts,tsx}',
+    'scripts/**/*.{js,jsx,ts,tsx}',
+    '--cache',
+  ].join(' ');
 
   if (format) {
     await execaCommand(`stylelint "**/*.{css,less.scss}" --cache --fix`, {
       stdio: 'inherit',
     });
-    await execaCommand(`eslint . --cache --fix`, {
+    await execaCommand(`lint . --cache --fix`, {
       stdio: 'inherit',
     });
     await execaCommand(`prettier . --write --cache --log-level warn`, {
@@ -25,7 +32,7 @@ async function runLint({ format }: LintCommandOptions) {
     return;
   }
   await Promise.all([
-    execaCommand(`eslint . --cache`, {
+    execaCommand(eslintCommand, {
       stdio: 'inherit',
     }),
     execaCommand(`prettier . --ignore-unknown --check --cache`, {

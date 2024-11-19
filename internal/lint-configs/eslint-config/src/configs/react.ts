@@ -12,6 +12,13 @@ export async function react(): Promise<Linter.Config[]> {
 
   return [
     {
+      files: [
+        'apps/web-*/**/*.{js,mjs,cjs,ts,jsx,tsx}',
+        'packages/**/*.{js,mjs,cjs,ts,jsx,tsx}',
+        'internal/**/*.{js,mjs,cjs,ts,jsx,tsx}',
+      ],
+    },
+    {
       plugins: {
         'react-hooks': pluginReactHooks,
         'react-refresh': pluginReactRefresh,

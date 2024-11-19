@@ -9,6 +9,10 @@
       "path": "apps/web-antd",
     },
     {
+      "name": "@xpress/docs",
+      "path": "docs",
+    },
+    {
       "name": "@xpress/commitlint-config",
       "path": "internal/lint-configs/commitlint-config",
     },
@@ -39,6 +43,18 @@
     {
       "name": "@xpress/vite-config",
       "path": "internal/vite-config",
+    },
+    {
+      "name": "@xpress-core/design",
+      "path": "packages/@core/base/design",
+    },
+    {
+      "name": "@xpress-core/icons",
+      "path": "packages/@core/base/icons",
+    },
+    {
+      "name": "@xpress/icons",
+      "path": "packages/icons",
     },
     {
       "name": "@xpress/utils",
