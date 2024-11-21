@@ -147,6 +147,7 @@ const customConfig: Linter.Config[] = [
       'n/prefer-global/buffer': 'off',
       'n/prefer-global/process': 'off',
       'no-console': 'off',
+      'react-hooks/rules-of-hooks': 'off',
       'unicorn/prefer-module': 'off',
     },
   },
