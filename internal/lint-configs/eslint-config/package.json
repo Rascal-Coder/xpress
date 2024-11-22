@@ -22,7 +22,8 @@
   "dependencies": {
     "eslint-config-turbo": "catalog:",
     "eslint-plugin-command": "catalog:",
-    "eslint-plugin-import-x": "catalog:"
+    "eslint-plugin-import-x": "catalog:",
+    "eslint-plugin-react": "^7.37.2"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
