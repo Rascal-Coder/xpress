@@ -42,11 +42,11 @@ export async function react(): Promise<Linter.Config[]> {
         // react runtime
         'react/react-in-jsx-scope': 'off',
       },
-      settings: {
-        react: {
-          version: 'detect', // 自动检测React版本
-        },
-      },
+      // settings: {
+      //   react: {
+      //     version: 'detect', // 自动检测React版本
+      //   },
+      // },
     },
   ];
 }

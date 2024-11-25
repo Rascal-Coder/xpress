@@ -1,5 +1,5 @@
-export { default as LayoutContent } from './layout-content.vue';
-export { default as LayoutFooter } from './layout-footer.vue';
-export { default as LayoutHeader } from './layout-header.vue';
-export { default as LayoutSidebar } from './layout-sidebar.vue';
-export { default as LayoutTabbar } from './layout-tabbar.vue';
+export { default as LayoutSidebar } from './layout-sidebar';
+export { default as LayoutContent } from './LayoutContent';
+export { default as LayoutFooter } from './LayoutFooter';
+export { default as LayoutHeader } from './LayoutHeader';
+export { default as LayoutTabbar } from './LayoutTabbar';

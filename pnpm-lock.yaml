@@ -4,321 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@changesets/git':
-      specifier: ^3.0.1
-      version: 3.0.1
-    '@clack/prompts':
-      specifier: ^0.8.1
-      version: 0.8.1
-    '@commitlint/cli':
-      specifier: ^19.5.0
-      version: 19.6.0
-    '@commitlint/config-conventional':
-      specifier: ^19.5.0
-      version: 19.6.0
-    '@eslint/js':
-      specifier: ^9.15.0
-      version: 9.15.0
-    '@faker-js/faker':
-      specifier: ^9.2.0
-      version: 9.2.0
-    '@iconify/json':
-      specifier: ^2.2.273
-      version: 2.2.274
-    '@iconify/react':
-      specifier: ^5.0.2
-      version: 5.0.2
-    '@iconify/tailwind':
-      specifier: ^1.1.3
-      version: 1.1.3
-    '@jspm/generator':
-      specifier: ^2.4.1
-      version: 2.4.1
-    '@manypkg/get-packages':
-      specifier: ^2.2.2
-      version: 2.2.2
-    '@pnpm/workspace.read-manifest':
-      specifier: ^2.2.1
-      version: 2.2.1
-    '@stylistic/stylelint-plugin':
-      specifier: ^3.1.1
-      version: 3.1.1
-    '@tailwindcss/nesting':
-      specifier: 0.0.0-insiders.565cd3e
-      version: 0.0.0-insiders.565cd3e
-    '@tailwindcss/typography':
-      specifier: ^0.5.15
-      version: 0.5.15
-    '@types/archiver':
-      specifier: ^6.0.3
-      version: 6.0.3
-    '@types/eslint':
-      specifier: ^9.6.1
-      version: 9.6.1
-    '@types/html-minifier-terser':
-      specifier: ^7.0.2
-      version: 7.0.2
-    '@types/jsonwebtoken':
-      specifier: ^9.0.7
-      version: 9.0.7
-    '@types/node':
-      specifier: ^22.9.0
-      version: 22.9.0
-    '@types/postcss-import':
-      specifier: ^14.0.3
-      version: 14.0.3
-    '@types/react':
-      specifier: ^18.3.12
-      version: 18.3.12
-    '@types/react-dom':
-      specifier: ^18.3.1
-      version: 18.3.1
-    '@typescript-eslint/eslint-plugin':
-      specifier: ^8.14.0
-      version: 8.15.0
-    '@typescript-eslint/parser':
-      specifier: ^8.14.0
-      version: 8.15.0
-    '@vitejs/plugin-react':
-      specifier: ^4.3.3
-      version: 4.3.3
-    archiver:
-      specifier: ^7.0.1
-      version: 7.0.1
-    autoprefixer:
-      specifier: ^10.4.20
-      version: 10.4.20
-    cac:
-      specifier: ^6.7.14
-      version: 6.7.14
-    chalk:
-      specifier: ^5.3.0
-      version: 5.3.0
-    cheerio:
-      specifier: ^1.0.0
-      version: 1.0.0
-    circular-dependency-scanner:
-      specifier: ^2.3.0
-      version: 2.3.0
-    commitlint-plugin-function-rules:
-      specifier: ^4.0.1
-      version: 4.0.1
-    consola:
-      specifier: ^3.2.3
-      version: 3.2.3
-    cross-env:
-      specifier: ^7.0.3
-      version: 7.0.3
-    cssnano:
-      specifier: ^7.0.6
-      version: 7.0.6
-    cz-git:
-      specifier: ^1.11.0
-      version: 1.11.0
-    czg:
-      specifier: ^1.11.0
-      version: 1.11.0
-    dayjs:
-      specifier: ^1.11.13
-      version: 1.11.13
-    depcheck:
-      specifier: ^1.4.7
-      version: 1.4.7
-    dotenv:
-      specifier: ^16.4.5
-      version: 16.4.5
-    eslint:
-      specifier: ^9.15.0
-      version: 9.15.0
-    eslint-config-turbo:
-      specifier: ^2.3.0
-      version: 2.3.0
-    eslint-plugin-command:
-      specifier: ^0.2.6
-      version: 0.2.6
-    eslint-plugin-eslint-comments:
-      specifier: ^3.2.0
-      version: 3.2.0
-    eslint-plugin-import-x:
-      specifier: ^4.4.2
-      version: 4.4.2
-    eslint-plugin-jsdoc:
-      specifier: ^50.5.0
-      version: 50.5.0
-    eslint-plugin-jsonc:
-      specifier: ^2.18.2
-      version: 2.18.2
-    eslint-plugin-n:
-      specifier: ^17.13.2
-      version: 17.13.2
-    eslint-plugin-no-only-tests:
-      specifier: ^3.3.0
-      version: 3.3.0
-    eslint-plugin-perfectionist:
-      specifier: ^3.9.1
-      version: 3.9.1
-    eslint-plugin-prettier:
-      specifier: ^5.2.1
-      version: 5.2.1
-    eslint-plugin-react-hooks:
-      specifier: ^5.0.0
-      version: 5.0.0
-    eslint-plugin-react-refresh:
-      specifier: ^0.4.14
-      version: 0.4.14
-    eslint-plugin-regexp:
-      specifier: ^2.7.0
-      version: 2.7.0
-    eslint-plugin-unicorn:
-      specifier: ^56.0.0
-      version: 56.0.1
-    eslint-plugin-unused-imports:
-      specifier: ^4.1.4
-      version: 4.1.4
-    eslint-plugin-vitest:
-      specifier: ^0.5.4
-      version: 0.5.4
-    execa:
-      specifier: ^9.5.1
-      version: 9.5.1
-    find-up:
-      specifier: ^7.0.0
-      version: 7.0.0
-    get-port:
-      specifier: ^7.1.0
-      version: 7.1.0
-    globals:
-      specifier: ^15.12.0
-      version: 15.12.0
-    h3:
-      specifier: ^1.13.0
-      version: 1.13.0
-    html-minifier-terser:
-      specifier: ^7.2.0
-      version: 7.2.0
-    husky:
-      specifier: ^9.1.7
-      version: 9.1.7
-    is-ci:
-      specifier: ^3.0.1
-      version: 3.0.1
-    jsonc-eslint-parser:
-      specifier: ^2.4.0
-      version: 2.4.0
-    jsonwebtoken:
-      specifier: ^9.0.2
-      version: 9.0.2
-    lint-staged:
-      specifier: ^15.2.10
-      version: 15.2.10
-    lucide-react:
-      specifier: ^0.460.0
-      version: 0.460.0
-    nitropack:
-      specifier: ^2.10.4
-      version: 2.10.4
-    ora:
-      specifier: ^8.1.1
-      version: 8.1.1
-    pkg-types:
-      specifier: ^1.2.1
-      version: 1.2.1
-    postcss:
-      specifier: ^8.4.49
-      version: 8.4.49
-    postcss-import:
-      specifier: ^16.1.0
-      version: 16.1.0
-    postcss-preset-env:
-      specifier: ^10.1.1
-      version: 10.1.1
-    postcss-scss:
-      specifier: ^4.0.9
-      version: 4.0.9
-    postcss-styled-syntax:
-      specifier: ^0.7.0
-      version: 0.7.0
-    prettier:
-      specifier: ^3.3.3
-      version: 3.3.3
-    prettier-plugin-tailwindcss:
-      specifier: ^0.6.8
-      version: 0.6.9
-    publint:
-      specifier: ^0.2.12
-      version: 0.2.12
-    react:
-      specifier: ^18.3.1
-      version: 18.3.1
-    react-dom:
-      specifier: ^18.3.1
-      version: 18.3.1
-    rimraf:
-      specifier: ^6.0.1
-      version: 6.0.1
-    rollup-plugin-visualizer:
-      specifier: ^5.12.0
-      version: 5.12.0
-    stylelint:
-      specifier: ^16.10.0
-      version: 16.10.0
-    stylelint-config-css-modules:
-      specifier: ^4.4.0
-      version: 4.4.0
-    stylelint-config-recess-order:
-      specifier: ^5.1.1
-      version: 5.1.1
-    stylelint-config-recommended:
-      specifier: ^14.0.1
-      version: 14.0.1
-    stylelint-config-recommended-scss:
-      specifier: ^14.1.0
-      version: 14.1.0
-    stylelint-config-standard:
-      specifier: ^36.0.1
-      version: 36.0.1
-    stylelint-order:
-      specifier: ^6.0.4
-      version: 6.0.4
-    stylelint-prettier:
-      specifier: ^5.0.2
-      version: 5.0.2
-    stylelint-scss:
-      specifier: ^6.9.0
-      version: 6.9.0
-    tailwindcss-animate:
-      specifier: ^1.0.7
-      version: 1.0.7
-    turbo:
-      specifier: ^2.3.0
-      version: 2.3.0
-    typescript:
-      specifier: ^5.6.3
-      version: 5.6.3
-    unbuild:
-      specifier: ^3.0.0-rc.11
-      version: 3.0.0-rc.11
-    vite:
-      specifier: ^5.4.11
-      version: 5.4.11
-    vite-plugin-compression:
-      specifier: ^0.5.1
-      version: 0.5.1
-    vite-plugin-dts:
-      specifier: 4.2.1
-      version: 4.2.1
-    vite-plugin-html:
-      specifier: ^3.2.2
-      version: 3.2.2
-    vite-plugin-pwa:
-      specifier: ^0.21.0
-      version: 0.21.0
-    vitepress:
-      specifier: ^1.5.0
-      version: 1.5.0
-
 importers:
 
   .:
@@ -761,6 +446,22 @@ importers:
       '@types/react':
         specifier: 'catalog:'
         version: 18.3.12
+
+  packages/@core/ui-kit/layout-ui:
+    dependencies:
+      ahooks:
+        specifier: ^3.8.1
+        version: 3.8.1(react@18.3.1)
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.12
+        version: 18.3.12
+      '@xpress-core/icons':
+        specifier: workspace:*
+        version: link:../../base/icons
 
   packages/icons:
     dependencies:
@@ -3112,6 +2813,12 @@ packages:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
     engines: {node: '>=8'}
 
+  ahooks@3.8.1:
+    resolution: {integrity: sha512-JoP9+/RWO7MnI/uSKdvQ8WB10Y3oo1PjLv+4Sv4Vpm19Z86VUMdXh+RhWvMGxZZs06sq2p0xVtFk8Oh5ZObsoA==}
+    engines: {node: '>=8.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
   ajv-draft-04@1.0.0:
     resolution: {integrity: sha512-mv00Te6nmYbRp5DCwclxtt7yV/joXJPGS7nM+97GdxvuttCOfgI3K4U25zboyeX0O+myI8ERluxQe5wljMmVIw==}
     peerDependencies:
@@ -4862,6 +4569,9 @@ packages:
     resolution: {integrity: sha512-NGnrKwXzSms2qUUih/ILZ5JBqNTSa1+ZmP6flaIp6KmSElgE9qdndzS3cqjrDovwFdmwsGsLdeFgB6suw+1e9g==}
     engines: {node: '>= 0.4'}
 
+  intersection-observer@0.12.2:
+    resolution: {integrity: sha512-7m1vEcPCxXYI8HqnL8CKI6siDyD+eIWSwgB3DZA+ZTogxk9I4CDnj4wilt9x/+/QbHI4YG5YZNmC6458/e9Ktg==}
+
   ioredis@5.4.1:
     resolution: {integrity: sha512-2YZsvl7jopIa1gaePkeMtd9rAcSjOOjPtpcLlOeusyO+XH2SK5ZcT+UCrElPP+WVIInh2TzeI4XW9ENaSLVVHA==}
     engines: {node: '>=12.22.0'}
@@ -5145,6 +4855,10 @@ packages:
 
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
+
+  js-cookie@3.0.5:
+    resolution: {integrity: sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==}
+    engines: {node: '>=14'}
 
   js-levenshtein@1.1.6:
     resolution: {integrity: sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==}
@@ -6550,6 +6264,9 @@ packages:
     peerDependencies:
       react: ^18.3.1
 
+  react-fast-compare@3.2.2:
+    resolution: {integrity: sha512-nsO+KSNgo1SbJqJEYRE9ERzo7YtYbou/OqjSQKxV7jcKox7+usiUVZOAC+XnDOABXggQTno0Y1CpVnuWEc1boQ==}
+
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
@@ -6690,6 +6407,9 @@ packages:
   require-package-name@2.0.1:
     resolution: {integrity: sha512-uuoJ1hU/k6M0779t3VMVIYpb2VMJk05cehCaABFhXaibcbvfgR8wKiozLjVFSzJPmQMRqIcO0HMyTFqfV09V6Q==}
 
+  resize-observer-polyfill@1.5.1:
+    resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
+
   resolve-dir@1.0.1:
     resolution: {integrity: sha512-R7uiTjECzvOsWSfdM0QKFNBVFcK27aHOUwdvK53BcW8zqnGdYp0Fbj82cy54+2A4P2tFM22J5kRfe1R+lM/1yg==}
     engines: {node: '>=0.10.0'}
@@ -6795,6 +6515,10 @@ packages:
 
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
+
+  screenfull@5.2.0:
+    resolution: {integrity: sha512-9BakfsO2aUQN2K9Fdbj87RJIEZ82Q9IGim7FqM5OsebfoFC6ZHXgDq/KvniuLTPdeM8wY2o6Dj3WQ7KeQCj3cA==}
+    engines: {node: '>=0.10.0'}
 
   scslre@0.3.0:
     resolution: {integrity: sha512-3A6sD0WYP7+QrjbfNA2FN3FsOaGGFoekCVgTyypy53gPxhbkCIjtO6YWgdrfM+n/8sI8JeXZOIxsHjMTNxQ4nQ==}
@@ -10414,6 +10138,19 @@ snapshots:
       clean-stack: 2.2.0
       indent-string: 4.0.0
 
+  ahooks@3.8.1(react@18.3.1):
+    dependencies:
+      '@babel/runtime': 7.26.0
+      dayjs: 1.11.13
+      intersection-observer: 0.12.2
+      js-cookie: 3.0.5
+      lodash: 4.17.21
+      react: 18.3.1
+      react-fast-compare: 3.2.2
+      resize-observer-polyfill: 1.5.1
+      screenfull: 5.2.0
+      tslib: 2.8.1
+
   ajv-draft-04@1.0.0(ajv@8.13.0):
     optionalDependencies:
       ajv: 8.13.0
@@ -12460,6 +12197,8 @@ snapshots:
       hasown: 2.0.2
       side-channel: 1.0.6
 
+  intersection-observer@0.12.2: {}
+
   ioredis@5.4.1:
     dependencies:
       '@ioredis/commands': 1.2.0
@@ -12702,6 +12441,8 @@ snapshots:
   jiti@2.4.0: {}
 
   jju@1.4.0: {}
+
+  js-cookie@3.0.5: {}
 
   js-levenshtein@1.1.6: {}
 
@@ -14170,6 +13911,8 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
+  react-fast-compare@3.2.2: {}
+
   react-is@16.13.1: {}
 
   react-refresh@0.14.2: {}
@@ -14332,6 +14075,8 @@ snapshots:
 
   require-package-name@2.0.1: {}
 
+  resize-observer-polyfill@1.5.1: {}
+
   resolve-dir@1.0.1:
     dependencies:
       expand-tilde: 2.0.2
@@ -14461,6 +14206,8 @@ snapshots:
   scheduler@0.23.2:
     dependencies:
       loose-envify: 1.4.0
+
+  screenfull@5.2.0: {}
 
   scslre@0.3.0:
     dependencies:

@@ -174,7 +174,6 @@
   "stylelint.enable": true, // 启用StyleLint
   "stylelint.packageManager": "pnpm", // 使用pnpm作为包管理器
   "stylelint.validate": ["css", "less", "postcss", "scss"], // 验证StyleLint
-  "stylelint.customSyntax": "postcss-html", // 使用postcss-html作为自定义语法
   "stylelint.snippet": ["css", "less", "postcss", "scss"], // 启用代码片段
 
   "typescript.inlayHints.enumMemberValues.enabled": true, // 启用枚举成员值内联提示

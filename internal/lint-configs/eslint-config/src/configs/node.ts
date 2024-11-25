@@ -31,8 +31,9 @@ export async function node(): Promise<Linter.Config[]> {
               '@xpress/vite-config',
               'vitest',
               'vite',
-              '@vue/test-utils',
               '@xpress/tailwind-config',
+              '@testing-library/react',
+              'msw',
             ],
           },
         ],
@@ -44,8 +45,8 @@ export async function node(): Promise<Linter.Config[]> {
         'n/no-unsupported-features/es-syntax': [
           'error',
           {
-            ignores: [],
-            version: '>=18.0.0', // 指定 Node.js 版本
+            ignores: ['modules', 'dynamicImport'],
+            version: '>=20.10.0',
           },
         ],
         // 强制使用 Buffer 而不是全局 Buffer

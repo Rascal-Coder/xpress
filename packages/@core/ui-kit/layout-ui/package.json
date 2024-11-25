@@ -32,6 +32,11 @@
     }
   },
   "devDependencies": {
+    "@types/react": "^18.3.12",
     "@xpress-core/icons": "workspace:*"
+  },
+  "dependencies": {
+    "ahooks": "^3.8.1",
+    "react": "^18.3.1"
   }
 }
