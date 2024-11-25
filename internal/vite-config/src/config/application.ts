@@ -2,6 +2,11 @@ import type { UserConfig } from 'vite';
 
 import type { DefineApplicationOptions } from '../typing';
 
+import path, { relative } from 'node:path';
+
+import { findMonorepoRoot } from '@xpress/node-utils';
+
+import { NodePackageImporter } from 'sass';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 
 import { defaultImportmapOptions, getDefaultPwaOptions } from '../options';
@@ -43,6 +48,9 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       ...envConfig,
       ...application,
     });
+
+    const { injectGlobalScss = true } = application;
+
     const applicationConfig: UserConfig = {
       base,
       build: {
@@ -59,6 +67,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
         // 设置构建目标为 ES2015
         target: 'es2015',
       },
+      css: createCssOptions(injectGlobalScss),
       esbuild: {
         // 在构建时删除的代码
         drop: isBuild
@@ -89,5 +98,25 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
     return mergeConfig(mergedCommonConfig, vite);
   });
 }
-
+function createCssOptions(injectGlobalScss = true) {
+  const root = findMonorepoRoot();
+  return {
+    preprocessorOptions: injectGlobalScss
+      ? {
+          scss: {
+            additionalData: (content: string, filepath: string) => {
+              const relativePath = relative(root, filepath);
+              // apps下的包注入全局样式
+              if (relativePath.startsWith(`apps${path.sep}`)) {
+                return `@use "@vben/styles/global" as *;\n${content}`;
+              }
+              return content;
+            },
+            api: 'modern',
+            importers: [new NodePackageImporter()],
+          },
+        }
+      : {},
+  };
+}
 export { defineApplicationConfig };

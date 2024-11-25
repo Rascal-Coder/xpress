@@ -1,0 +1,40 @@
+.xpressScrollbar {
+  &:not(.both-shadow).left-shadow {
+    mask-image: linear-gradient(90deg, transparent, #000 16px);
+  }
+
+  &:not(.both-shadow).right-shadow {
+    mask-image: linear-gradient(
+      90deg,
+      #000 0%,
+      #000 calc(100% - 16px),
+      transparent
+    );
+  }
+
+  &.both-shadow {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 16px,
+      #000 calc(100% - 16px),
+      transparent 100%
+    );
+  }
+}
+
+.scrollbarTopShadow {
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--scroll-shadow, var(--background))),
+    transparent
+  );
+}
+
+.scrollbarBottomShadow {
+  background: linear-gradient(
+    to top,
+    hsl(var(--scroll-shadow, var(--background))),
+    transparent
+  );
+}

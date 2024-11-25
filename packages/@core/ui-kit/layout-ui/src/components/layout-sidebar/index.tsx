@@ -1,5 +1,7 @@
 import type { CSSProperties, FC, MouseEvent } from 'react';
 
+import { XpressScrollbar } from '@xpress-core/shadcn-ui';
+
 // import { VbenScrollbar } from '@vben-core/shadcn-ui';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
@@ -366,10 +368,9 @@ const LayoutSidebar: FC<Props> = ({
             {logo}
           </div>
         )}
-
-        <div className="flex-1 overflow-hidden" style={contentStyle}>
+        <XpressScrollbar shadow={true} shadowBorder={true} style={contentStyle}>
           {children}
-        </div>
+        </XpressScrollbar>
 
         <div style={collapseStyle} />
 
@@ -407,10 +408,14 @@ const LayoutSidebar: FC<Props> = ({
                 {extraTitle}
               </div>
             )}
-
-            <div className="flex-1 overflow-hidden" style={extraContentStyle}>
+            <XpressScrollbar
+              className="border-border py-2"
+              shadow={true}
+              shadowBorder={true}
+              style={extraContentStyle}
+            >
               {extra}
-            </div>
+            </XpressScrollbar>
           </div>
         )}
       </aside>

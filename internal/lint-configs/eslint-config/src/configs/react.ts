@@ -39,6 +39,7 @@ export async function react(): Promise<Linter.Config[]> {
 
         ...pluginReact.configs.recommended.rules,
         'react/jsx-uses-react': 'off',
+        'react/prop-types': 'off',
         // react runtime
         'react/react-in-jsx-scope': 'off',
       },

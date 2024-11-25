@@ -6,6 +6,10 @@ export default {
       flexbox: 'no-2009',
     },
     'postcss-import': {},
+    // 'postcss-modules': {
+    //   generateScopedName: '[name]__[local]___[hash:base64:5]',
+    //   globalModulePaths: [],
+    // },
     'postcss-preset-env': {
       features: {
         'color-functional-notation': false,

@@ -1,0 +1,40 @@
+{
+  "name": "@xpress-core/shadcn-ui",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "#build": "pnpm unbuild",
+    "#prepublishOnly": "npm run build",
+    "tcm": "tcm src -p '**/*.module.css' --watch",
+    "tcm:build": "tcm src -p '**/*.module.css'"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "#main": "./dist/index.mjs",
+  "#module": "./dist/index.mjs",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "dependencies": {
+    "@radix-ui/react-scroll-area": "^1.2.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@xpress-core/icons": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
+    "class-variance-authority": "^0.7.0",
+    "lucide-react": "^0.460.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typed-css-modules": "^0.9.1"
+  }
+}

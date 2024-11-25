@@ -97,6 +97,8 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
   importmapOptions?: ImportmapPluginOptions;
   /** 是否注入app loading */
   injectAppLoading?: boolean;
+  /** 是否注入全局scss */
+  injectGlobalScss?: boolean;
   /** loading模板  */
   loadingTemplate?: string;
   /** 是否开启nitro mock */
@@ -109,6 +111,7 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
   printInfoMap?: Record<string, string | undefined>;
   /** 是否开启pwa */
   pwa?: boolean;
+
   /** pwa 插件配置 */
   pwaOptions?: Partial<PwaPluginOptions>;
 }

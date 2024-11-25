@@ -24,6 +24,7 @@ packages.forEach((pkg) => {
   ) {
     tailwindPackages.push(pkg.dir);
   }
+  // console.log(tailwindPackages);
 });
 
 const shadcnUiColors = {

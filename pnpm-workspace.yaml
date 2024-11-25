@@ -3,6 +3,7 @@ packages:
   - internal/lint-configs/*
   - packages/*
   - packages/@core/base/*
+  - packages/@core/ui-kit/*
   - apps/*
   - scripts/*
   - docs
