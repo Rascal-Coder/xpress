@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import type { XpressLayoutProps } from './typings';
 
 import { Menu } from '@xpress-core/icons';
+import { XpressIconButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useMouse, useThrottleFn } from 'ahooks';
@@ -614,12 +615,12 @@ const XpressLayout: FC<Props> = ({
               theme={sidebarTheme}
               toggleButton={
                 showHeaderToggleButton && (
-                  <button
-                    className="toggleButton my-0 ml-2 mr-1 rounded-md"
+                  <XpressIconButton
+                    className="my-0 ml-2 mr-1 rounded-md"
                     onClick={handleHeaderToggle}
                   >
                     <Menu className="size-4" />
-                  </button>
+                  </XpressIconButton>
                 )
               }
             >

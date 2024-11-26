@@ -57,6 +57,10 @@
       "path": "packages/@core/base/shared",
     },
     {
+      "name": "@xpress-core/typings",
+      "path": "packages/@core/base/typings",
+    },
+    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
     },
