@@ -1,6 +1,6 @@
 export default defineEventHandler(() => {
   return `
-<h1>Hello Vben Admin</h1>
+<h1>Hello Xpress Admin</h1>
 <h2>Mock service is starting</h2>
 <ul>
 <li><a href="/api/user">/api/user/info</a></li>

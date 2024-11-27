@@ -1,31 +1,12 @@
-import type { CSSProperties, HTMLAttributes } from 'react';
+import type { LayoutContentProps } from './types';
 
+import { useLayoutContentStyle } from '@xpress-core/hooks';
 import { Slot } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useMemo } from 'react';
+import { type CSSProperties, type FC, useMemo } from 'react';
 
-import { useLayoutContentStyle } from '../hooks';
-
-type ContentCompactType = 'compact' | 'wide';
-interface Props extends HTMLAttributes<HTMLElement> {
-  /**
-   * 内容区域定宽
-   */
-  contentCompact: ContentCompactType;
-  /**
-   * 定宽布局宽度
-   */
-  contentCompactWidth: number;
-  overlay?: React.ReactNode;
-  padding: number;
-  paddingBottom: number;
-  paddingLeft: number;
-  paddingRight: number;
-  paddingTop: number;
-}
-
-export default function LayoutContent({
+const LayoutContent: FC<LayoutContentProps> = ({
   className,
   contentCompact,
   contentCompactWidth,
@@ -38,7 +19,7 @@ export default function LayoutContent({
   style,
   children,
   ...rest
-}: Props) {
+}) => {
   const { contentElementRef, overlayStyle } = useLayoutContentStyle();
 
   const baseStyle = useMemo((): CSSProperties => {
@@ -73,15 +54,20 @@ export default function LayoutContent({
     }),
     [baseStyle, style],
   );
+
   return (
-    <main
-      className={cn('bg-background-deep relative', className)}
-      ref={contentElementRef}
-      style={mergedStyle}
-      {...rest}
-    >
-      <Slot style={overlayStyle}>{overlay}</Slot>
-      {children}
-    </main>
+    <>
+      <main
+        className={cn('bg-background-deep relative', className)}
+        ref={contentElementRef}
+        style={mergedStyle}
+        {...rest}
+      >
+        <Slot style={overlayStyle}>{overlay}</Slot>
+        {children}
+      </main>
+    </>
   );
-}
+};
+
+export default LayoutContent;

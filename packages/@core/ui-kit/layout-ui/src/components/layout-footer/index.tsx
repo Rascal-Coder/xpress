@@ -1,29 +1,15 @@
-import type { CSSProperties, PropsWithChildren } from 'react';
+import type { LayoutFooterProps } from './types';
 
-import { useMemo } from 'react';
+import { type CSSProperties, type FC, useMemo } from 'react';
 
-interface Props extends PropsWithChildren {
-  /**
-   * 是否固定在底部
-   */
-  fixed?: boolean;
-  height: number;
-  /**
-   * 是否显示
-   * @default true
-   */
-  show?: boolean;
-  width: string;
-  zIndex: number;
-}
-export default function LayoutFooter({
+const LayoutFooter: FC<LayoutFooterProps> = ({
   fixed,
   height,
   show = true,
   width,
   zIndex,
   children,
-}: Props) {
+}) => {
   const style = useMemo((): CSSProperties => {
     return {
       height: `${height}px`,
@@ -41,4 +27,6 @@ export default function LayoutFooter({
       {children}
     </footer>
   );
-}
+};
+
+export default LayoutFooter;

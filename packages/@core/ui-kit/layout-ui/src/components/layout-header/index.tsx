@@ -1,47 +1,10 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { LayoutHeaderProps } from './types';
 
-import { useMemo } from 'react';
+import { useShow } from '@xpress-core/hooks';
 
-interface LayoutHeaderProps {
-  /**
-   * 默认插槽内容
-   */
-  children?: ReactNode;
-  /**
-   * 横屏
-   */
-  fullWidth?: boolean;
-  /**
-   * 高度
-   */
-  height?: number;
-  /**
-   * 是否移动端
-   */
-  isMobile?: boolean;
-  /**
-   * Logo 插槽内容
-   */
-  logo?: ReactNode;
-  /**
-   * 是否显示
-   */
-  show?: boolean;
-  /**
-   * 侧边菜单宽度
-   */
-  sidebarWidth?: number;
-  /**
-   * 主题
-   */
-  theme?: string;
-  /**
-   * 切换按钮插槽内容
-   */
-  toggleButton?: ReactNode;
-}
+import { type CSSProperties, type FC, useMemo } from 'react';
 
-export default function LayoutHeader({
+const LayoutHeader: FC<LayoutHeaderProps> = ({
   fullWidth = false,
   height = 0,
   isMobile = false,
@@ -51,7 +14,7 @@ export default function LayoutHeader({
   theme,
   toggleButton,
   children,
-}: LayoutHeaderProps) {
+}) => {
   const style = useMemo((): CSSProperties => {
     const right = !show || !fullWidth ? undefined : 0;
 
@@ -68,6 +31,8 @@ export default function LayoutHeader({
     };
   }, [isMobile, sidebarWidth]);
 
+  const logoNode = useShow(!!logo, () => <div style={logoStyle}>{logo}</div>);
+
   return (
     <header
       className={`border-border bg-header top-0 flex w-full flex-[0_0_auto] items-center border-b transition-[margin-top] duration-200 ${
@@ -75,9 +40,11 @@ export default function LayoutHeader({
       }`}
       style={style}
     >
-      {logo && <div style={logoStyle}>{logo}</div>}
+      {logoNode}
       {toggleButton}
       {children}
     </header>
   );
-}
+};
+
+export default LayoutHeader;

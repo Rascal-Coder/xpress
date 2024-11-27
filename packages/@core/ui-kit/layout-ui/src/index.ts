@@ -1,3 +1,3 @@
-export type * from './typings';
+export type * from './types';
 
-export { default as XpressLayout } from './XpressLayout';
+export { default as XpressLayout } from './xpress-layout';

@@ -61,12 +61,20 @@
       "path": "packages/@core/base/typings",
     },
     {
+      "name": "@xpress-core/hooks",
+      "path": "packages/@core/hooks",
+    },
+    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
     },
     {
       "name": "@xpress-core/shadcn-ui",
       "path": "packages/@core/ui-kit/shadcn-ui",
+    },
+    {
+      "name": "@xpress/constants",
+      "path": "packages/constants",
     },
     {
       "name": "@xpress/icons",

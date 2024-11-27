@@ -1,142 +1,15 @@
 import type { CSSProperties, FC, MouseEvent } from 'react';
 
+import type { LayoutSidebarProps } from './types';
+
+import { useScrollLock, useShow } from '@xpress-core/hooks';
 import { XpressScrollbar } from '@xpress-core/shadcn-ui';
 
-// import { VbenScrollbar } from '@vben-core/shadcn-ui';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { useScrollLock } from '../../hooks/useScrollLock';
 import { SidebarCollapseButton, SidebarFixedButton } from '../widgets';
 
-interface Props {
-  /** 子组件 */
-  children?: React.ReactNode;
-  /**
-   * 折叠
-   */
-  collapse: boolean;
-  /**
-   * 折叠区域高度
-   * @default 42
-   */
-  collapseHeight?: number;
-  /**
-   * 折叠宽度
-   * @default 48
-   */
-  collapseWidth?: number;
-  /**
-   * 隐藏的dom是否可见
-   * @default true
-   */
-  domVisible?: boolean;
-  /**
-   * 展开时是否悬停
-   */
-  expandOnHover: boolean;
-  /**
-   * 展开时是否悬停
-   */
-  expandOnHovering: boolean;
-  /** 额外内容 */
-  extra?: React.ReactNode;
-  /** 扩展区域折叠状态 */
-  extraCollapse: boolean;
-  /** 额外内容标题 */
-  extraTitle?: React.ReactNode;
-  /** 扩展区域可见性 */
-  extraVisible: boolean;
-  /**
-   * 扩展区域宽度
-   */
-  extraWidth: number;
-  /**
-   * 固定扩展区域
-   * @default false
-   */
-  fixedExtra?: boolean;
-
-  /**
-   * 头部高度
-   */
-  headerHeight: number;
-  /**
-   * 是否侧边混合模式
-   * @default false
-   */
-  isSidebarMixed?: boolean;
-
-  /** Logo组件 */
-  logo?: React.ReactNode;
-  /**
-   * 顶部margin
-   * @default 60
-   */
-  marginTop?: number;
-  /**
-   * 混合菜单宽度
-   * @default 80
-   */
-  mixedWidth?: number;
-  /**
-   * 折叠变化
-   */
-  onCollapseChange: (collapse: boolean) => void;
-  /**
-   * 展开时是否悬停变化
-   */
-  onExpandOnHoverChange: (expandOnHover: boolean) => void;
-  /**
-   * 展开时是否悬停变化
-   */
-  onExpandOnHoveringChange: (expandOnHovering: boolean) => void;
-
-  /** 扩展区域折叠状态改变事件 */
-  onExtraCollapseChange: (collapse: boolean) => void;
-
-  /** 扩展区域可见性改变事件 */
-  onExtraVisibleChange: (visible: boolean) => void;
-  onLeave: () => void;
-
-  /**
-   * 顶部padding
-   * @default 60
-   */
-  paddingTop?: number;
-
-  /**
-   * 是否显示
-   * @default true
-   */
-  show?: boolean;
-
-  /**
-   * 显示折叠按钮
-   * @default false
-   */
-  showCollapseButton?: boolean;
-
-  /** 是否显示Logo */
-  showLogo?: boolean;
-
-  /**
-   * 主题
-   */
-  theme: string;
-
-  /**
-   * 宽度
-   */
-  width: number;
-
-  /**
-   * zIndex
-   * @default 0
-   */
-  zIndex?: number;
-}
-
-const LayoutSidebar: FC<Props> = ({
+const LayoutSidebar: FC<LayoutSidebarProps> = ({
   collapse,
   collapseHeight = 42,
   collapseWidth = 48,
@@ -334,15 +207,94 @@ const LayoutSidebar: FC<Props> = ({
     };
   }, [collapseHeight]);
 
+  // 隐藏的侧边栏渲染
+  const hiddenSidebarNode = useShow(domVisible, () => (
+    <div
+      className={`h-full transition-all duration-150 ${theme}`}
+      style={hiddenSideStyle}
+    />
+  ));
+
+  // 固定按钮渲染
+  const fixedButtonNode = useShow(!collapse && !isSidebarMixed, () => (
+    <SidebarFixedButton
+      expandOnHover={expandOnHover}
+      onExpandOnHoverChange={onExpandOnHoverChange}
+    />
+  ));
+
+  // Logo渲染
+  const logoNode = useShow(showLogo && !!logo, () => (
+    <div
+      className="flex h-[50px] items-center justify-center"
+      style={headerStyle}
+    >
+      {logo}
+    </div>
+  ));
+
+  // 折叠按钮渲染
+  const collapseButtonNode = useShow(
+    showCollapseButton && !isSidebarMixed,
+    () => (
+      <SidebarCollapseButton
+        collapsed={collapse}
+        onCollapsedChange={onCollapseChange}
+      />
+    ),
+  );
+
+  // 混合模式下的折叠按钮
+  const mixedCollapseButtonNode = useShow(
+    isSidebarMixed && expandOnHover,
+    () => (
+      <SidebarCollapseButton
+        collapsed={extraCollapse}
+        onCollapsedChange={onExtraCollapseChange}
+      />
+    ),
+  );
+
+  // 混合模式下的固定按钮和标题
+  const mixedFixedContentNode = useShow(!extraCollapse, () => (
+    <>
+      <SidebarFixedButton
+        expandOnHover={expandOnHover}
+        onExpandOnHoverChange={onExpandOnHoverChange}
+      />
+      {extraTitle && (
+        <div className="flex items-center pl-2" style={extraTitleStyle}>
+          {extraTitle}
+        </div>
+      )}
+    </>
+  ));
+
+  // 混合模式下的额外侧边栏渲染
+  const mixedSidebarNode = useShow(isSidebarMixed, () => (
+    <div
+      className={`border-border bg-sidebar fixed top-0 h-full overflow-hidden border-r transition-all duration-200 ${
+        extraVisible ? 'border-l' : ''
+      }`}
+      ref={asideRef}
+      style={extraStyle}
+    >
+      {mixedCollapseButtonNode}
+      {mixedFixedContentNode}
+      <XpressScrollbar
+        className="border-border py-2"
+        shadow={true}
+        shadowBorder={true}
+        style={extraContentStyle}
+      >
+        {extra}
+      </XpressScrollbar>
+    </div>
+  ));
+
   return (
     <>
-      {domVisible && (
-        <div
-          className={`h-full transition-all duration-150 ${theme}`}
-          style={hiddenSideStyle}
-        />
-      )}
-
+      {hiddenSidebarNode}
       <aside
         className={`fixed left-0 top-0 h-full transition-all duration-150 ${theme} ${
           isSidebarMixed
@@ -353,71 +305,14 @@ const LayoutSidebar: FC<Props> = ({
         onMouseLeave={handleMouseleave}
         style={style}
       >
-        {!collapse && !isSidebarMixed && (
-          <SidebarFixedButton
-            expandOnHover={expandOnHover}
-            onExpandOnHoverChange={onExpandOnHoverChange}
-          />
-        )}
-
-        {showLogo && logo && (
-          <div
-            className="flex h-[50px] items-center justify-center"
-            style={headerStyle}
-          >
-            {logo}
-          </div>
-        )}
+        {fixedButtonNode}
+        {logoNode}
         <XpressScrollbar shadow={true} shadowBorder={true} style={contentStyle}>
           {children}
         </XpressScrollbar>
-
         <div style={collapseStyle} />
-
-        {showCollapseButton && !isSidebarMixed && (
-          <SidebarCollapseButton
-            collapsed={collapse}
-            onCollapsedChange={onCollapseChange}
-          />
-        )}
-
-        {isSidebarMixed && (
-          <div
-            className={`border-border bg-sidebar fixed top-0 h-full overflow-hidden border-r transition-all duration-200 ${
-              extraVisible ? 'border-l' : ''
-            }`}
-            ref={asideRef}
-            style={extraStyle}
-          >
-            {isSidebarMixed && expandOnHover && (
-              <SidebarCollapseButton
-                collapsed={extraCollapse}
-                onCollapsedChange={onExtraCollapseChange}
-              />
-            )}
-
-            {!extraCollapse && (
-              <SidebarFixedButton
-                expandOnHover={expandOnHover}
-                onExpandOnHoverChange={onExpandOnHoverChange}
-              />
-            )}
-
-            {!extraCollapse && extraTitle && (
-              <div className="flex items-center pl-2" style={extraTitleStyle}>
-                {extraTitle}
-              </div>
-            )}
-            <XpressScrollbar
-              className="border-border py-2"
-              shadow={true}
-              shadowBorder={true}
-              style={extraContentStyle}
-            >
-              {extra}
-            </XpressScrollbar>
-          </div>
-        )}
+        {collapseButtonNode}
+        {mixedSidebarNode}
       </aside>
     </>
   );

@@ -1,20 +1,15 @@
 {
-  "name": "@xpress-core/layout-ui",
+  "name": "@xpress-core/hooks",
   "version": "1.0.0",
-  "description": "",
-  "keywords": [],
   "license": "MIT",
-  "author": "",
+  "type": "module",
   "scripts": {
-    "build": "pnpm unbuild",
-    "prepublishOnly": "npm run build"
+    "build": "pnpm unbuild"
   },
   "files": [
     "dist"
   ],
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -27,19 +22,17 @@
   "publishConfig": {
     "exports": {
       ".": {
+        "types": "./dist/index.d.ts",
         "default": "./dist/index.mjs"
       }
     }
   },
   "dependencies": {
+    "@xpress-core/shared": "workspace:*",
     "ahooks": "^3.8.1",
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@xpress-core/hooks": "workspace:*",
-    "@xpress-core/icons": "workspace:*",
-    "@xpress-core/shadcn-ui": "workspace:*",
-    "@xpress-core/shared": "workspace:*"
+    "@types/react": "^18.3.12"
   }
 }

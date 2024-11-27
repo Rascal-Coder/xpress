@@ -1,7 +1,13 @@
 import type { FC } from 'react';
 
-import type { XpressLayoutProps } from './typings';
+import type { Props } from './types';
 
+import {
+  useEnhancedScroll,
+  useLayoutFooterStyle,
+  useLayoutHeaderStyle,
+  useShow,
+} from '@xpress-core/hooks';
 import { Menu } from '@xpress-core/icons';
 import { XpressIconButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
@@ -15,37 +21,8 @@ import {
   LayoutHeader,
   LayoutSidebar,
   LayoutTabbar,
-} from './components';
-import {
-  useEnhancedScroll,
-  useLayout,
-  useLayoutFooterStyle,
-  useLayoutHeaderStyle,
-} from './hooks';
-
-interface LayoutComponents {
-  logo?: React.ReactNode;
-  menu?: React.ReactNode;
-  mixedMenu?: React.ReactNode;
-  sideExtra?: React.ReactNode;
-  sideExtraTitle?: React.ReactNode;
-}
-
-interface LayoutSlots {
-  content?: React.ReactNode;
-  'content-overlay'?: React.ReactNode;
-  extra?: React.ReactNode;
-  footer?: React.ReactNode;
-  header?: React.ReactNode;
-  tabbar?: React.ReactNode;
-}
-interface Props extends XpressLayoutProps, LayoutComponents {
-  children?: LayoutSlots;
-  /** 侧边栏鼠标离开事件 */
-  onSideMouseLeave: () => void;
-  /** 切换侧边栏事件 */
-  onToggleSidebar: () => void;
-}
+} from '../components';
+import { useLayout } from '../hooks';
 
 const XpressLayout: FC<Props> = ({
   contentCompact = 'wide',
@@ -554,43 +531,106 @@ const XpressLayout: FC<Props> = ({
   }, [isSideMode, isMixedNav]);
 
   const SCROLL_FIXED_CLASS = `_scroll__fixed_`;
+
+  // 侧边栏渲染
+  const sidebarNode = useShow(sidebarEnableState, () => (
+    <LayoutSidebar
+      collapse={sidebarCollapse}
+      collapseWidth={getSideCollapseWidth}
+      domVisible={!isMobile}
+      expandOnHover={sidebarExpandOnHover}
+      expandOnHovering={sidebarExpandOnHovering}
+      extra={sideExtra}
+      extraCollapse={sidebarExtraCollapse}
+      extraTitle={sideExtraTitle}
+      extraVisible={sidebarExtraVisible}
+      extraWidth={sidebarExtraWidth}
+      fixedExtra={sidebarExpandOnHover}
+      headerHeight={isMixedNav ? 0 : headerHeight}
+      isSidebarMixed={isSidebarMixedNav}
+      logo={logo}
+      marginTop={sidebarMarginTop}
+      mixedWidth={sidebarMixedWidth}
+      onCollapseChange={setSidebarCollapse}
+      onExpandOnHoverChange={setSidebarExpandOnHover}
+      onExpandOnHoveringChange={setSidebarExpandOnHovering}
+      onExtraCollapseChange={setSidebarExtraCollapse}
+      onExtraVisibleChange={setSidebarExtraVisible}
+      onLeave={onSideMouseLeave}
+      show={showSidebar}
+      showLogo={showLogo}
+      theme={sidebarTheme}
+      width={getSidebarWidth}
+      zIndex={sidebarZIndex}
+    >
+      {isSidebarMixedNav ? mixedMenu : menu}
+    </LayoutSidebar>
+  ));
+
+  // 头部渲染
+  const headerNode = useShow(
+    headerVisible && !isFullContent && !headerIsHidden,
+    () => (
+      <LayoutHeader
+        fullWidth={!isSideMode}
+        height={headerHeight}
+        isMobile={isMobile}
+        logo={showHeaderLogo ? logo : undefined}
+        show={true}
+        sidebarWidth={getSidebarWidth}
+        theme={sidebarTheme}
+        toggleButton={
+          showHeaderToggleButton && (
+            <XpressIconButton
+              className="my-0 ml-2 mr-1 rounded-md"
+              onClick={handleHeaderToggle}
+            >
+              <Menu className="size-4" />
+            </XpressIconButton>
+          )
+        }
+      >
+        {children?.header}
+      </LayoutHeader>
+    ),
+  );
+
+  // 标签栏渲染
+  const tabbarNode = useShow(tabbarEnable, () => (
+    <LayoutTabbar
+      className="layout-tabbar"
+      height={tabbarHeight}
+      style={tabbarStyle}
+    >
+      {children?.tabbar}
+    </LayoutTabbar>
+  ));
+
+  // 页脚渲染
+  const footerNode = useShow(footerEnable && !isFullContent, () => (
+    <LayoutFooter
+      fixed={footerFixed}
+      height={footerHeight}
+      show={true}
+      width={footerWidth}
+      zIndex={zIndex}
+    >
+      {children?.footer}
+    </LayoutFooter>
+  ));
+
+  // 遮罩层渲染
+  const maskNode = useShow(maskVisible, () => (
+    <div
+      className="bg-overlay fixed left-0 top-0 h-full w-full transition-[background-color] duration-200"
+      onClick={handleClickMask}
+      style={maskStyle}
+    />
+  ));
+
   return (
     <div className="relative flex min-h-full w-full">
-      {sidebarEnableState && (
-        <LayoutSidebar
-          collapse={sidebarCollapse}
-          collapseWidth={getSideCollapseWidth}
-          domVisible={!isMobile}
-          expandOnHover={sidebarExpandOnHover}
-          expandOnHovering={sidebarExpandOnHovering}
-          extra={sideExtra}
-          extraCollapse={sidebarExtraCollapse}
-          extraTitle={sideExtraTitle}
-          extraVisible={sidebarExtraVisible}
-          extraWidth={sidebarExtraWidth}
-          fixedExtra={sidebarExpandOnHover}
-          headerHeight={isMixedNav ? 0 : headerHeight}
-          isSidebarMixed={isSidebarMixedNav}
-          logo={logo}
-          marginTop={sidebarMarginTop}
-          mixedWidth={sidebarMixedWidth}
-          onCollapseChange={setSidebarCollapse}
-          onExpandOnHoverChange={setSidebarExpandOnHover}
-          onExpandOnHoveringChange={setSidebarExpandOnHovering}
-          onExtraCollapseChange={setSidebarExtraCollapse}
-          onExtraVisibleChange={setSidebarExtraVisible}
-          onLeave={onSideMouseLeave}
-          show={showSidebar}
-          showLogo={showLogo}
-          theme={sidebarTheme}
-          width={getSidebarWidth}
-          zIndex={sidebarZIndex}
-        >
-          {/* 根据模式选择显示的菜单 */}
-          {isSidebarMixedNav ? mixedMenu : menu}
-        </LayoutSidebar>
-      )}
-
+      {sidebarNode}
       <div
         className="flex flex-1 flex-col overflow-hidden transition-all duration-300 ease-in"
         ref={contentRef}
@@ -604,39 +644,8 @@ const XpressLayout: FC<Props> = ({
           )}
           style={headerWrapperStyle}
         >
-          {headerVisible && (
-            <LayoutHeader
-              fullWidth={!isSideMode}
-              height={headerHeight}
-              isMobile={isMobile}
-              logo={showHeaderLogo ? logo : undefined}
-              show={!isFullContent && !headerIsHidden}
-              sidebarWidth={getSidebarWidth}
-              theme={sidebarTheme}
-              toggleButton={
-                showHeaderToggleButton && (
-                  <XpressIconButton
-                    className="my-0 ml-2 mr-1 rounded-md"
-                    onClick={handleHeaderToggle}
-                  >
-                    <Menu className="size-4" />
-                  </XpressIconButton>
-                )
-              }
-            >
-              {children?.header}
-            </LayoutHeader>
-          )}
-
-          {tabbarEnable && (
-            <LayoutTabbar
-              className="layout-tabbar"
-              height={tabbarHeight}
-              style={tabbarStyle}
-            >
-              {children?.tabbar}
-            </LayoutTabbar>
-          )}
+          {headerNode}
+          {tabbarNode}
         </div>
 
         <LayoutContent
@@ -654,28 +663,11 @@ const XpressLayout: FC<Props> = ({
           {children?.content}
         </LayoutContent>
 
-        {footerEnable && (
-          <LayoutFooter
-            fixed={footerFixed}
-            height={footerHeight}
-            show={!isFullContent}
-            width={footerWidth}
-            zIndex={zIndex}
-          >
-            {children?.footer}
-          </LayoutFooter>
-        )}
+        {footerNode}
       </div>
 
       {children?.extra}
-
-      {maskVisible && (
-        <div
-          className="bg-overlay fixed left-0 top-0 h-full w-full transition-[background-color] duration-200"
-          onClick={handleClickMask}
-          style={maskStyle}
-        />
-      )}
+      {maskNode}
     </div>
   );
 };

@@ -1,18 +1,15 @@
+import type { LayoutTabbarProps } from './types';
+
 import { cn } from '@xpress-core/shared/utils';
 
-import { type CSSProperties, type HTMLAttributes, useMemo } from 'react';
+import { type CSSProperties, type FC, useMemo } from 'react';
 
-interface LayoutTabbarProps extends HTMLAttributes<HTMLElement> {
-  className?: string;
-  height?: number;
-}
-
-export default function LayoutTabbar({
+const LayoutTabbar: FC<LayoutTabbarProps> = ({
   className,
   height,
   style,
   children,
-}: LayoutTabbarProps) {
+}: LayoutTabbarProps) => {
   const baseStyle = useMemo((): CSSProperties => {
     return {
       height: `${height}px`,
@@ -38,4 +35,6 @@ export default function LayoutTabbar({
       {children}
     </section>
   );
-}
+};
+
+export default LayoutTabbar;

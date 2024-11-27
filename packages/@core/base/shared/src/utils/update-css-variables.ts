@@ -4,7 +4,7 @@
  */
 function updateCSSVariables(
   variables: { [key: string]: string },
-  id = '__vben-styles__',
+  id = '__xpress-styles__',
 ): void {
   // 获取或创建内联样式表元素
   const styleElement =

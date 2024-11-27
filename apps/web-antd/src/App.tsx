@@ -21,7 +21,7 @@ function App() {
     sidebarCollapseShowTitle: false,
     sidebarHidden: false,
     sideCollapseWidth: 64,
-    sidebarTheme: 'dark',
+    sidebarTheme: 'light',
     sidebarWidth: 200,
     // 标签页
     tabbarEnable: true,
@@ -38,12 +38,21 @@ function App() {
 
   const handleToggleSidebar = () => {};
 
+  // 生成大量测试菜单项
+  const testMenuItems = Array.from({ length: 50 }, (_, index) => (
+    <div
+      className="mx-2 mb-2 rounded bg-white/10 p-4 hover:bg-white/20"
+      key={index}
+    >
+      菜单项 {index + 1}
+    </div>
+  ));
+
   return (
     <>
-      <div className="h-10 bg-red-500">hello xpress</div>
-      <div>hello xpress</div>
-      <div className="fixed right-0 top-0 z-[2000] p-4">
+      <div className="fixed right-0 top-0 z-[2000] flex flex-col gap-2 p-4">
         <button
+          className="rounded bg-blue-500 px-3 py-1 text-white"
           onClick={() =>
             setLayoutConfig((prev) => ({ ...prev, isMobile: !prev.isMobile }))
           }
@@ -51,6 +60,7 @@ function App() {
           切换移动端
         </button>
         <button
+          className="rounded bg-blue-500 px-3 py-1 text-white"
           onClick={() =>
             setLayoutConfig((prev) => ({
               ...prev,
@@ -62,6 +72,7 @@ function App() {
           切换布局模式
         </button>
         <button
+          className="rounded bg-blue-500 px-3 py-1 text-white"
           onClick={() =>
             setLayoutConfig((prev) => ({
               ...prev,
@@ -72,8 +83,10 @@ function App() {
           切换主题
         </button>
       </div>
+
       <XpressLayout
         {...layoutConfig}
+        menu={testMenuItems}
         onSideMouseLeave={handleSideMouseLeave}
         onToggleSidebar={handleToggleSidebar}
       />

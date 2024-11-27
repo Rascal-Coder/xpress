@@ -4,6 +4,7 @@ packages:
   - packages/*
   - packages/@core/base/*
   - packages/@core/ui-kit/*
+  - packages/@core/*
   - apps/*
   - scripts/*
   - docs
