@@ -18,7 +18,7 @@
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",
@@ -26,8 +26,8 @@
     "@xpress/tailwind-config": "workspace:*",
     "@xpress/utils": "workspace:*",
     "@xpress/vite-config": "workspace:*",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1"
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:"
   }
 }
