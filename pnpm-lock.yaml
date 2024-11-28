@@ -18,6 +18,9 @@ catalogs:
     '@commitlint/config-conventional':
       specifier: ^19.5.0
       version: 19.6.0
+    '@ctrl/tinycolor':
+      specifier: ^4.1.0
+      version: 4.1.0
     '@eslint/js':
       specifier: ^9.15.0
       version: 9.15.0
@@ -42,6 +45,18 @@ catalogs:
     '@pnpm/workspace.read-manifest':
       specifier: ^2.2.1
       version: 2.2.1
+    '@radix-ui/react-popover':
+      specifier: ^1.1.2
+      version: 1.1.2
+    '@radix-ui/react-scroll-area':
+      specifier: ^1.2.1
+      version: 1.2.1
+    '@radix-ui/react-slot':
+      specifier: ^1.1.0
+      version: 1.1.0
+    '@radix-ui/react-tooltip':
+      specifier: ^1.1.4
+      version: 1.1.4
     '@stylistic/stylelint-plugin':
       specifier: ^3.1.1
       version: 3.1.1
@@ -63,6 +78,12 @@ catalogs:
     '@types/jsonwebtoken':
       specifier: ^9.0.7
       version: 9.0.7
+    '@types/lodash.clonedeep':
+      specifier: ^4.5.9
+      version: 4.5.9
+    '@types/lodash.get':
+      specifier: ^4.4.9
+      version: 4.4.9
     '@types/node':
       specifier: ^22.9.0
       version: 22.9.3
@@ -84,11 +105,14 @@ catalogs:
     '@vitejs/plugin-react':
       specifier: ^4.3.3
       version: 4.3.3
+    ahooks:
+      specifier: ^3.8.1
+      version: 3.8.1
     archiver:
       specifier: ^7.0.1
       version: 7.0.1
     autoprefixer:
-      specifier: ^10.4.20
+      specifier: ^10.4.17
       version: 10.4.20
     cac:
       specifier: ^6.7.14
@@ -102,6 +126,12 @@ catalogs:
     circular-dependency-scanner:
       specifier: ^2.3.0
       version: 2.3.0
+    class-variance-authority:
+      specifier: ^0.7.0
+      version: 0.7.0
+    clsx:
+      specifier: ^2.1.1
+      version: 2.1.1
     commitlint-plugin-function-rules:
       specifier: ^4.0.1
       version: 4.0.1
@@ -123,6 +153,9 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.13
+    defu:
+      specifier: ^6.1.4
+      version: 6.1.4
     depcheck:
       specifier: ^1.4.7
       version: 1.4.7
@@ -162,6 +195,9 @@ catalogs:
     eslint-plugin-prettier:
       specifier: ^5.2.1
       version: 5.2.1
+    eslint-plugin-react:
+      specifier: ^7.37.2
+      version: 7.37.2
     eslint-plugin-react-hooks:
       specifier: ^5.0.0
       version: 5.0.0
@@ -213,6 +249,12 @@ catalogs:
     lint-staged:
       specifier: ^15.2.10
       version: 15.2.10
+    lodash.clonedeep:
+      specifier: ^4.5.0
+      version: 4.5.0
+    lodash.get:
+      specifier: ^4.4.2
+      version: 4.4.2
     lucide-react:
       specifier: ^0.460.0
       version: 0.460.0
@@ -226,7 +268,7 @@ catalogs:
       specifier: ^1.2.1
       version: 1.2.1
     postcss:
-      specifier: ^8.4.49
+      specifier: ^8.4.35
       version: 8.4.49
     postcss-import:
       specifier: ^16.1.0
@@ -255,12 +297,18 @@ catalogs:
     react-dom:
       specifier: ^18.3.1
       version: 18.3.1
+    react-router-dom:
+      specifier: ^7.0.1
+      version: 7.0.1
     rimraf:
       specifier: ^6.0.1
       version: 6.0.1
     rollup-plugin-visualizer:
       specifier: ^5.12.0
       version: 5.12.0
+    sass:
+      specifier: ^1.81.0
+      version: 1.81.0
     stylelint:
       specifier: ^16.10.0
       version: 16.10.0
@@ -288,12 +336,24 @@ catalogs:
     stylelint-scss:
       specifier: ^6.9.0
       version: 6.10.0
+    tailwind-merge:
+      specifier: ^2.5.5
+      version: 2.5.5
+    tailwindcss:
+      specifier: ^3.4.1
+      version: 3.4.15
     tailwindcss-animate:
       specifier: ^1.0.7
       version: 1.0.7
+    theme-colors:
+      specifier: ^0.1.0
+      version: 0.1.0
     turbo:
       specifier: ^2.3.0
       version: 2.3.1
+    typed-css-modules:
+      specifier: ^0.9.1
+      version: 0.9.1
     typescript:
       specifier: ^5.6.3
       version: 5.7.2
@@ -440,13 +500,13 @@ importers:
         specifier: workspace:*
         version: link:../../internal/vite-config
       autoprefixer:
-        specifier: ^10.4.17
+        specifier: 'catalog:'
         version: 10.4.20(postcss@8.4.49)
       postcss:
-        specifier: ^8.4.35
+        specifier: 'catalog:'
         version: 8.4.49
       tailwindcss:
-        specifier: ^3.4.1
+        specifier: 'catalog:'
         version: 3.4.15
 
   docs:
@@ -488,7 +548,7 @@ importers:
         specifier: 'catalog:'
         version: 4.4.3(eslint@9.15.0(jiti@2.4.0))(typescript@5.7.2)
       eslint-plugin-react:
-        specifier: ^7.37.2
+        specifier: 'catalog:'
         version: 7.37.2(eslint@9.15.0(jiti@2.4.0))
     devDependencies:
       '@eslint/js':
@@ -753,7 +813,7 @@ importers:
         specifier: 'catalog:'
         version: 5.12.0(rollup@2.79.2)
       sass:
-        specifier: ^1.81.0
+        specifier: 'catalog:'
         version: 1.81.0
       vite:
         specifier: 'catalog:'
@@ -789,35 +849,35 @@ importers:
   packages/@core/base/shared:
     dependencies:
       '@ctrl/tinycolor':
-        specifier: ^4.1.0
+        specifier: 'catalog:'
         version: 4.1.0
       '@types/lodash.get':
-        specifier: ^4.4.9
+        specifier: 'catalog:'
         version: 4.4.9
       clsx:
-        specifier: ^2.1.1
+        specifier: 'catalog:'
         version: 2.1.1
       dayjs:
-        specifier: ^1.11.13
+        specifier: 'catalog:'
         version: 1.11.13
       defu:
-        specifier: ^6.1.4
+        specifier: 'catalog:'
         version: 6.1.4
       lodash.clonedeep:
-        specifier: ^4.5.0
+        specifier: 'catalog:'
         version: 4.5.0
       lodash.get:
-        specifier: ^4.4.2
+        specifier: 'catalog:'
         version: 4.4.2
       tailwind-merge:
-        specifier: ^2.5.5
+        specifier: 'catalog:'
         version: 2.5.5
       theme-colors:
-        specifier: ^0.1.0
+        specifier: 'catalog:'
         version: 0.1.0
     devDependencies:
       '@types/lodash.clonedeep':
-        specifier: ^4.5.9
+        specifier: 'catalog:'
         version: 4.5.9
 
   packages/@core/base/typings: {}
@@ -828,14 +888,14 @@ importers:
         specifier: workspace:*
         version: link:../base/shared
       ahooks:
-        specifier: ^3.8.1
+        specifier: 'catalog:'
         version: 3.8.1(react@18.3.1)
       react:
-        specifier: ^18.3.1
+        specifier: 'catalog:'
         version: 18.3.1
     devDependencies:
       '@types/react':
-        specifier: ^18.3.12
+        specifier: 'catalog:'
         version: 18.3.12
 
   packages/@core/router:
@@ -854,14 +914,14 @@ importers:
   packages/@core/ui-kit/layout-ui:
     dependencies:
       ahooks:
-        specifier: ^3.8.1
+        specifier: 'catalog:'
         version: 3.8.1(react@18.3.1)
       react:
-        specifier: ^18.3.1
+        specifier: 'catalog:'
         version: 18.3.1
     devDependencies:
       '@types/react':
-        specifier: ^18.3.12
+        specifier: 'catalog:'
         version: 18.3.12
       '@xpress-core/hooks':
         specifier: workspace:*
@@ -879,16 +939,16 @@ importers:
   packages/@core/ui-kit/shadcn-ui:
     dependencies:
       '@radix-ui/react-popover':
-        specifier: ^1.1.2
+        specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-scroll-area':
-        specifier: ^1.2.1
+        specifier: 'catalog:'
         version: 1.2.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
-        specifier: ^1.1.0
+        specifier: 'catalog:'
         version: 1.1.0(@types/react@18.3.12)(react@18.3.1)
       '@radix-ui/react-tooltip':
-        specifier: ^1.1.4
+        specifier: 'catalog:'
         version: 1.1.4(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@xpress-core/icons':
         specifier: workspace:*
@@ -897,29 +957,29 @@ importers:
         specifier: workspace:*
         version: link:../../base/shared
       class-variance-authority:
-        specifier: ^0.7.0
+        specifier: 'catalog:'
         version: 0.7.0
       lucide-react:
-        specifier: ^0.460.0
+        specifier: 'catalog:'
         version: 0.460.0(react@18.3.1)
       react:
-        specifier: ^18.3.1
+        specifier: 'catalog:'
         version: 18.3.1
       react-dom:
-        specifier: ^18.3.1
+        specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@types/react':
-        specifier: ^18.3.12
+        specifier: 'catalog:'
         version: 18.3.12
       '@types/react-dom':
-        specifier: ^18.3.1
+        specifier: 'catalog:'
         version: 18.3.1
       '@xpress-core/typings':
         specifier: workspace:*
         version: link:../../base/typings
       typed-css-modules:
-        specifier: ^0.9.1
+        specifier: 'catalog:'
         version: 0.9.1
 
   packages/constants:

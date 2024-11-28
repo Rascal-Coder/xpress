@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@xpress-core/layout-ui": "workspace:*",
+    "@xpress-core/router": "workspace:*",
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "@xpress-core/router": "workspace:*",
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
@@ -27,8 +27,8 @@
     "@xpress/tailwind-config": "workspace:*",
     "@xpress/utils": "workspace:*",
     "@xpress/vite-config": "workspace:*",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1"
+    "autoprefixer": "catalog:",
+    "postcss": "catalog:",
+    "tailwindcss": "catalog:"
   }
 }

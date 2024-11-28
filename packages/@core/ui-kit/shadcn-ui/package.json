@@ -23,21 +23,21 @@
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "dependencies": {
-    "@radix-ui/react-popover": "^1.1.2",
-    "@radix-ui/react-scroll-area": "^1.2.1",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@radix-ui/react-tooltip": "^1.1.4",
+    "@radix-ui/react-popover": "catalog:",
+    "@radix-ui/react-scroll-area": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-tooltip": "catalog:",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
-    "class-variance-authority": "^0.7.0",
-    "lucide-react": "^0.460.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "class-variance-authority": "catalog:",
+    "lucide-react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",
-    "typed-css-modules": "^0.9.1"
+    "typed-css-modules": "catalog:"
   }
 }
