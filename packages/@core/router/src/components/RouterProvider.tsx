@@ -3,6 +3,7 @@ import type { RouterOptions } from '../core/types';
 import React, { useEffect, useState } from 'react';
 import { RouterProvider as ReactRouterProvider } from 'react-router-dom';
 
+import { RouterContext } from '../context/RouterContext';
 import { Router } from '../core/router';
 
 interface RouterProviderProps {
@@ -26,5 +27,14 @@ export function RouterProvider({ options }: RouterProviderProps) {
     router.history = reactRouter.navigate;
   }, [router, reactRouter]);
 
-  return <ReactRouterProvider future={FUTURE_FLAGS} router={reactRouter} />;
+  return (
+    <RouterContext.Provider
+      value={{
+        currentRoute: router.currentRoute ?? router.createEmptyRoute(),
+        router,
+      }}
+    >
+      <ReactRouterProvider future={FUTURE_FLAGS} router={reactRouter} />
+    </RouterContext.Provider>
+  );
 }

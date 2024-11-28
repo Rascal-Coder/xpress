@@ -2,9 +2,16 @@ import type { NavigateFunction, RouteObject } from 'react-router-dom';
 
 import type { LocationQuery, LocationQueryRaw } from './query';
 import type {
+  ErrorHandler,
+  NavigationGuard,
+  NavigationGuardNext,
+  NavigationHook,
+  RedirectFn,
   RouteLocation,
   RouteLocationRaw,
   RouteRecord,
+  Router as RouterInterface,
+  RouterMode,
   RouterOptions,
 } from './types';
 
@@ -21,39 +28,23 @@ import { createRouterError, RouterError, RouterErrorTypes } from './errors';
 import { RouteMatcher } from './matcher';
 import { parseQuery, stringifyQuery } from './query';
 import { callbacks } from './utils/callbacks';
-// import type { NavigationFailure } from './errors';
 import { logger } from './utils/logger';
+import { createRedirect } from './utils/redirect';
 
-export type RouterMode = 'hash' | 'history' | 'memory';
-
-export type NavigationGuardNext = (
-  to?: (() => void) | Error | false | RouteLocationRaw,
-) => void;
-
-export interface NavigationGuard {
-  (
-    to: RouteLocation,
-    from: RouteLocation,
-    next: NavigationGuardNext,
-  ): Promise<void> | void;
-}
-
-export type NavigationHook = (to: RouteLocation, from: RouteLocation) => void;
-
-export type ErrorHandler = (error: RouterError) => void;
-
-export class Router {
+export class Router implements RouterInterface {
   private afterHooks = callbacks<NavigationHook>();
   private beforeGuards = callbacks<NavigationGuard>();
-  private errorHandler?: ErrorHandler;
-  private history: NavigateFunction | null = null;
+  private errorHandlers = callbacks<ErrorHandler>();
   private matcher: RouteMatcher;
   private mode: RouterMode;
-  currentRoute?: RouteLocation;
+  public currentRoute?: RouteLocation;
+  public history: NavigateFunction | null = null;
+  public redirect: RedirectFn;
 
   constructor(private options: RouterOptions) {
     this.mode = options.mode || 'history';
     this.matcher = new RouteMatcher(options.routes);
+    this.redirect = createRedirect();
 
     if (options.beforeEach) {
       this.beforeEach(options.beforeEach);
@@ -62,27 +53,32 @@ export class Router {
     if (options.afterEach) {
       this.afterEach(options.afterEach);
     }
-  }
 
-  // 私有方法
-  private createEmptyRoute(): RouteLocation {
-    return {
-      fullPath: '',
-      hash: '',
-      matched: [],
-      meta: {},
-      params: {},
-      path: '',
-      query: {},
-    };
+    this.initializeRoute();
   }
 
   private handleError(error: RouterError): void {
-    if (this.errorHandler) {
-      this.errorHandler(error);
+    if (this.errorHandlers.list().length > 0) {
+      this.errorHandlers.list().forEach((handler) => handler(error));
     } else {
       logger.error('Navigation error:', error);
       throw error;
+    }
+  }
+
+  private async initializeRoute() {
+    const location = window.location;
+    const currentRoute = await this.resolve({
+      path: location.pathname + location.search,
+    });
+
+    // 执行导航守卫
+    try {
+      await this.runGuards(currentRoute, this.createEmptyRoute());
+      this.currentRoute = currentRoute;
+    } catch (error) {
+      // 如果导航被取消（例如重定向），不更新当前路由
+      logger.warn('Initial navigation was interrupted:', error);
     }
   }
 
@@ -148,37 +144,18 @@ export class Router {
     }
   }
 
-  private async runGuards(
-    to: RouteLocation,
-    from: RouteLocation,
-  ): Promise<void> {
+  private async runGuards(to: RouteLocation, from: RouteLocation) {
     const guards = this.beforeGuards.list();
     for (const guard of guards) {
       await new Promise<void>((resolve, reject) => {
-        const next: NavigationGuardNext = (arg?: any) => {
-          if (arg === false) {
-            reject(
-              new RouterError(
-                RouterErrorTypes.NAVIGATION_CANCELLED,
-                'Navigation cancelled by guard',
-              ),
-            );
-          } else if (arg instanceof Error) {
-            reject(arg);
-          } else if (typeof arg === 'string' || typeof arg === 'object') {
-            reject(
-              new RouterError(
-                RouterErrorTypes.NAVIGATION_DUPLICATED,
-                'Redirecting',
-                { to: arg },
-              ),
-            );
+        const next: NavigationGuardNext = (result) => {
+          if (result === false || result instanceof Error) {
+            reject(result);
           } else {
             resolve();
           }
         };
-
-        guard(to, from, next);
+        guard(to, from, next, this);
       });
     }
   }
@@ -235,6 +212,19 @@ export class Router {
     return this.beforeGuards.add(guard);
   }
 
+  // 将 createEmptyRoute 改为公共方法
+  createEmptyRoute(): RouteLocation {
+    return {
+      fullPath: '',
+      hash: '',
+      matched: [],
+      meta: {},
+      params: {},
+      path: '',
+      query: {},
+    };
+  }
+
   // 创建底层路由器
   createRouter(): ReturnType<typeof createBrowserRouter> {
     const routes = this.transformRoutes(this.options.routes);
@@ -264,6 +254,11 @@ export class Router {
     }
   }
 
+  // 添加 getOptions 方法以安全地访问配置
+  getOptions(): RouterOptions {
+    return this.options;
+  }
+
   getRoute(name: string): RouteRecord | undefined {
     return this.matcher.getRoute(name);
   }
@@ -273,7 +268,7 @@ export class Router {
   }
 
   onError(handler: ErrorHandler): void {
-    this.errorHandler = handler;
+    this.errorHandlers.add(handler);
   }
 
   // 查询参数处理
