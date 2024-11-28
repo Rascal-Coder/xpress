@@ -18,7 +18,8 @@
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "^7.0.1"
+    "@xpress-core/router": "workspace:*",
+    "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
     "@types/react": "catalog:",

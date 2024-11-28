@@ -181,7 +181,11 @@ export async function javascript(): Promise<Linter.Config[]> {
         'no-use-before-define': [
           // 禁止在变量定义之前使用它们
           'error',
-          { classes: false, functions: false, variables: true },
+          {
+            classes: false,
+            functions: false,
+            variables: true,
+          },
         ],
         'no-useless-backreference': 'error', // 禁止在正则表达式中使用无用的回引用
         'no-useless-call': 'error', // 禁止不必要的 .call() 和 .apply()
