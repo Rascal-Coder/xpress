@@ -74,11 +74,23 @@ export class Router implements RouterInterface {
 
     // 执行导航守卫
     try {
-      await this.runGuards(currentRoute, this.createEmptyRoute());
+      const emptyRoute = this.createEmptyRoute();
+      await this.runGuards(currentRoute, emptyRoute);
       this.currentRoute = currentRoute;
+
+      // 执行 afterEach 钩子
+      this.afterHooks.list().forEach((hook) => hook(currentRoute, emptyRoute));
     } catch (error) {
       // 如果导航被取消（例如重定向），不更新当前路由
-      logger.warn('Initial navigation was interrupted:', error);
+      const routerError =
+        error instanceof RouterError
+          ? error
+          : createRouterError(RouterErrorTypes.NAVIGATION_CANCELLED, {
+              error,
+              from: this.createEmptyRoute(),
+              to: currentRoute,
+            });
+      this.handleError(routerError);
     }
   }
 
@@ -308,7 +320,7 @@ export class Router implements RouterInterface {
   }
 
   async resolve(to: RouteLocationRaw): Promise<RouteLocation> {
-    const route = this.matcher.resolve(to);
+    const { params, route } = this.matcher.resolve(to);
     const query = typeof to === 'string' ? {} : to.query || {};
     const fullPath = route.path + this.stringifyQuery(query);
 
@@ -318,7 +330,7 @@ export class Router implements RouterInterface {
       matched: [route],
       meta: route.meta || {},
       name: route.name,
-      params: typeof to === 'string' ? {} : to.params || {},
+      params,
       path: route.path,
       query: parseQuery(this.stringifyQuery(query)),
     };
