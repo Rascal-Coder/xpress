@@ -1,0 +1,39 @@
+{
+  "name": "@xpress-core/router",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm unbuild"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "dependencies": {
+    "@remix-run/router": "^1.0.0",
+    "ahooks": "catalog:",
+    "react": "catalog:",
+    "react-router-dom": "6.28.0"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
+  }
+}

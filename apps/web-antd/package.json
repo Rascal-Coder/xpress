@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@xpress-core/layout-ui": "workspace:*",
+    "@xpress-core/router": "workspace:*",
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-router-dom": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",
