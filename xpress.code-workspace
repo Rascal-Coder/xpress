@@ -65,12 +65,12 @@
       "path": "packages/@core/hooks",
     },
     {
-      "name": "@xpress-core/router",
-      "path": "packages/@core/router",
-    },
-    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
+    },
+    {
+      "name": "@xpress-core/react-menu",
+      "path": "packages/@core/ui-kit/react-menu",
     },
     {
       "name": "@xpress-core/shadcn-ui",

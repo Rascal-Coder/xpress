@@ -1,15 +1,20 @@
 {
-  "name": "@xpress-core/router",
+  "name": "@xpress-core/react-menu",
   "version": "1.0.0",
+  "description": "",
+  "keywords": [],
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "pnpm unbuild"
+    "build": "pnpm unbuild",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "dist"
   ],
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css"
+  ],
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -22,18 +27,19 @@
   "publishConfig": {
     "exports": {
       ".": {
-        "types": "./dist/index.d.ts",
         "default": "./dist/index.mjs"
       }
     }
   },
   "dependencies": {
-    "@remix-run/router": "^1.0.0",
-    "ahooks": "catalog:",
-    "react": "catalog:",
-    "react-router-dom": "6.28.0"
+    "@xpress-core/hooks": "workspace:*",
+    "@xpress-core/icons": "workspace:*",
+    "@xpress-core/shadcn-ui": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/react": "catalog:"
+    "@types/react": "^18.3.12"
   }
 }

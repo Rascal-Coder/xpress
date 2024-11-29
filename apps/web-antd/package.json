@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@xpress-core/layout-ui": "workspace:*",
-    "@xpress-core/router": "workspace:*",
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"

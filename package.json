@@ -23,8 +23,11 @@
     "dev": "turbo-run dev",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
     "build:analyze": "turbo build:analyze",
-    "prepare": "is-ci || husky"
+    "prepare": "is-ci || husky",
+    "test:unit": "vitest run --dom",
+    "test:e2e": "turbo run test:e2e"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "catalog:",
     "@xpress/cli": "workspace:*",
@@ -38,14 +41,17 @@
     "@xpress/vite-config": "workspace:*",
     "autoprefixer": "catalog:",
     "cross-env": "catalog:",
+    "happy-dom": "^15.11.7",
     "husky": "catalog:",
     "is-ci": "catalog:",
     "lint-staged": "catalog:",
+    "playwright": "^1.49.0",
     "rimraf": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "unbuild": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vitest": "^2.1.6"
   },
   "engines": {
     "node": ">=20.10.0",

@@ -1,10 +1,11 @@
-import type { CSSProperties, FC, MouseEvent } from 'react';
+import type { CSSProperties, FC } from 'react';
 
 import type { LayoutSidebarProps } from './types';
 
 import { useScrollLock, useShow } from '@xpress-core/hooks';
 import { XpressScrollbar } from '@xpress-core/shadcn-ui';
 
+import { useDebounceFn } from 'ahooks';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { SidebarCollapseButton, SidebarFixedButton } from '../widgets';
@@ -109,11 +110,9 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     };
   }, [width, extraWidth, show, extraVisible, zIndex]);
 
-  const handleMouseenter = useCallback(
-    (e: MouseEvent) => {
-      if (e.nativeEvent.offsetX < 10) return;
-      if (expandOnHover) return;
-
+  // 使用 useDebounceFn 处理展开
+  const { run: handleExpand } = useDebounceFn(
+    () => {
       if (!expandOnHovering) {
         onCollapseChange(false);
       }
@@ -124,35 +123,34 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
 
       onExpandOnHoveringChange(true);
     },
-    [
-      expandOnHover,
-      expandOnHovering,
-      isSidebarMixed,
-      lock,
-      onCollapseChange,
-      onExpandOnHoveringChange,
-    ],
+    { wait: 100 },
   );
 
-  const handleMouseleave = useCallback(() => {
-    onLeave();
-    if (isSidebarMixed) {
-      unlock();
-    }
-    if (expandOnHover) return;
+  // 使用 useDebounceFn 处理收起
+  const { run: handleCollapse } = useDebounceFn(
+    () => {
+      onLeave?.();
+      if (isSidebarMixed) {
+        unlock();
+      }
+      if (!expandOnHover) {
+        onExpandOnHoveringChange(false);
+        onCollapseChange(true);
+        onExtraVisibleChange(false);
+      }
+    },
+    { wait: 100 },
+  );
 
-    onExpandOnHoveringChange(false);
-    onCollapseChange(true);
-    onExtraVisibleChange(false);
-  }, [
-    isSidebarMixed,
-    expandOnHover,
-    unlock,
-    onLeave,
-    onExpandOnHoveringChange,
-    onCollapseChange,
-    onExtraVisibleChange,
-  ]);
+  const handleMouseenter = useCallback(() => {
+    // if (e.nativeEvent.offsetX < 10) return;
+    if (expandOnHover) return;
+    handleExpand();
+  }, [expandOnHover, handleExpand]);
+
+  const handleMouseleave = useCallback(() => {
+    handleCollapse();
+  }, [handleCollapse]);
 
   useEffect(() => {
     if (fixedExtra) {

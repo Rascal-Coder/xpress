@@ -2,7 +2,10 @@ export * from './create-icon';
 
 export * from './lucide';
 
-export type { IconifyIcon as IconifyIconStructure } from '@iconify/react';
+export type {
+  IconifyIcon as IconifyIconStructure,
+  IconifyIconProps,
+} from '@iconify/react';
 export {
   addCollection,
   addIcon,
