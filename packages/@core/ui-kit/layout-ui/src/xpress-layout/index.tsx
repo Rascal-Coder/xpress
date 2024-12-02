@@ -61,7 +61,7 @@ const XpressLayout: FC<Props> = ({
   zIndex = 200,
   children,
 }) => {
-  const [sidebarCollapse, setSidebarCollapse] = useState(false);
+  const [sidebarCollapse, setSidebarCollapse] = useState(true);
   const [sidebarExtraVisible, setSidebarExtraVisible] = useState(false);
   const [sidebarExtraCollapse, setSidebarExtraCollapse] = useState(false);
   const [sidebarExpandOnHover, setSidebarExpandOnHover] = useState(false);
@@ -102,9 +102,12 @@ const XpressLayout: FC<Props> = ({
   }, [headerVisible, headerHidden, tabbarEnable, tabbarHeight, headerHeight]);
 
   const getSideCollapseWidth = useMemo(() => {
-    return sidebarCollapseShowTitle || isSidebarMixedNav
-      ? sidebarMixedWidth
-      : sideCollapseWidth;
+    const collapseWidth =
+      sidebarCollapseShowTitle || isSidebarMixedNav
+        ? sidebarMixedWidth
+        : sideCollapseWidth;
+
+    return collapseWidth;
   }, [
     sidebarCollapseShowTitle,
     isSidebarMixedNav,

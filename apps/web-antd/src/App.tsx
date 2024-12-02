@@ -26,6 +26,7 @@ function App() {
     // 标签页
     tabbarEnable: true,
     tabbarHeight: 40,
+    // sidebarCollapse: false,
     // 其他
     zIndex: 1000,
   });

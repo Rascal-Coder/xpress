@@ -1,4 +1,4 @@
-// import type { IconifyIconProps } from '@iconify/react';
+import type { Icon } from '@xpress-core/typings';
 
 import { IconDefault, IconifyIcon } from '@xpress-core/icons';
 import {
@@ -15,8 +15,8 @@ type BaseIconProps = {
   fallback?: boolean;
 };
 
-interface IconProps extends BaseIconProps {
-  icon?: ((...args: any[]) => any) | React.ComponentType | string;
+export interface IconProps extends BaseIconProps {
+  icon?: Icon;
 }
 
 const Icon: React.FC<IconProps> = ({ fallback, icon, ...rest }) => {
