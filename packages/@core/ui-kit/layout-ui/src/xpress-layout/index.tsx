@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import type { Props } from './types';
+import type { XpressLayoutProps } from './types';
 
 import {
   useEnhancedScroll,
@@ -22,9 +22,9 @@ import {
   LayoutSidebar,
   LayoutTabbar,
 } from '../components';
-import { useLayout } from '../hooks';
+import { useLayout, useModel } from '../hooks';
 
-const XpressLayout: FC<Props> = ({
+const XpressLayout: FC<XpressLayoutProps> = ({
   contentCompact = 'wide',
   contentCompactWidth = 1200,
   contentPadding = 0,
@@ -45,10 +45,20 @@ const XpressLayout: FC<Props> = ({
   logo,
   menu,
   mixedMenu,
+  onSidebarCollapseChange,
+  onSidebarEnableChange,
+  onSidebarExpandOnHoverChange,
+  onSidebarExtraCollapseChange,
+  onSidebarExtraVisibleChange,
   onSideMouseLeave,
   onToggleSidebar,
+  sidebarCollapse: propsSidebarCollapse,
   sidebarCollapseShowTitle = false,
+  sidebarEnable: propsSidebarEnable,
+  sidebarExpandOnHover: propsSidebarExpandOnHover,
+  sidebarExtraCollapse: propsSidebarExtraCollapse,
   sidebarExtraCollapsedWidth = 60,
+  sidebarExtraVisible: propsSidebarExtraVisible,
   sidebarHidden = false,
   sidebarMixedWidth = 80,
   sidebarTheme = 'dark',
@@ -61,11 +71,36 @@ const XpressLayout: FC<Props> = ({
   zIndex = 200,
   children,
 }) => {
-  const [sidebarCollapse, setSidebarCollapse] = useState(true);
-  const [sidebarExtraVisible, setSidebarExtraVisible] = useState(false);
-  const [sidebarExtraCollapse, setSidebarExtraCollapse] = useState(false);
-  const [sidebarExpandOnHover, setSidebarExpandOnHover] = useState(false);
-  const [sidebarEnable, _setSidebarEnable] = useState(true);
+  const [sidebarCollapse, setSidebarCollapse] = useModel({
+    defaultValue: true,
+    onChange: onSidebarCollapseChange,
+    value: propsSidebarCollapse,
+  });
+
+  const [sidebarExtraVisible, setSidebarExtraVisible] = useModel({
+    defaultValue: false,
+    onChange: onSidebarExtraVisibleChange,
+    value: propsSidebarExtraVisible,
+  });
+
+  const [sidebarExtraCollapse, setSidebarExtraCollapse] = useModel({
+    defaultValue: false,
+    onChange: onSidebarExtraCollapseChange,
+    value: propsSidebarExtraCollapse,
+  });
+
+  const [sidebarExpandOnHover, setSidebarExpandOnHover] = useModel({
+    defaultValue: false,
+    onChange: onSidebarExpandOnHoverChange,
+    value: propsSidebarExpandOnHover,
+  });
+
+  const [sidebarEnable, _setSidebarEnable] = useModel({
+    defaultValue: true,
+    onChange: onSidebarEnableChange,
+    value: propsSidebarEnable,
+  });
+
   const [sidebarExpandOnHovering, setSidebarExpandOnHovering] = useState(false);
   const [headerIsHidden, setHeaderIsHidden] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -427,7 +462,7 @@ const XpressLayout: FC<Props> = ({
     if (isMobile) {
       setSidebarCollapse(true);
     }
-  }, [isMobile]);
+  }, [isMobile, setSidebarCollapse]);
 
   // 监听headerWrapperHeight和isFullContent变化
   useEffect(() => {
@@ -522,7 +557,7 @@ const XpressLayout: FC<Props> = ({
     if (isMobile) {
       setSidebarCollapse(false);
     } else {
-      onToggleSidebar();
+      onToggleSidebar?.();
     }
   };
 
@@ -631,6 +666,42 @@ const XpressLayout: FC<Props> = ({
     />
   ));
 
+  // Context value
+  // const contextValue = useMemo(
+  //   () => ({
+  //     headerIsHidden,
+  //     setHeaderIsHidden,
+  //     setSidebarCollapse,
+  //     setSidebarEnable,
+  //     setSidebarExpandOnHover,
+  //     setSidebarExpandOnHovering,
+  //     setSidebarExtraCollapse,
+  //     setSidebarExtraVisible,
+  //     sidebarCollapse,
+  //     sidebarEnable,
+  //     sidebarExpandOnHover,
+  //     sidebarExpandOnHovering,
+  //     sidebarExtraCollapse,
+  //     sidebarExtraVisible,
+  //   }),
+  //   [
+  //     sidebarCollapse,
+  //     setSidebarCollapse,
+  //     sidebarExtraVisible,
+  //     setSidebarExtraVisible,
+  //     sidebarExtraCollapse,
+  //     setSidebarExtraCollapse,
+  //     sidebarExpandOnHover,
+  //     setSidebarExpandOnHover,
+  //     sidebarEnable,
+  //     setSidebarEnable,
+  //     sidebarExpandOnHovering,
+  //     setSidebarExpandOnHovering,
+  //     headerIsHidden,
+  //     setHeaderIsHidden,
+  //   ],
+  // );
+
   return (
     <div className="relative flex min-h-full w-full">
       {sidebarNode}
@@ -672,6 +743,9 @@ const XpressLayout: FC<Props> = ({
       {children?.extra}
       {maskNode}
     </div>
+    // <XpressLayoutProvider value={contextValue}>
+
+    // </XpressLayoutProvider>
   );
 };
 

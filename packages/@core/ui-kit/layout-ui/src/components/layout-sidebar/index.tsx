@@ -46,6 +46,15 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   const asideRef = useRef<HTMLDivElement>(null);
   const { lock, unlock } = useScrollLock(document.body);
 
+  // const {
+  //   setSidebarCollapse,
+  //   setSidebarExpandOnHover,
+  //   setSidebarExpandOnHovering,
+  //   sidebarCollapse,
+  //   sidebarExpandOnHover,
+  //   sidebarExpandOnHovering,
+  // } = useXpressLayout();
+
   // 计算菜单宽度样式
   const calcMenuWidthStyle = useCallback(
     (isHiddenDom: boolean): CSSProperties => {

@@ -1,4 +1,4 @@
-import type { XpressLayoutProps } from '../types';
+import type { XpressLayoutProps as BaseXpressLayoutProps } from '../types';
 
 interface LayoutComponents {
   logo?: React.ReactNode;
@@ -16,7 +16,39 @@ interface LayoutSlots {
   header?: React.ReactNode;
   tabbar?: React.ReactNode;
 }
-interface Props extends XpressLayoutProps, LayoutComponents {
+
+// 添加useModel相关的状态控制props
+interface ModelStateProps {
+  /** 侧边栏折叠状态改变回调 */
+  onSidebarCollapseChange?: (collapse: boolean) => void;
+  /** 侧边栏启用状态改变回调 */
+  onSidebarEnableChange?: (enable: boolean) => void;
+
+  /** 侧边栏hover展开状态改变回调 */
+  onSidebarExpandOnHoverChange?: (expand: boolean) => void;
+  /** 侧边栏额外内容折叠状态改变回调 */
+  onSidebarExtraCollapseChange?: (collapse: boolean) => void;
+
+  /** 侧边栏额外内容显示状态改变回调 */
+  onSidebarExtraVisibleChange?: (visible: boolean) => void;
+  /** 侧边栏折叠状态 */
+  sidebarCollapse?: boolean;
+
+  /** 侧边栏启用状态 */
+  sidebarEnable?: boolean;
+  /** 侧边栏hover展开状态 */
+  sidebarExpandOnHover?: boolean;
+
+  /** 侧边栏额外内容折叠状态 */
+  sidebarExtraCollapse?: boolean;
+  /** 侧边栏额外内容显示状态 */
+  sidebarExtraVisible?: boolean;
+}
+
+interface XpressLayoutProps
+  extends BaseXpressLayoutProps,
+    LayoutComponents,
+    ModelStateProps {
   children?: LayoutSlots;
   /** 侧边栏鼠标离开事件 */
   onSideMouseLeave: () => void;
@@ -24,4 +56,4 @@ interface Props extends XpressLayoutProps, LayoutComponents {
   onToggleSidebar: () => void;
 }
 
-export type { LayoutComponents, LayoutSlots, Props };
+export type { LayoutComponents, LayoutSlots, XpressLayoutProps };
