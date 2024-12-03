@@ -23,5 +23,5 @@ export interface NormalMenuProps {
   /**
    * 主题
    */
-  theme?: 'dark' | 'light';
+  theme?: 'auto' | 'dark' | 'light';
 }

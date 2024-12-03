@@ -1,4 +1,4 @@
-import type { CSSProperties, FC } from 'react';
+import type { FC } from 'react';
 
 import type { LayoutSidebarProps } from './types';
 
@@ -6,21 +6,22 @@ import { useScrollLock, useShow } from '@xpress-core/hooks';
 import { XpressScrollbar } from '@xpress-core/shadcn-ui';
 
 import { useDebounceFn } from 'ahooks';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { SidebarCollapseButton, SidebarFixedButton } from '../widgets';
+import { useLayoutStyles } from './useLayoutStyles';
 
 const LayoutSidebar: FC<LayoutSidebarProps> = ({
-  collapse,
+  collapse = false,
   collapseHeight = 42,
   collapseWidth = 48,
   domVisible = true,
-  expandOnHover,
-  expandOnHovering,
+  expandOnHover = false,
+  expandOnHovering = false,
   extra,
-  extraCollapse,
+  extraCollapse = false,
   extraTitle,
-  extraVisible,
+  extraVisible = false,
   extraWidth,
   fixedExtra = false,
   headerHeight,
@@ -46,91 +47,46 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   const asideRef = useRef<HTMLDivElement>(null);
   const { lock, unlock } = useScrollLock(document.body);
 
-  // const {
-  //   setSidebarCollapse,
-  //   setSidebarExpandOnHover,
-  //   setSidebarExpandOnHovering,
-  //   sidebarCollapse,
-  //   sidebarExpandOnHover,
-  //   sidebarExpandOnHovering,
-  // } = useXpressLayout();
-
-  // 计算菜单宽度样式
-  const calcMenuWidthStyle = useCallback(
-    (isHiddenDom: boolean): CSSProperties => {
-      let widthValue = `${width + (isSidebarMixed && fixedExtra && extraVisible ? extraWidth : 0)}px`;
-
-      if (isHiddenDom && expandOnHovering && !expandOnHover) {
-        widthValue = `${collapseWidth}px`;
-      }
-
-      return {
-        ...(widthValue === '0px' ? { overflow: 'hidden' } : {}),
-        flex: `0 0 ${widthValue}`,
-        marginLeft: show ? 0 : `-${widthValue}`,
-        maxWidth: widthValue,
-        minWidth: widthValue,
-        width: widthValue,
-      };
-    },
-    [
-      width,
-      isSidebarMixed,
-      fixedExtra,
-      extraVisible,
-      extraWidth,
-      expandOnHovering,
-      expandOnHover,
-      collapseWidth,
-      show,
-    ],
-  );
-
-  const hiddenSideStyle = useMemo(
-    () => calcMenuWidthStyle(true),
-    [calcMenuWidthStyle],
-  );
-
-  const style = useMemo(
-    () => ({
-      '--scroll-shadow': 'var(--sidebar)',
-      ...calcMenuWidthStyle(false),
-      height: `calc(100% - ${marginTop}px)`,
-      marginTop: `${marginTop}px`,
-      paddingTop: `${paddingTop}px`,
-      zIndex,
-      ...(isSidebarMixed && extraVisible ? { transition: 'none' } : {}),
-    }),
-    [
-      marginTop,
-      paddingTop,
-      zIndex,
-      isSidebarMixed,
-      extraVisible,
-      calcMenuWidthStyle,
-    ],
-  );
-
-  const extraStyle = useMemo(() => {
-    return {
-      left: `${width}px`,
-      width: extraVisible && show ? `${extraWidth}px` : 0,
-      zIndex,
-    };
-  }, [width, extraWidth, show, extraVisible, zIndex]);
+  const {
+    collapseStyle,
+    contentStyle,
+    extraContentStyle,
+    extraStyle,
+    extraTitleStyle,
+    headerStyle,
+    hiddenSideStyle,
+    style,
+  } = useLayoutStyles({
+    collapse,
+    collapseHeight,
+    collapseWidth,
+    expandOnHover,
+    expandOnHovering,
+    extraVisible,
+    extraWidth,
+    fixedExtra,
+    headerHeight,
+    isSidebarMixed,
+    marginTop,
+    mixedWidth,
+    paddingTop,
+    show,
+    width,
+    zIndex,
+  });
 
   // 使用 useDebounceFn 处理展开
   const { run: handleExpand } = useDebounceFn(
     () => {
       if (!expandOnHovering) {
-        onCollapseChange(false);
+        onCollapseChange?.(false);
       }
 
       if (isSidebarMixed) {
-        lock();
+        lock?.();
       }
 
-      onExpandOnHoveringChange(true);
+      onExpandOnHoveringChange?.(true);
     },
     { wait: 100 },
   );
@@ -140,12 +96,12 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     () => {
       onLeave?.();
       if (isSidebarMixed) {
-        unlock();
+        unlock?.();
       }
       if (!expandOnHover) {
-        onExpandOnHoveringChange(false);
-        onCollapseChange(true);
-        onExtraVisibleChange(false);
+        onExpandOnHoveringChange?.(false);
+        onCollapseChange?.(true);
+        onExtraVisibleChange?.(false);
       }
     },
     { wait: 100 },
@@ -162,57 +118,10 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   }, [handleCollapse]);
 
   useEffect(() => {
-    if (fixedExtra) {
+    if (fixedExtra && onExtraVisibleChange) {
       onExtraVisibleChange(true);
     }
   }, [fixedExtra, onExtraVisibleChange]);
-
-  // 额外标题样式
-  const extraTitleStyle = useMemo((): CSSProperties => {
-    return {
-      height: `${headerHeight - 1}px`,
-    };
-  }, [headerHeight]);
-
-  // 内容宽度样式
-  const contentWidthStyle = useMemo((): CSSProperties => {
-    if (isSidebarMixed && fixedExtra) {
-      return { width: `${collapse ? collapseWidth : mixedWidth}px` };
-    }
-    return {};
-  }, [isSidebarMixed, fixedExtra, collapse, collapseWidth, mixedWidth]);
-
-  // 内容样式
-  const contentStyle = useMemo((): CSSProperties => {
-    return {
-      height: `calc(100% - ${headerHeight + collapseHeight}px)`,
-      paddingTop: '8px',
-      ...contentWidthStyle,
-    };
-  }, [headerHeight, collapseHeight, contentWidthStyle]);
-
-  // 头部样式
-  const headerStyle = useMemo((): CSSProperties => {
-    return {
-      ...(isSidebarMixed ? { display: 'flex', justifyContent: 'center' } : {}),
-      height: `${headerHeight}px`,
-      ...contentWidthStyle,
-    };
-  }, [isSidebarMixed, headerHeight, contentWidthStyle]);
-
-  // 额外内容样式
-  const extraContentStyle = useMemo((): CSSProperties => {
-    return {
-      height: `calc(100% - ${headerHeight + collapseHeight}px)`,
-    };
-  }, [headerHeight, collapseHeight]);
-
-  // 折叠样式
-  const collapseStyle = useMemo((): CSSProperties => {
-    return {
-      height: `${collapseHeight}px`,
-    };
-  }, [collapseHeight]);
 
   // 隐藏的侧边栏渲染
   const hiddenSidebarNode = useShow(domVisible, () => (
@@ -226,7 +135,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   const fixedButtonNode = useShow(!collapse && !isSidebarMixed, () => (
     <SidebarFixedButton
       expandOnHover={expandOnHover}
-      onExpandOnHoverChange={onExpandOnHoverChange}
+      onExpandOnHoverChange={onExpandOnHoverChange || (() => {})}
     />
   ));
 
@@ -246,7 +155,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     () => (
       <SidebarCollapseButton
         collapsed={collapse}
-        onCollapsedChange={onCollapseChange}
+        onCollapsedChange={onCollapseChange || (() => {})}
       />
     ),
   );
@@ -257,7 +166,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     () => (
       <SidebarCollapseButton
         collapsed={extraCollapse}
-        onCollapsedChange={onExtraCollapseChange}
+        onCollapsedChange={onExtraCollapseChange || (() => {})}
       />
     ),
   );
@@ -267,7 +176,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     <>
       <SidebarFixedButton
         expandOnHover={expandOnHover}
-        onExpandOnHoverChange={onExpandOnHoverChange}
+        onExpandOnHoverChange={onExpandOnHoverChange || (() => {})}
       />
       {extraTitle && (
         <div className="flex items-center pl-2" style={extraTitleStyle}>

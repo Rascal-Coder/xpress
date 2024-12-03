@@ -1,33 +1,32 @@
-import type { Dispatch, SetStateAction } from 'react';
+import type { SetStateAction } from 'react';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
-export interface ModelOptions<T> {
-  defaultValue?: T;
+export interface UseModelOptions<T> {
+  defaultValue: T;
   onChange?: (value: T) => void;
+  value?: T;
 }
 
-export function useModel<T>(
-  props: {
-    defaultValue?: T;
-    onChange?: (value: T) => void;
-    value?: T;
-  },
-  options: ModelOptions<T> = {},
-): [T, Dispatch<SetStateAction<T>>] {
-  const { defaultValue = options.defaultValue, onChange, value } = props;
-
+export function useModel<T>({
+  defaultValue,
+  onChange,
+  value,
+}: UseModelOptions<T>) {
   const [innerValue, setInnerValue] = useState<T>(
-    value === undefined ? (defaultValue as T) : value,
+    value === undefined ? defaultValue : value,
+  );
+
+  const currentValue = useMemo(
+    () => (value === undefined ? innerValue : value),
+    [value, innerValue],
   );
 
   const handleChange = useCallback(
     (val: SetStateAction<T>) => {
       const newValue =
         typeof val === 'function'
-          ? (val as (prevState: T) => T)(
-              value === undefined ? innerValue : value,
-            )
+          ? (val as (prevState: T) => T)(currentValue)
           : val;
 
       if (value === undefined) {
@@ -35,8 +34,8 @@ export function useModel<T>(
       }
       onChange?.(newValue);
     },
-    [value, innerValue, onChange],
+    [value, currentValue, onChange],
   );
 
-  return [value === undefined ? innerValue : value, handleChange];
+  return [currentValue, handleChange] as const;
 }

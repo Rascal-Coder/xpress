@@ -557,7 +557,7 @@ const XpressLayout: FC<XpressLayoutProps> = ({
     if (isMobile) {
       setSidebarCollapse(false);
     } else {
-      onToggleSidebar?.();
+      onToggleSidebar();
     }
   };
 

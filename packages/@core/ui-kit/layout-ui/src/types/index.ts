@@ -270,5 +270,5 @@ export type {
   TabsStyleType,
   ThemeModeType,
   UseLayoutResult,
-  XpressLayoutProps,
+  XpressLayoutProps as BaseXpressLayoutProps,
 };

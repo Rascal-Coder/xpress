@@ -474,6 +474,9 @@ importers:
       '@xpress-core/layout-ui':
         specifier: workspace:*
         version: link:../../packages/@core/ui-kit/layout-ui
+      '@xpress-core/react-menu':
+        specifier: workspace:*
+        version: link:../../packages/@core/ui-kit/react-menu
       '@xpress/styles':
         specifier: workspace:*
         version: link:../../packages/styles

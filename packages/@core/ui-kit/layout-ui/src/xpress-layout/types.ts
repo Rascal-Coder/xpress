@@ -1,4 +1,4 @@
-import type { XpressLayoutProps as BaseXpressLayoutProps } from '../types';
+import type { BaseXpressLayoutProps } from '../types';
 
 interface LayoutComponents {
   logo?: React.ReactNode;
@@ -50,8 +50,8 @@ interface XpressLayoutProps
     LayoutComponents,
     ModelStateProps {
   children?: LayoutSlots;
-  /** 侧边栏鼠标离开事件 */
-  onSideMouseLeave: () => void;
+  /** Optional mouse leave handler for sidebar */
+  onSideMouseLeave?: () => void;
   /** 切换侧边栏事件 */
   onToggleSidebar: () => void;
 }
