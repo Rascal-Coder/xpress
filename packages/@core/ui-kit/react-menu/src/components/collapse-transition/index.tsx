@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from 'react';
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Transition } from 'react-transition-group';
 
 interface CollapseTransitionProps extends PropsWithChildren {
@@ -101,23 +101,42 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     reset(el);
   };
 
+  const onEnterCancelled = () => {
+    const el = nodeRef.current;
+    if (!el) return;
+    reset(el);
+  };
+
+  const onExitCancelled = () => {
+    const el = nodeRef.current;
+    if (!el) return;
+    reset(el);
+  };
+
   return (
     <Transition
-      in={props.in}
       nodeRef={nodeRef}
+      {...props}
+      addEndListener={(done) => {
+        const node = nodeRef.current;
+        if (node) {
+          const handleTransitionEnd = () => {
+            node.removeEventListener('transitionend', handleTransitionEnd);
+            done();
+          };
+          node.addEventListener('transitionend', handleTransitionEnd, false);
+        }
+      }}
       onEnter={onEnter}
+      onEnterCancelled={onEnterCancelled}
       onEntered={onEntered}
       onEntering={onEntering}
       onExit={onExit}
+      onExitCancelled={onExitCancelled}
       onExited={onExited}
       onExiting={onExiting}
-      timeout={300}
     >
-      {() => (
-        <div ref={nodeRef} style={{ transition: 'all 0.3s ease-in-out' }}>
-          {props.children}
-        </div>
-      )}
+      <div ref={nodeRef}>{props.children}</div>
     </Transition>
   );
 };

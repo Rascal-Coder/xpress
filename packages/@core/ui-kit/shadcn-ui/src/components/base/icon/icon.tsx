@@ -19,7 +19,7 @@ export interface IconProps extends BaseIconProps {
   icon?: Icon;
 }
 
-const Icon: React.FC<IconProps> = ({ fallback, icon, ...rest }) => {
+const XpressIcon: React.FC<IconProps> = ({ fallback, icon, ...rest }) => {
   const isRemoteIcon = isString(icon) && isHttpUrl(icon);
   const isComponent = !isString(icon) && (isObject(icon) || isFunction(icon));
 
@@ -50,4 +50,4 @@ const Icon: React.FC<IconProps> = ({ fallback, icon, ...rest }) => {
   return null;
 };
 
-export default Icon;
+export default XpressIcon;
