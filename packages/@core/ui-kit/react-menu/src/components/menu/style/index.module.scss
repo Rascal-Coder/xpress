@@ -1,0 +1,235 @@
+$namespace: xpress;
+
+@mixin menu-item-active {
+  color: var(--menu-item-active-color);
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--menu-item-active-background-color);
+}
+
+@mixin menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--menu-item-height);
+  padding: var(--menu-item-padding-y) var(--menu-item-padding-x);
+  margin: 0 var(--menu-item-margin-x) var(--menu-item-margin-y)
+    var(--menu-item-margin-x);
+  font-size: var(--menu-font-size);
+  color: var(--menu-item-color);
+  text-decoration: none;
+  white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
+  background: var(--menu-item-background-color);
+  border: none;
+  border-radius: var(--menu-item-radius);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    padding 0.15s ease,
+    border-color 0.15s ease;
+
+  &.is-disabled {
+    cursor: not-allowed;
+    background: none !important;
+    opacity: 0.25;
+  }
+
+  .#{$namespace}-menu__icon {
+    transition: transform 0.25s;
+  }
+
+  &:hover {
+    .#{$namespace}-menu__icon {
+      transform: scale(1.2);
+    }
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+
+  * {
+    vertical-align: bottom;
+  }
+}
+
+@mixin menu-title {
+  max-width: var(--menu-title-width);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 1;
+}
+
+:global {
+  .#{$namespace}-menu__popup-container,
+  .#{$namespace}-menu {
+    --menu-title-width: 140px;
+    --menu-item-icon-size: 16px;
+    --menu-item-height: 38px;
+    --menu-item-padding-y: 21px;
+    --menu-item-padding-x: 12px;
+    --menu-item-popup-padding-y: 20px;
+    --menu-item-popup-padding-x: 12px;
+    --menu-item-margin-y: 2px;
+    --menu-item-margin-x: 0px;
+    --menu-item-collapse-padding-y: 23.5px;
+    --menu-item-collapse-padding-x: 0px;
+    --menu-item-collapse-margin-y: 4px;
+    --menu-item-collapse-margin-x: 0px;
+    --menu-item-radius: 0px;
+    --menu-item-indent: 16px;
+    --menu-font-size: 14px;
+
+    &.is-dark {
+      --menu-background-color: hsl(var(--menu));
+      --menu-item-background-color: var(--menu-background-color);
+      --menu-item-color: hsl(var(--foreground) / 80%);
+      --menu-item-hover-color: hsl(var(--accent-foreground));
+      --menu-item-hover-background-color: hsl(var(--accent));
+      --menu-item-active-color: hsl(var(--accent-foreground));
+      --menu-item-active-background-color: hsl(var(--accent));
+      --menu-submenu-hover-color: hsl(var(--foreground));
+      --menu-submenu-hover-background-color: hsl(var(--accent));
+      --menu-submenu-active-color: hsl(var(--foreground));
+      --menu-submenu-active-background-color: transparent;
+      --menu-submenu-background-color: var(--menu-background-color);
+    }
+
+    &.is-light {
+      --menu-background-color: hsl(var(--menu));
+      --menu-item-background-color: var(--menu-background-color);
+      --menu-item-color: hsl(var(--foreground));
+      --menu-item-hover-color: var(--menu-item-color);
+      --menu-item-hover-background-color: hsl(var(--accent));
+      --menu-item-active-color: hsl(var(--primary));
+      --menu-item-active-background-color: hsl(var(--primary) / 15%);
+      --menu-submenu-hover-color: hsl(var(--primary));
+      --menu-submenu-hover-background-color: hsl(var(--accent));
+      --menu-submenu-active-color: hsl(var(--primary));
+      --menu-submenu-active-background-color: transparent;
+      --menu-submenu-background-color: var(--menu-background-color);
+    }
+  }
+}
+
+.menu {
+  position: relative;
+  box-sizing: border-box;
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  background: var(--menu-background-color);
+
+  &.vertical {
+    &:not(.collapse) {
+      .menuItem,
+      .subMenuContent,
+      .menuItemGroupTitle {
+        padding-left: calc(
+          var(--menu-item-indent) + var(--menu-level) * var(--menu-item-indent)
+        );
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &.horizontal {
+    display: flex;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    height: var(--height-horizontal-height);
+    border-right: none;
+
+    .menuItem {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--menu-item-height);
+      padding-right: calc(var(--menu-item-padding-x) + 6px);
+      margin: 0;
+      margin-right: 2px;
+      border-radius: var(--menu-item-radius);
+    }
+  }
+
+  &.collapse {
+    .menuIcon {
+      margin-right: 0;
+    }
+
+    .subMenuIconArrow {
+      display: none;
+    }
+
+    .subMenuContent,
+    .menuItem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--menu-item-collapse-padding-y)
+        var(--menu-item-collapse-padding-x);
+      margin: var(--menu-item-collapse-margin-y)
+        var(--menu-item-collapse-margin-x);
+      transition: all 0.3s;
+
+      &.active {
+        background: var(--menu-item-active-background-color) !important;
+        border-radius: var(--menu-item-radius);
+      }
+    }
+  }
+}
+
+.menuItem {
+  fill: var(--menu-item-color);
+
+  @include menu-item;
+
+  &.active {
+    fill: var(--menu-item-active-color);
+
+    @include menu-item-active;
+  }
+
+  &:not(.active):hover {
+    color: var(--menu-item-hover-color);
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--menu-item-hover-background-color) !important;
+  }
+}
+
+.subMenu {
+  padding-left: 0;
+  margin: 0;
+  list-style: none;
+  background: var(--menu-submenu-background-color);
+  fill: var(--menu-item-color);
+
+  &.active {
+    .subMenuContent {
+      color: var(--menu-submenu-active-color);
+      text-decoration: none;
+      cursor: pointer;
+      background: var(--menu-submenu-active-background-color);
+      fill: var(--menu-submenu-active-color);
+    }
+  }
+}
+
+.subMenuContent {
+  height: var(--menu-item-height);
+
+  @include menu-item;
+
+  &:hover {
+    color: var(--menu-submenu-hover-color);
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--menu-submenu-hover-background-color) !important;
+  }
+}
