@@ -1,6 +1,6 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
-export interface NormalMenuProps {
+interface NormalMenuProps {
   /**
    * 菜单数据
    */
@@ -23,5 +23,6 @@ export interface NormalMenuProps {
   /**
    * 主题
    */
-  theme?: 'auto' | 'dark' | 'light';
+  theme?: 'dark' | 'light';
 }
+export type { NormalMenuProps };

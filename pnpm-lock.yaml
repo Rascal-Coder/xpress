@@ -925,6 +925,9 @@ importers:
       '@xpress-core/shared':
         specifier: workspace:*
         version: link:../../base/shared
+      '@xpress-core/typings':
+        specifier: workspace:*
+        version: link:../../base/typings
 
   packages/@core/ui-kit/react-menu:
     dependencies:
@@ -946,6 +949,9 @@ importers:
       ahooks:
         specifier: ^3.8.4
         version: 3.8.4(react@18.3.1)
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -959,6 +965,9 @@ importers:
       '@types/react':
         specifier: ^18.3.12
         version: 18.3.12
+      '@types/react-dom':
+        specifier: ^19.0.2
+        version: 19.0.2(@types/react@18.3.12)
       '@xpress-core/typings':
         specifier: workspace:*
         version: link:../../base/typings
@@ -3404,6 +3413,11 @@ packages:
   '@types/react-dom@18.3.1':
     resolution: {integrity: sha512-qW1Mfv8taImTthu4KoXgDfLuk4bydU6Q/TkADnDWWHwi4NX4BR+LWfTp2sVmTqRrsHvyDDTelgelxJ+SsejKKQ==}
 
+  '@types/react-dom@19.0.2':
+    resolution: {integrity: sha512-c1s+7TKFaDRRxr1TxccIX2u7sfCnc3RxkVyBIUA2lCpyqCF+QoAwQ/CBg7bsMdVwP120HEH143VQezKtef5nCg==}
+    peerDependencies:
+      '@types/react': ^19.0.0
+
   '@types/react-transition-group@4.4.11':
     resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
 
@@ -5491,6 +5505,9 @@ packages:
   ignore@6.0.2:
     resolution: {integrity: sha512-InwqeHHN2XpumIkMvpl/DCJVrAHgCsG5+cn1XlnLWGwtZBm8QJfSusItfrwx81CTp5agNZqpKU2J/ccC5nGT4A==}
     engines: {node: '>= 4'}
+
+  immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
 
   immutable@5.0.3:
     resolution: {integrity: sha512-P8IdPQHq3lA1xVeBRi5VPqUm5HDgKnx0Ru51wZz5mjxHr5n3RWhjIpOFU7ybkUxfB+5IToy+OLaHYDBIWsv+uw==}
@@ -11223,6 +11240,10 @@ snapshots:
     dependencies:
       '@types/react': 18.3.12
 
+  '@types/react-dom@19.0.2(@types/react@18.3.12)':
+    dependencies:
+      '@types/react': 18.3.12
+
   '@types/react-transition-group@4.4.11':
     dependencies:
       '@types/react': 18.3.12
@@ -13699,6 +13720,8 @@ snapshots:
   ignore@5.3.2: {}
 
   ignore@6.0.2: {}
+
+  immer@10.1.1: {}
 
   immutable@5.0.3: {}
 

@@ -22,9 +22,11 @@ import {
   LayoutSidebar,
   LayoutTabbar,
 } from '../components';
-import { useLayout, useModel } from '../hooks';
+import { useLayout } from '../hooks';
+import { useLayoutContext } from './context';
+import { LayoutProvider } from './LayoutProvider';
 
-const XpressLayout: FC<XpressLayoutProps> = ({
+const XpressLayoutInner: FC<XpressLayoutProps> = ({
   contentCompact = 'wide',
   contentCompactWidth = 1200,
   contentPadding = 0,
@@ -45,20 +47,9 @@ const XpressLayout: FC<XpressLayoutProps> = ({
   logo,
   menu,
   mixedMenu,
-  onSidebarCollapseChange,
-  onSidebarEnableChange,
-  onSidebarExpandOnHoverChange,
-  onSidebarExtraCollapseChange,
-  onSidebarExtraVisibleChange,
-  onSideMouseLeave,
   onToggleSidebar,
-  sidebarCollapse: propsSidebarCollapse,
   sidebarCollapseShowTitle = false,
-  sidebarEnable: propsSidebarEnable,
-  sidebarExpandOnHover: propsSidebarExpandOnHover,
-  sidebarExtraCollapse: propsSidebarExtraCollapse,
   sidebarExtraCollapsedWidth = 60,
-  sidebarExtraVisible: propsSidebarExtraVisible,
   sidebarHidden = false,
   sidebarMixedWidth = 80,
   sidebarTheme = 'dark',
@@ -71,35 +62,18 @@ const XpressLayout: FC<XpressLayoutProps> = ({
   zIndex = 200,
   children,
 }) => {
-  const [sidebarCollapse, setSidebarCollapse] = useModel({
-    defaultValue: true,
-    onChange: onSidebarCollapseChange,
-    value: propsSidebarCollapse,
-  });
-
-  const [sidebarExtraVisible, setSidebarExtraVisible] = useModel({
-    defaultValue: false,
-    onChange: onSidebarExtraVisibleChange,
-    value: propsSidebarExtraVisible,
-  });
-
-  const [sidebarExtraCollapse, setSidebarExtraCollapse] = useModel({
-    defaultValue: false,
-    onChange: onSidebarExtraCollapseChange,
-    value: propsSidebarExtraCollapse,
-  });
-
-  const [sidebarExpandOnHover, setSidebarExpandOnHover] = useModel({
-    defaultValue: false,
-    onChange: onSidebarExpandOnHoverChange,
-    value: propsSidebarExpandOnHover,
-  });
-
-  const [sidebarEnable, _setSidebarEnable] = useModel({
-    defaultValue: true,
-    onChange: onSidebarEnableChange,
-    value: propsSidebarEnable,
-  });
+  const {
+    onSideMouseLeave,
+    setSidebarCollapse,
+    setSidebarExpandOnHover,
+    setSidebarExtraCollapse,
+    setSidebarExtraVisible,
+    sidebarCollapse,
+    sidebarEnable,
+    sidebarExpandOnHover,
+    sidebarExtraCollapse,
+    sidebarExtraVisible,
+  } = useLayoutContext();
 
   const [sidebarExpandOnHovering, setSidebarExpandOnHovering] = useState(false);
   const [headerIsHidden, setHeaderIsHidden] = useState(false);
@@ -118,6 +92,7 @@ const XpressLayout: FC<XpressLayoutProps> = ({
     isSidebarMixedNav,
   } = useLayout({ isMobile, layout });
   const { clientY: mouseY } = useMouse(contentRef.current);
+
   /**
    * 顶栏是否自动隐藏
    */
@@ -666,42 +641,6 @@ const XpressLayout: FC<XpressLayoutProps> = ({
     />
   ));
 
-  // Context value
-  // const contextValue = useMemo(
-  //   () => ({
-  //     headerIsHidden,
-  //     setHeaderIsHidden,
-  //     setSidebarCollapse,
-  //     setSidebarEnable,
-  //     setSidebarExpandOnHover,
-  //     setSidebarExpandOnHovering,
-  //     setSidebarExtraCollapse,
-  //     setSidebarExtraVisible,
-  //     sidebarCollapse,
-  //     sidebarEnable,
-  //     sidebarExpandOnHover,
-  //     sidebarExpandOnHovering,
-  //     sidebarExtraCollapse,
-  //     sidebarExtraVisible,
-  //   }),
-  //   [
-  //     sidebarCollapse,
-  //     setSidebarCollapse,
-  //     sidebarExtraVisible,
-  //     setSidebarExtraVisible,
-  //     sidebarExtraCollapse,
-  //     setSidebarExtraCollapse,
-  //     sidebarExpandOnHover,
-  //     setSidebarExpandOnHover,
-  //     sidebarEnable,
-  //     setSidebarEnable,
-  //     sidebarExpandOnHovering,
-  //     setSidebarExpandOnHovering,
-  //     headerIsHidden,
-  //     setHeaderIsHidden,
-  //   ],
-  // );
-
   return (
     <div className="relative flex min-h-full w-full">
       {sidebarNode}
@@ -743,9 +682,26 @@ const XpressLayout: FC<XpressLayoutProps> = ({
       {children?.extra}
       {maskNode}
     </div>
-    // <XpressLayoutProvider value={contextValue}>
+  );
+};
 
-    // </XpressLayoutProvider>
+const XpressLayout: FC<XpressLayoutProps> = (props) => {
+  return (
+    <LayoutProvider
+      defaultSidebarCollapse={props.sidebarCollapse}
+      defaultSidebarEnable={props.sidebarEnable}
+      defaultSidebarExpandOnHover={props.sidebarExpandOnHover}
+      defaultSidebarExtraCollapse={props.sidebarExtraCollapse}
+      defaultSidebarExtraVisible={props.sidebarExtraVisible}
+      onSidebarCollapseChange={props.onSidebarCollapseChange}
+      onSidebarEnableChange={props.onSidebarEnableChange}
+      onSidebarExpandOnHoverChange={props.onSidebarExpandOnHoverChange}
+      onSidebarExtraCollapseChange={props.onSidebarExtraCollapseChange}
+      onSidebarExtraVisibleChange={props.onSidebarExtraVisibleChange}
+      onSideMouseLeave={props.onSideMouseLeave}
+    >
+      <XpressLayoutInner {...props} />
+    </LayoutProvider>
   );
 };
 

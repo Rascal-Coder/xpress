@@ -1,51 +1,61 @@
 import { createContext, useContext } from 'react';
 
-interface MenuItemRegistered {
+export interface MenuItemRegistered {
+  active: boolean;
   parentPaths: string[];
   path: string;
 }
 
-interface MenuContextValue {
-  activePath?: string;
+export interface MenuItemClicked {
+  parentPaths: string[];
+  path: string;
+}
+
+export interface MenuContextType {
+  activePath: string;
   addMenuItem: (item: MenuItemRegistered) => void;
-  addSubMenu: (subMenu: MenuItemRegistered) => void;
-  closeMenu: (path: string, parentPaths: string[]) => void;
-  handleMenuItemClick: (data: MenuItemRegistered) => void;
-  handleSubMenuClick: (data: MenuItemRegistered) => void;
+  addSubMenu: (item: MenuItemRegistered) => void;
+  closeMenu: (path: string, parentLinks: string[]) => void;
+  handleMenuItemClick: (item: MenuItemClicked) => void;
+  handleSubMenuClick: (subMenu: MenuItemRegistered) => void;
   isMenuPopup: boolean;
   items: Record<string, MenuItemRegistered>;
-  mouseInChild: boolean;
   openedMenus: string[];
-  openMenu: (path: string, parentPaths: string[]) => void;
+  openMenu: (path: string, parentLinks: string[]) => void;
   removeMenuItem: (item: MenuItemRegistered) => void;
-  removeSubMenu: (subMenu: MenuItemRegistered) => void;
+
+  removeSubMenu: (item: MenuItemRegistered) => void;
   subMenus: Record<string, MenuItemRegistered>;
-  theme: 'dark' | 'light';
+  theme: string;
 }
 
-export const MenuContext = createContext<MenuContextValue | null>(null);
-
-export function useMenu() {
-  const context = useContext(MenuContext);
-  if (!context) {
-    throw new Error('useMenu must be used within a MenuProvider');
-  }
-  return context;
-}
-
-export interface SubMenuContextValue {
-  addSubMenu: (subMenu: MenuItemRegistered) => void;
+export interface SubMenuContextType {
+  addSubMenu: (item: MenuItemRegistered) => void;
+  handleMouseleave?: (deepDispatch: boolean) => void;
   level: number;
   mouseInChild: boolean;
-  removeSubMenu: (subMenu: MenuItemRegistered) => void;
+  removeSubMenu: (item: MenuItemRegistered) => void;
 }
 
-export const SubMenuContext = createContext<null | SubMenuContextValue>(null);
+export const MenuContext = createContext<MenuContextType | undefined>(
+  undefined,
+);
+export const SubMenuContext = createContext<SubMenuContextType | undefined>(
+  undefined,
+);
 
-export function useSubMenu() {
-  const context = useContext(SubMenuContext);
+export const useMenuContext = () => {
+  const context = useContext(MenuContext);
   if (!context) {
-    throw new Error('useSubMenu must be used within a SubMenuProvider');
+    throw new Error('useMenuContext must be used within a MenuProvider');
   }
   return context;
-}
+};
+
+export const useSubMenuContext = () => {
+  const context = useContext(SubMenuContext);
+  if (!context) {
+    throw new Error('useSubMenuContext must be used within a SubMenuProvider');
+  }
+  return context;
+};

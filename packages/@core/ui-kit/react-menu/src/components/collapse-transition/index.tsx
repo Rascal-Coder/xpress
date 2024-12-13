@@ -3,10 +3,23 @@ import type { FC, PropsWithChildren } from 'react';
 import { useRef } from 'react';
 import { Transition } from 'react-transition-group';
 
+/**
+ * 折叠过渡动画组件的属性接口
+ * @interface CollapseTransitionProps
+ * @extends {PropsWithChildren}
+ */
 interface CollapseTransitionProps extends PropsWithChildren {
+  /**
+   * 控制折叠内容是否显示
+   * @default false
+   */
   in?: boolean;
 }
 
+/**
+ * 重置元素的样式到初始状态
+ * @param {HTMLElement} el - 需要重置样式的 HTML 元素
+ */
 const reset = (el: HTMLElement) => {
   el.style.maxHeight = '';
   el.style.overflow = el.dataset.oldOverflow || '';
@@ -16,9 +29,25 @@ const reset = (el: HTMLElement) => {
   el.style.marginBottom = el.dataset.oldMarginBottom || '';
 };
 
+/**
+ * 折叠过渡动画组件
+ * 提供平滑的展开/折叠动画效果
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <CollapseTransition in={isOpen}>
+ *   <div>折叠内容</div>
+ * </CollapseTransition>
+ * ```
+ */
 const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
   const nodeRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * 进入动画开始时的处理函数
+   * 保存原始样式并设置初始状态
+   */
   const onEnter = () => {
     const el = nodeRef.current;
     if (!el) return;
@@ -38,6 +67,10 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     el.style.marginBottom = '0';
   };
 
+  /**
+   * 进入动画进行中的处理函数
+   * 设置目标高度和过渡样式
+   */
   const onEntering = () => {
     const el = nodeRef.current;
     if (!el) return;
@@ -60,6 +93,10 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     });
   };
 
+  /**
+   * 进入动画结束时的处理函数
+   * 清除过渡样式
+   */
   const onEntered = () => {
     const el = nodeRef.current;
     if (!el) return;
@@ -68,6 +105,10 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     el.style.overflow = el.dataset.oldOverflow || '';
   };
 
+  /**
+   * 退出动画开始时的处理函数
+   * 保存当前样式状态
+   */
   const onExit = () => {
     const el = nodeRef.current;
     if (!el) return;
@@ -82,6 +123,10 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     el.style.overflow = 'hidden';
   };
 
+  /**
+   * 退出动画进行中的处理函数
+   * 设置折叠动画
+   */
   const onExiting = () => {
     const el = nodeRef.current;
     if (!el) return;
@@ -95,18 +140,28 @@ const CollapseTransition: FC<CollapseTransitionProps> = (props) => {
     }
   };
 
+  /**
+   * 退出动画结束时的处理函数
+   * 重置所有样式
+   */
   const onExited = () => {
     const el = nodeRef.current;
     if (!el) return;
     reset(el);
   };
 
+  /**
+   * 进入动画被取消时的处理函数
+   */
   const onEnterCancelled = () => {
     const el = nodeRef.current;
     if (!el) return;
     reset(el);
   };
 
+  /**
+   * 退出动画被取消时的处理函数
+   */
   const onExitCancelled = () => {
     const el = nodeRef.current;
     if (!el) return;

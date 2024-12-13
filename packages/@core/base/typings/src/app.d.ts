@@ -1,4 +1,3 @@
-// TODO: 需要抽离到 @xpress/core/typings 包中
 type LayoutType =
   | 'full-content'
   | 'header-nav'

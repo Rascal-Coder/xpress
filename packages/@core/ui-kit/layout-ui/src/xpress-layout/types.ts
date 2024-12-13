@@ -1,4 +1,4 @@
-import type { BaseXpressLayoutProps } from '../types';
+import type { BaseXpressLayoutProps } from '@xpress-core/typings';
 
 interface LayoutComponents {
   logo?: React.ReactNode;
