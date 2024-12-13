@@ -1,5 +1,4 @@
 import type { MenuItemClicked, MenuItemRegistered, MenuProps } from '../types';
-import type { MenuContextType, SubMenuContextType } from './context';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { Ellipsis } from '@xpress-core/icons';
@@ -15,21 +14,20 @@ import React, {
   useState,
 } from 'react';
 
+import {
+  MenuContext,
+  type MenuContextType,
+  MenuSymbols,
+  SubMenuContext,
+  type SubMenuContextType,
+} from '../contexts';
+import { useMenuStyle } from '../hooks';
 import SubMenu from '../submenu';
-import { MenuContext, SubMenuContext } from './context';
 
 import './styles.module.scss';
 
 interface Props extends MenuProps {}
 
-function useMenuStyle(menu?: SubMenuContextType) {
-  const subMenuStyle = useMemo(() => {
-    return {
-      '--menu-level': menu ? (menu?.level ?? 0 + 1) : 0,
-    } as React.CSSProperties;
-  }, [menu]);
-  return subMenuStyle;
-}
 export default function Menu(props: Props) {
   const {
     accordion = true,
@@ -54,7 +52,7 @@ export default function Menu(props: Props) {
   const [activePath, setActivePath] = useState(defaultActive);
   const [items, setItems] = useState<MenuContextType['items']>({});
   const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
-  const [mouseInChild, _setMouseInChild] = useState(false);
+  const mouseInChild = useRef(false);
 
   const isMenuPopup = useMemo(() => {
     return mode === 'horizontal' || (mode === 'vertical' && collapse);
@@ -124,13 +122,13 @@ export default function Menu(props: Props) {
     },
     [accordion, close, onClose, subMenus],
   );
-  function addMenuItem(item: MenuItemRegistered) {
+  const addMenuItem = useCallback((item: MenuItemRegistered) => {
     setItems(
       produce((draft) => {
         draft[item.path] = item;
       }),
     );
-  }
+  }, []);
 
   const addSubMenu = useCallback((subMenu: MenuItemRegistered) => {
     setSubMenus(
@@ -148,13 +146,13 @@ export default function Menu(props: Props) {
     );
   }, []);
 
-  function removeMenuItem(item: MenuItemRegistered) {
+  const removeMenuItem = useCallback((item: MenuItemRegistered) => {
     setItems(
       produce((draft) => {
         Reflect.deleteProperty(draft, item.path);
       }),
     );
-  }
+  }, []);
 
   const handleSubMenuClick = useCallback(
     ({ parentPaths, path }: MenuItemRegistered) => {
@@ -287,52 +285,62 @@ export default function Menu(props: Props) {
   useEffect(() => {
     initMenu();
   }, [initMenu]);
-  const menuProviderValue = useMemo(() => {
-    return {
-      activePath,
-      addMenuItem,
-      addSubMenu,
-      closeMenu,
-      handleMenuItemClick,
-      handleSubMenuClick,
-      isMenuPopup,
-      mouseInChild,
-      openedMenus,
-      openMenu,
-      props,
-      removeMenuItem,
-      removeSubMenu,
-      subMenus,
-      theme,
-      items,
-    };
-  }, [
-    activePath,
-    addSubMenu,
-    closeMenu,
-    handleMenuItemClick,
-    handleSubMenuClick,
-    isMenuPopup,
-    mouseInChild,
-    openedMenus,
-    openMenu,
-    removeSubMenu,
-    subMenus,
-    theme,
-    items,
-    props,
-  ]);
-  const subMenuContextValue = useMemo(() => {
+  const baseProviderValue = useMemo(() => {
     return {
       addSubMenu,
-      level: 1,
       mouseInChild,
       removeSubMenu,
     };
   }, [addSubMenu, mouseInChild, removeSubMenu]);
+
+  const menuProviderValue = useMemo<MenuContextType>(() => {
+    return {
+      ...baseProviderValue,
+      activePath,
+      addMenuItem,
+      closeMenu,
+      handleMenuItemClick,
+      handleSubMenuClick,
+      isMenuPopup,
+      openedMenus,
+      openMenu,
+      path: '/',
+      props,
+      removeMenuItem,
+      subMenus,
+      theme,
+      type: MenuSymbols.MENU,
+      items,
+    };
+  }, [
+    baseProviderValue,
+    activePath,
+    addMenuItem,
+    closeMenu,
+    handleMenuItemClick,
+    handleSubMenuClick,
+    isMenuPopup,
+    openedMenus,
+    openMenu,
+    props,
+    removeMenuItem,
+    subMenus,
+    theme,
+    items,
+  ]);
+
+  const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
+    return {
+      ...baseProviderValue,
+      level: 1,
+      parent: menuProviderValue,
+      path: '/',
+      type: MenuSymbols.SUBMENU,
+    };
+  }, [baseProviderValue, menuProviderValue]);
   return (
     <MenuContext.Provider value={menuProviderValue}>
-      <SubMenuContext.Provider value={subMenuContextValue}>
+      <SubMenuContext.Provider value={subMenuProviderValue}>
         <ul
           className={cn(
             theme,
