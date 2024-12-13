@@ -1,17 +1,12 @@
-import type {
-  MenuContextType,
-  MenuItemClicked,
-  MenuItemRegistered,
-} from './context';
-import type { MenuProps } from './types';
+import type { MenuItemClicked, MenuItemRegistered, MenuProps } from '../types';
+import type { MenuContextType, SubMenuContextType } from './context';
 
 import { useNamespace } from '@xpress-core/hooks';
+import { Ellipsis } from '@xpress-core/icons';
 import { cn, isHttpUrl } from '@xpress-core/shared/utils';
 
 import { useSize } from 'ahooks';
 import { produce } from 'immer';
-// import {Ellipsis} from "@xpress-core/icons"
-// import {isHttpUrl} from "@xpress-core/shared/utils"
 import React, {
   useCallback,
   useEffect,
@@ -20,11 +15,14 @@ import React, {
   useState,
 } from 'react';
 
-import { MenuProvider } from './MenuProvider';
+import SubMenu from '../submenu';
+import { MenuContext, SubMenuContext } from './context';
+
+import './styles.module.scss';
 
 interface Props extends MenuProps {}
 
-function useMenuStyle(menu?: { level: number }) {
+function useMenuStyle(menu?: SubMenuContextType) {
   const subMenuStyle = useMemo(() => {
     return {
       '--menu-level': menu ? (menu?.level ?? 0 + 1) : 0,
@@ -32,20 +30,20 @@ function useMenuStyle(menu?: { level: number }) {
   }, [menu]);
   return subMenuStyle;
 }
-export default function Menu({
-  accordion = true,
-  collapse = false,
-  defaultActive = '',
-  defaultOpeneds,
-  mode = 'vertical',
-  onClose,
-  onOpen,
-  onSelect,
-  rounded = true,
-  theme = 'dark',
-  children,
-  ...reset
-}: Props) {
+export default function Menu(props: Props) {
+  const {
+    accordion = true,
+    collapse = false,
+    defaultActive = '',
+    defaultOpeneds,
+    mode = 'vertical',
+    onClose,
+    onOpen,
+    onSelect,
+    rounded = true,
+    theme = 'dark',
+    children,
+  } = props;
   const { b, is } = useNamespace('menu');
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
@@ -134,21 +132,21 @@ export default function Menu({
     );
   }
 
-  function addSubMenu(subMenu: MenuItemRegistered) {
+  const addSubMenu = useCallback((subMenu: MenuItemRegistered) => {
     setSubMenus(
       produce((draft) => {
         draft[subMenu.path] = subMenu;
       }),
     );
-  }
+  }, []);
 
-  function removeSubMenu(subMenu: MenuItemRegistered) {
+  const removeSubMenu = useCallback((subMenu: MenuItemRegistered) => {
     setSubMenus(
       produce((draft) => {
         Reflect.deleteProperty(draft, subMenu.path);
       }),
     );
-  }
+  }, []);
 
   function removeMenuItem(item: MenuItemRegistered) {
     setItems(
@@ -298,10 +296,10 @@ export default function Menu({
       handleMenuItemClick,
       handleSubMenuClick,
       isMenuPopup,
-      level: 1,
       mouseInChild,
       openedMenus,
       openMenu,
+      props,
       removeMenuItem,
       removeSubMenu,
       subMenus,
@@ -310,6 +308,7 @@ export default function Menu({
     };
   }, [
     activePath,
+    addSubMenu,
     closeMenu,
     handleMenuItemClick,
     handleSubMenuClick,
@@ -317,42 +316,51 @@ export default function Menu({
     mouseInChild,
     openedMenus,
     openMenu,
+    removeSubMenu,
     subMenus,
     theme,
     items,
+    props,
   ]);
+  const subMenuContextValue = useMemo(() => {
+    return {
+      addSubMenu,
+      level: 1,
+      mouseInChild,
+      removeSubMenu,
+    };
+  }, [addSubMenu, mouseInChild, removeSubMenu]);
   return (
-    <MenuProvider {...menuProviderValue} {...reset}>
-      <ul
-        className={cn(
-          theme,
-          b(),
-          is(mode, true),
-          is(theme, true),
-          is('rounded', rounded),
-          is('collapse', collapse),
-        )}
-        ref={menuRef}
-        role="menu"
-        style={menuStyle}
-      >
-        {mode === 'horizontal' && moreChildren.length > 0 ? (
-          <>
-            {defaultChildren}
-            {/*
-            <SubMenu
-              path="sub-menu-more"
-              title={<EllipsisIcon />}
-              isSubMenuMore={true}
-            >
-              {moreChildren}
-            </SubMenu>
-            */}
-          </>
-        ) : (
-          children
-        )}
-      </ul>
-    </MenuProvider>
+    <MenuContext.Provider value={menuProviderValue}>
+      <SubMenuContext.Provider value={subMenuContextValue}>
+        <ul
+          className={cn(
+            theme,
+            b(),
+            is(mode, true),
+            is(theme, true),
+            is('rounded', rounded),
+            is('collapse', collapse),
+          )}
+          ref={menuRef}
+          role="menu"
+          style={menuStyle}
+        >
+          {mode === 'horizontal' && moreChildren.length > 0 ? (
+            <>
+              {defaultChildren}
+              <SubMenu
+                path="sub-menu-more"
+                title={<Ellipsis className={'size-4'} />}
+              >
+                {moreChildren}
+              </SubMenu>
+            </>
+          ) : (
+            children
+          )}
+        </ul>
+      </SubMenuContext.Provider>
+    </MenuContext.Provider>
   );
 }

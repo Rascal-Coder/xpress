@@ -1,15 +1,6 @@
+import type { MenuItemClicked, MenuItemRegistered, MenuProps } from '../types';
+
 import { createContext, useContext } from 'react';
-
-export interface MenuItemRegistered {
-  active: boolean;
-  parentPaths: string[];
-  path: string;
-}
-
-export interface MenuItemClicked {
-  parentPaths: string[];
-  path: string;
-}
 
 export interface MenuContextType {
   activePath: string;
@@ -22,8 +13,8 @@ export interface MenuContextType {
   items: Record<string, MenuItemRegistered>;
   openedMenus: string[];
   openMenu: (path: string, parentLinks: string[]) => void;
+  props: MenuProps;
   removeMenuItem: (item: MenuItemRegistered) => void;
-
   removeSubMenu: (item: MenuItemRegistered) => void;
   subMenus: Record<string, MenuItemRegistered>;
   theme: string;
