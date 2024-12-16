@@ -27,7 +27,6 @@
     "test:unit": "vitest run --dom",
     "test:e2e": "turbo run test:e2e"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "catalog:",
     "@xpress/cli": "workspace:*",

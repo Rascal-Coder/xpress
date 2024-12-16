@@ -22,7 +22,7 @@ import {
   type SubMenuContextType,
 } from '../contexts';
 import { useMenuStyle } from '../hooks';
-import SubMenu from '../submenu';
+import SubMenu from '../sub-menu';
 
 import './styles.module.scss';
 

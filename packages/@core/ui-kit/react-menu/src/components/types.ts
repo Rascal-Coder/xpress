@@ -75,7 +75,7 @@ interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 激活时的图标
    */
-  activeIcon?: string;
+  activeIcon?: IconType;
   /**
    * @zh_CN 徽标配置
    */
@@ -109,7 +109,7 @@ interface SubMenuProps extends MenuRecordBadgeRaw, PropsWithChildren {
   /**
    * @zh_CN 激活图标
    */
-  activeIcon?: string;
+  activeIcon?: IconType;
   /**
    * @zh_CN submenu 内容
    */

@@ -5,30 +5,30 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import CollapseTransition from '../collapse-transition';
 import {
-  MenuContext,
   type MenuContextType,
   MenuSymbols,
   SubMenuContext,
   type SubMenuContextType,
 } from '../contexts';
-import { useMenu, useMenuStyle } from '../hooks';
+import {
+  useMenu,
+  useMenuContext,
+  useMenuStyle,
+  useSubMenuContext,
+} from '../hooks';
+import SubMenuContent from '../sub-menu-content';
 
 interface Props extends SubMenuProps {
+  className?: string;
   isSubMenuMore?: boolean;
 }
 function SubMenu({
   activeIcon,
+  className,
   content,
   disabled = false,
   icon,
@@ -40,8 +40,8 @@ function SubMenu({
   const { parentMenu, parentPaths } = useMenu();
   const { b, is } = useNamespace('sub-menu');
   const nsMenu = useNamespace('menu');
-  const rootMenu = useContext(MenuContext);
-  const subMenu = useContext(SubMenuContext);
+  const rootMenu = useMenuContext();
+  const subMenu = useSubMenuContext();
   const subMenuStyle = useMenuStyle(subMenu);
 
   const mouseInChild = useRef(false);
@@ -243,6 +243,7 @@ function SubMenu({
           is('opened', opened),
           is('active', active),
           is('disabled', disabled),
+          className,
         )}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => handleMouseleave()}
@@ -260,10 +261,16 @@ function SubMenu({
             open
             openDelay={0}
             trigger={
-              <>
-                {/* TODO:submenContent */}
-                {title}
-              </>
+              <SubMenuContent
+                className={cn(is('active', active))}
+                icon={menuIcon}
+                isMenuMore={isSubMenuMore}
+                isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
+                level={currentLevel}
+                onClick={handleClick}
+                path={path}
+                title={title}
+              />
             }
           >
             <div
@@ -282,10 +289,17 @@ function SubMenu({
           </XpressHoverCard>
         ) : (
           <>
-            {/* TODO:submenContent */}
+            <SubMenuContent
+              className={cn(is('active', active))}
+              icon={menuIcon}
+              isMenuMore={isSubMenuMore}
+              isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
+              level={currentLevel}
+              onClick={handleClick}
+              path={path}
+              title={title}
+            />
             {content}
-            {title}
-            {/* TODO:submenContent */}
             {opened && (
               <CollapseTransition>
                 <ul
