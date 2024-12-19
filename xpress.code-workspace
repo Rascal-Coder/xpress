@@ -65,6 +65,10 @@
       "path": "packages/@core/hooks",
     },
     {
+      "name": "@xpress-core/preferences",
+      "path": "packages/@core/preferences",
+    },
+    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
     },
