@@ -1,6 +1,5 @@
 export * from './constants';
 export * from './date';
-export * from './execCommand';
 export * from './fs';
 export * from './git';
 export { add as gitAdd, getStagedFiles } from './git';

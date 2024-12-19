@@ -13,10 +13,6 @@
       "path": "docs",
     },
     {
-      "name": "@xpress/commitlint-config",
-      "path": "internal/lint-configs/commitlint-config",
-    },
-    {
       "name": "@xpress/eslint-config",
       "path": "internal/lint-configs/eslint-config",
     },

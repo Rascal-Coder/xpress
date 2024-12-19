@@ -49,7 +49,7 @@ export const locales = {
   },
   'zh-cn': {
     gitCommitMessages: {
-      description: `请输入描述信息（${colors.yellow('!')}开头表示破坏性改动`,
+      description: `请输入描述信息（${colors.yellow('!')}开头表示破坏性改动）`,
       scopes: '请选择提交范围',
       types: '请选择提交类型',
     },

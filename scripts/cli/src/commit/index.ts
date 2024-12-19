@@ -7,7 +7,7 @@ import type { Lang } from './locales';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { colors, execCommand } from '@xpress/node-utils';
+import { colors, execaCommand } from '@xpress/node-utils';
 
 import * as p from '@clack/prompts';
 
@@ -62,8 +62,10 @@ export async function gitCommit(lang: Lang = 'en-us') {
   const scopePart = result.scope ? `(${result.scope})` : '';
   const commitMsg = `${result.types}${scopePart}${breaking}: ${description}`;
 
-  await execCommand('git', ['commit', '-m', commitMsg], { stdio: 'inherit' });
-
+  await execaCommand(`git commit -m "${commitMsg}"`, {
+    stdio: 'inherit',
+    shell: true,
+  });
   p.outro(`${colors.green('✔')} 提交成功!`);
 }
 
@@ -72,7 +74,10 @@ export async function gitCommitVerify(
   lang: Lang = 'en-us',
   ignores: RegExp[] = [],
 ) {
-  const gitPath = await execCommand('git', ['rev-parse', '--show-toplevel']);
+  const { stdout: gitPath } = await execaCommand(
+    'git rev-parse --show-toplevel',
+  );
+  console.log(gitPath);
   const gitMsgPath = path.join(gitPath, '.git', 'COMMIT_EDITMSG');
   const commitMsg = readFileSync(gitMsgPath, 'utf8').trim();
 
@@ -87,20 +92,26 @@ export async function gitCommitVerify(
   }
 }
 
-export function defineCommitCommand(cli: CAC): void {
-  cli
-    .command('commit', '使用规范化的方式提交代码')
+export function defineCommitCommand(cac: CAC): void {
+  cac
+    .command('commit')
+    .usage('Git commit message')
     .option('-l, --lang <lang>', '选择语言 (en-us/zh-cn)', { default: 'zh-cn' })
     .action(async (options) => {
       await gitCommit(options.lang);
     });
 }
 
-export function defineCommitVerifyCommand(cli: CAC): void {
-  cli
-    .command('commit:verify', 'Git commit message verify')
+export function defineCommitVerifyCommand(cac: CAC): void {
+  cac
+    .command('commit:verify')
+    .usage('Git commit message verify')
     .option('-l, --lang <lang>', '选择语言 (en-us/zh-cn)', { default: 'zh-cn' })
+    .option('-i, --ignores <patterns...>', '忽略的提交信息正则表达式')
     .action(async (options) => {
-      await gitCommitVerify(options.lang);
+      const ignores = options.ignores
+        ? options.ignores.map((pattern: string) => new RegExp(pattern))
+        : [];
+      await gitCommitVerify(options.lang, ignores);
     });
 }

@@ -29,7 +29,7 @@
     "test:e2e": "turbo run test:e2e"
   },
   "devDependencies": {
-    "@testing-library/react": "^16.1.0",
+    "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@xpress/cli": "workspace:*",
     "@xpress/commitlint-config": "workspace:*",
@@ -44,15 +44,15 @@
     "cross-env": "catalog:",
     "husky": "catalog:",
     "is-ci": "catalog:",
-    "jsdom": "^25.0.1",
+    "jsdom": "catalog:",
     "lint-staged": "catalog:",
-    "playwright": "^1.49.0",
+    "playwright": "catalog:",
     "rimraf": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:",
     "unbuild": "catalog:",
     "vite": "catalog:",
-    "vitest": "^2.1.6"
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=20.10.0",

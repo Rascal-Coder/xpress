@@ -32,16 +32,16 @@
     }
   },
   "dependencies": {
-    "@types/react-transition-group": "^4.4.11",
+    "@types/react-transition-group": "catalog:",
     "@xpress-core/hooks": "workspace:*",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
-    "ahooks": "^3.8.4",
-    "immer": "^10.1.1",
+    "ahooks": "catalog:",
+    "immer": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-transition-group": "^4.4.5"
+    "react-transition-group": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

@@ -24,9 +24,8 @@
   "dependencies": {
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
-    "ahooks": "^3.8.4",
-    "react": "catalog:",
-    "zustand": "^5.0.2"
+    "ahooks": "catalog:",
+    "react": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:"
