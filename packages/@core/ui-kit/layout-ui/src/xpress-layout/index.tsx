@@ -63,19 +63,15 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   children,
 }) => {
   const {
-    onSideMouseLeave,
     setSidebarCollapse,
-    setSidebarExpandOnHover,
-    setSidebarExtraCollapse,
-    setSidebarExtraVisible,
     sidebarCollapse,
     sidebarEnable,
     sidebarExpandOnHover,
+    sidebarExpandOnHovering,
     sidebarExtraCollapse,
     sidebarExtraVisible,
   } = useLayoutContext();
 
-  const [sidebarExpandOnHovering, setSidebarExpandOnHovering] = useState(false);
   const [headerIsHidden, setHeaderIsHidden] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const {
@@ -548,15 +544,10 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   // 侧边栏渲染
   const sidebarNode = useShow(sidebarEnableState, () => (
     <LayoutSidebar
-      collapse={sidebarCollapse}
       collapseWidth={getSideCollapseWidth}
       domVisible={!isMobile}
-      expandOnHover={sidebarExpandOnHover}
-      expandOnHovering={sidebarExpandOnHovering}
       extra={sideExtra}
-      extraCollapse={sidebarExtraCollapse}
       extraTitle={sideExtraTitle}
-      extraVisible={sidebarExtraVisible}
       extraWidth={sidebarExtraWidth}
       fixedExtra={sidebarExpandOnHover}
       headerHeight={isMixedNav ? 0 : headerHeight}
@@ -564,12 +555,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       logo={logo}
       marginTop={sidebarMarginTop}
       mixedWidth={sidebarMixedWidth}
-      onCollapseChange={setSidebarCollapse}
-      onExpandOnHoverChange={setSidebarExpandOnHover}
-      onExpandOnHoveringChange={setSidebarExpandOnHovering}
-      onExtraCollapseChange={setSidebarExtraCollapse}
-      onExtraVisibleChange={setSidebarExtraVisible}
-      onLeave={onSideMouseLeave}
       show={showSidebar}
       showLogo={showLogo}
       theme={sidebarTheme}

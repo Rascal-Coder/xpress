@@ -44,6 +44,7 @@ export const LayoutProvider: FC<LayoutProviderProps> = ({
     defaultSidebarExpandOnHover,
   );
   const [sidebarEnable, setSidebarEnable] = useState(defaultSidebarEnable);
+  const [sidebarExpandOnHovering, setSidebarExpandOnHovering] = useState(false);
 
   const handleSidebarCollapseChange = (value: boolean) => {
     setSidebarCollapse(value);
@@ -77,11 +78,13 @@ export const LayoutProvider: FC<LayoutProviderProps> = ({
         setSidebarCollapse: handleSidebarCollapseChange,
         setSidebarEnable: handleSidebarEnableChange,
         setSidebarExpandOnHover: handleSidebarExpandOnHoverChange,
+        setSidebarExpandOnHovering,
         setSidebarExtraCollapse: handleSidebarExtraCollapseChange,
         setSidebarExtraVisible: handleSidebarExtraVisibleChange,
         sidebarCollapse,
         sidebarEnable,
         sidebarExpandOnHover,
+        sidebarExpandOnHovering,
         sidebarExtraCollapse,
         sidebarExtraVisible,
       }}

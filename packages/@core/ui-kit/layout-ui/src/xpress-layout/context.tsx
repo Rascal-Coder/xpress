@@ -5,11 +5,13 @@ interface LayoutContextType {
   setSidebarCollapse: (value: boolean) => void;
   setSidebarEnable: (value: boolean) => void;
   setSidebarExpandOnHover: (value: boolean) => void;
+  setSidebarExpandOnHovering: (value: boolean) => void;
   setSidebarExtraCollapse: (value: boolean) => void;
   setSidebarExtraVisible: (value: boolean) => void;
   sidebarCollapse: boolean;
   sidebarEnable: boolean;
   sidebarExpandOnHover: boolean;
+  sidebarExpandOnHovering: boolean;
   sidebarExtraCollapse: boolean;
   sidebarExtraVisible: boolean;
 }

@@ -17,13 +17,12 @@ interface LayoutSlots {
   tabbar?: React.ReactNode;
 }
 
-// 添加useModel相关的状态控制props
-interface ModelStateProps {
+interface XpressLayoutProps extends BaseXpressLayoutProps, LayoutComponents {
+  children?: LayoutSlots;
   /** 侧边栏折叠状态改变回调 */
   onSidebarCollapseChange?: (collapse: boolean) => void;
   /** 侧边栏启用状态改变回调 */
   onSidebarEnableChange?: (enable: boolean) => void;
-
   /** 侧边栏hover展开状态改变回调 */
   onSidebarExpandOnHoverChange?: (expand: boolean) => void;
   /** 侧边栏额外内容折叠状态改变回调 */
@@ -31,6 +30,11 @@ interface ModelStateProps {
 
   /** 侧边栏额外内容显示状态改变回调 */
   onSidebarExtraVisibleChange?: (visible: boolean) => void;
+  /** Optional mouse leave handler for sidebar */
+  onSideMouseLeave?: () => void;
+
+  /** 切换侧边栏事件 */
+  onToggleSidebar: () => void;
   /** 侧边栏折叠状态 */
   sidebarCollapse?: boolean;
 
@@ -43,17 +47,6 @@ interface ModelStateProps {
   sidebarExtraCollapse?: boolean;
   /** 侧边栏额外内容显示状态 */
   sidebarExtraVisible?: boolean;
-}
-
-interface XpressLayoutProps
-  extends BaseXpressLayoutProps,
-    LayoutComponents,
-    ModelStateProps {
-  children?: LayoutSlots;
-  /** Optional mouse leave handler for sidebar */
-  onSideMouseLeave?: () => void;
-  /** 切换侧边栏事件 */
-  onToggleSidebar: () => void;
 }
 
 export type { LayoutComponents, LayoutSlots, XpressLayoutProps };
