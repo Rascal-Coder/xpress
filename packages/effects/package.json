@@ -10,9 +10,9 @@
   },
   "main": "index.js",
   "dependencies": {
-    "react": "^19.0.0"
+    "react": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "^19.0.1"
+    "@types/react": "catalog:"
   }
 }

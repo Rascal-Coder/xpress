@@ -24,10 +24,11 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
     "build:analyze": "turbo build:analyze",
     "prepare": "is-ci || husky",
-    "test:unit": "vitest run --dom",
+    "test:unit": "vitest run",
     "test:e2e": "turbo run test:e2e"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.1.0",
     "@types/node": "catalog:",
     "@xpress/cli": "workspace:*",
     "@xpress/commitlint-config": "workspace:*",
@@ -40,9 +41,9 @@
     "@xpress/vite-config": "workspace:*",
     "autoprefixer": "catalog:",
     "cross-env": "catalog:",
-    "happy-dom": "^15.11.7",
     "husky": "catalog:",
     "is-ci": "catalog:",
+    "jsdom": "^25.0.1",
     "lint-staged": "catalog:",
     "playwright": "^1.49.0",
     "rimraf": "catalog:",
@@ -60,7 +61,9 @@
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
-        "eslint": "*"
+        "eslint": "*",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
       }
     },
     "neverBuiltDependencies": [
