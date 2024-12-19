@@ -1078,6 +1078,9 @@ importers:
 
   scripts/cli:
     dependencies:
+      '@clack/prompts':
+        specifier: 'catalog:'
+        version: 0.8.2
       '@xpress/node-utils':
         specifier: workspace:*
         version: link:../../internal/node-utils

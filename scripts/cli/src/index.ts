@@ -5,6 +5,7 @@ import { cac } from 'cac';
 import { defineCheckCircularCommand } from './check-circular';
 import { defineDepcheckCommand } from './check-dep';
 import { defineCodeWorkspaceCommand } from './code-workspace';
+import { defineCommitCommand, defineCommitVerifyCommand } from './commit';
 import { defineLintCommand } from './lint';
 import { definePubLintCommand } from './publint';
 
@@ -25,6 +26,12 @@ try {
 
   // xpress check-dep
   defineDepcheckCommand(cli);
+
+  // xpress commit
+  defineCommitCommand(cli);
+
+  // xpress commit:verify
+  defineCommitVerifyCommand(cli);
 
   // Invalid command
   cli.on('command:*', () => {

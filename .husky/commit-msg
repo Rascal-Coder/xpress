@@ -1,6 +1,9 @@
-echo Start running commit-msg hook...
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-# Check whether the git commit information is standardized
-pnpm exec commitlint --edit "$1"
+echo "开始运行 commit-msg 钩子..."
 
-echo Run commit-msg hook done.
+# 使用 pnpm run 执行已定义的脚本
+pnpm run commit:verify
+
+echo "commit-msg 钩子运行完成。"
