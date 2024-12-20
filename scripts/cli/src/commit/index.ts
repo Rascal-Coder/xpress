@@ -1,5 +1,3 @@
-/* eslint-disable perfectionist/sort-objects */
-/* eslint-disable regexp/no-unused-capturing-group */
 import type { CAC } from 'cac';
 
 import type { Lang } from './locales';
@@ -9,7 +7,15 @@ import path from 'node:path';
 
 import { colors, execaCommand } from '@xpress/node-utils';
 
-import * as p from '@clack/prompts';
+import {
+  intro,
+  isCancel,
+  note,
+  outro,
+  select,
+  spinner,
+  text,
+} from '@clack/prompts';
 
 import { locales } from './locales';
 
@@ -20,53 +26,76 @@ import { locales } from './locales';
 export async function gitCommit(lang: Lang = 'en-us') {
   const { gitCommitMessages, gitCommitScopes, gitCommitTypes } = locales[lang];
 
-  p.intro(`${colors.blue('📝')} ${colors.green('Git Commit')}`);
+  // 开始提示
+  intro(`${colors.blue('📝')} ${gitCommitMessages.intro}`);
 
-  const typesChoices = gitCommitTypes.map(([value, msg]) => ({
-    label: `${value.padEnd(12)}${msg}`,
-    value,
-  }));
-
-  const scopesChoices = gitCommitScopes.map(([value, msg]) => ({
-    label: `${value.padEnd(30)} (${msg})`,
-    value,
-  }));
-
-  const result = await p.group({
-    types: () =>
-      p.select({
-        message: gitCommitMessages.types,
-        options: typesChoices,
-      }),
-    scope: () =>
-      p.select({
-        message: gitCommitMessages.scopes,
-        options: [{ label: '(不选择scope)', value: '' }, ...scopesChoices],
-      }),
-    description: () =>
-      p.text({
-        message: gitCommitMessages.description,
-        validate: (value) => {
-          if (!value) return '请输入提交描述';
-        },
-      }),
+  // 1. 选择提交类型
+  const type = await select({
+    message: gitCommitMessages.types,
+    options: gitCommitTypes.map(([value, msg]) => ({
+      label: `${value.padEnd(12)}: ${msg}`,
+      value,
+    })),
   });
 
-  if (p.isCancel(result)) {
-    p.cancel('操作已取消');
-    process.exit(0);
+  if (isCancel(type)) {
+    note(gitCommitMessages.canceled, 'red');
+    return;
   }
 
-  const breaking = result.description.startsWith('!') ? '!' : '';
-  const description = result.description.replace(/^!/, '').trim();
-  const scopePart = result.scope ? `(${result.scope})` : '';
-  const commitMsg = `${result.types}${scopePart}${breaking}: ${description}`;
-
-  await execaCommand(`git commit -m "${commitMsg}"`, {
-    stdio: 'inherit',
-    shell: true,
+  // 2. 选择提交范围
+  const scope = await select({
+    message: gitCommitMessages.scopes,
+    options: [
+      { label: gitCommitMessages.noScope, value: '' },
+      ...gitCommitScopes.map(([value, msg]) => ({
+        label: `${value.padEnd(30)}: ${msg}`,
+        value,
+      })),
+    ],
   });
-  p.outro(`${colors.green('✔')} 提交成功!`);
+
+  if (isCancel(scope)) {
+    note(gitCommitMessages.canceled, 'red');
+    return;
+  }
+
+  // 3. 输入提交描述
+  const description = await text({
+    message: gitCommitMessages.description,
+    placeholder: 'Enter a brief commit description...',
+    validate: (value) => {
+      if (!value) return gitCommitMessages.emptyDescription;
+      if (value.length > 100) return gitCommitMessages.descriptionTooLong;
+      return undefined;
+    },
+  });
+
+  if (isCancel(description)) {
+    note(gitCommitMessages.canceled, 'red');
+    return;
+  }
+
+  const breaking = description.startsWith('!') ? '!' : '';
+  const finalDescription = description.replace(/^!/, '').trim();
+  const scopePart = scope ? `(${scope})` : '';
+  const commitMsg = `${type}${scopePart}${breaking}: ${finalDescription}`;
+
+  const s = spinner();
+  s.start(gitCommitMessages.committing);
+
+  try {
+    await execaCommand(`git commit -m "${commitMsg}"`, {
+      shell: true,
+      stdio: 'inherit',
+    });
+    s.stop();
+    outro(gitCommitMessages.commitSuccess);
+  } catch (error) {
+    s.stop();
+    note(gitCommitMessages.commitFailed, 'red');
+    console.error(error);
+  }
 }
 
 /** Git commit message verify */
@@ -77,14 +106,14 @@ export async function gitCommitVerify(
   const { stdout: gitPath } = await execaCommand(
     'git rev-parse --show-toplevel',
   );
-  console.log(gitPath);
+
   const gitMsgPath = path.join(gitPath, '.git', 'COMMIT_EDITMSG');
+
   const commitMsg = readFileSync(gitMsgPath, 'utf8').trim();
 
   if (ignores.some((regExp) => regExp.test(commitMsg))) return;
 
-  const REG_EXP =
-    /(?<type>[a-z]+)(?:\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i;
+  const REG_EXP = /[a-z]+(?:\(.+\))?!?: .+/i;
 
   if (!REG_EXP.test(commitMsg)) {
     const errorMsg = locales[lang].gitCommitVerify;

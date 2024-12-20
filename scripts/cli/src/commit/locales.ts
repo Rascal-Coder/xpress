@@ -5,7 +5,16 @@ export type Lang = 'en-us' | 'zh-cn';
 export const locales = {
   'en-us': {
     gitCommitMessages: {
+      canceled: 'Commit process canceled.',
+      commitFailed:
+        '❌ Commit failed. Error occurred while committing changes.',
+      commitSuccess: '🎉 Commit successful!',
+      committing: 'Committing changes...',
       description: `Please enter a description (add prefix ${colors.yellow('!')} to indicate breaking change)`,
+      descriptionTooLong: 'The description must not exceed 100 characters.',
+      emptyDescription: 'The description cannot be empty.',
+      intro: 'Git Commit: Start creating your commit message.',
+      noScope: '(No scope)',
       scopes: 'Please select a scope',
       types: 'Please select a type',
     },
@@ -49,7 +58,15 @@ export const locales = {
   },
   'zh-cn': {
     gitCommitMessages: {
+      canceled: '提交过程已取消。',
+      commitFailed: '❌ 提交失败。提交更改时发生错误。',
+      commitSuccess: '🎉 提交成功！',
+      committing: '正在提交更改...',
       description: `请输入描述信息（${colors.yellow('!')}开头表示破坏性改动）`,
+      descriptionTooLong: '描述不能超过100个字符。',
+      emptyDescription: '描述不能为空。',
+      intro: 'Git 提交：开始创建您的提交信息。',
+      noScope: '(无范围)',
       scopes: '请选择提交范围',
       types: '请选择提交类型',
     },

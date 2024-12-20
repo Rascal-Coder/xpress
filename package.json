@@ -32,7 +32,6 @@
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",
     "@xpress/cli": "workspace:*",
-    "@xpress/commitlint-config": "workspace:*",
     "@xpress/eslint-config": "workspace:*",
     "@xpress/prettier-config": "workspace:*",
     "@xpress/stylelint-config": "workspace:*",
