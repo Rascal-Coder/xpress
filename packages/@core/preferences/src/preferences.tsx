@@ -217,7 +217,7 @@ export function PreferencesProvider({ children }: PreferencesProviderProps) {
 }
 
 // Hook for using preferences
-export function usePreferences() {
+export function usePreferencesContext() {
   const context = useContext(PreferencesContext);
   if (!context) {
     throw new Error('usePreferences must be used within a PreferencesProvider');

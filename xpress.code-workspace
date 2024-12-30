@@ -81,8 +81,8 @@
       "path": "packages/constants",
     },
     {
-      "name": "effects",
-      "path": "packages/effects",
+      "name": "@xpress/layouts",
+      "path": "packages/effects/layouts",
     },
     {
       "name": "@xpress/icons",

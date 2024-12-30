@@ -1,0 +1,26 @@
+{
+  "name": "@xpress/layouts",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@tanstack/react-router": "^1.92.6",
+    "@xpress-core/layout-ui": "workspace:*",
+    "@xpress-core/preferences": "workspace:*",
+    "@xpress-core/react-menu": "workspace:*",
+    "@xpress-core/typings": "workspace:*",
+    "react": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
+  }
+}

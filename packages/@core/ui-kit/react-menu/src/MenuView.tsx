@@ -5,7 +5,7 @@ import type { MenuProps } from './components/types';
 import Menu from './components/menu';
 import SubMenuView from './SubMenuView';
 
-interface Props extends MenuProps {
+interface Props extends Omit<MenuProps, 'children'> {
   menus: MenuRecordRaw[];
 }
 function MenuView({ collapse = false, menus, ...props }: Props) {

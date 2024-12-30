@@ -16,6 +16,7 @@
   "dependencies": {
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
+    "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
     "react-dom": "catalog:"
