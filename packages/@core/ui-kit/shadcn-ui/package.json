@@ -23,6 +23,7 @@
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-hover-card": "catalog:",
     "@radix-ui/react-popover": "catalog:",
     "@radix-ui/react-scroll-area": "catalog:",

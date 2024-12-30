@@ -17,6 +17,7 @@
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
+    "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "react": "catalog:"
   },

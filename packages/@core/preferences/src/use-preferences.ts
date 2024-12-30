@@ -85,6 +85,9 @@ function usePreferences() {
     return appPreferences.layout === 'header-nav';
   }, [appPreferences]);
 
+  const isHeaderMixedNav = useMemo(() => {
+    return appPreferences.layout === 'header-mixed-nav';
+  }, [appPreferences]);
   /**
    * @zh_CN 是否为混合导航模式
    */
@@ -214,6 +217,7 @@ function usePreferences() {
     globalSearchShortcutKey,
     isDark,
     isFullContent,
+    isHeaderMixedNav,
     isHeaderNav,
     isMixedNav,
     isMobile,
