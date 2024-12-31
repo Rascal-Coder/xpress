@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { SubMenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import CollapseTransition from '../collapse-transition';
 import {
-  type MenuContextType,
   MenuSymbols,
   SubMenuContext,
   type SubMenuContextType,
@@ -46,8 +44,8 @@ function SubMenu({
 
   const mouseInChild = useRef(false);
 
-  const [items, setItems] = useState<MenuContextType['items']>({});
-  const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
+  // const [items, setItems] = useState<MenuContextType['items']>({});
+  // const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
   // 确保必需的值存在
   if (!rootMenu) {
@@ -89,19 +87,19 @@ function SubMenu({
   const active = useMemo(() => {
     let isActive = false;
 
-    Object.values(items).forEach((item) => {
+    Object.values(rootMenu?.items).forEach((item) => {
       if (item.active) {
         isActive = true;
       }
     });
 
-    Object.values(subMenus).forEach((subItem) => {
+    Object.values(rootMenu?.subMenus).forEach((subItem) => {
       if (subItem.active) {
         isActive = true;
       }
     });
     return isActive;
-  }, [items, subMenus]);
+  }, [rootMenu?.items, rootMenu?.subMenus]);
 
   /**
    * 点击submenu展开/关闭

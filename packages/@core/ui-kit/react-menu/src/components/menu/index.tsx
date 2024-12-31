@@ -282,9 +282,11 @@ export default function Menu(props: Props) {
       handleResize();
     }
   }, [size, mode, handleResize]);
+
   useEffect(() => {
     initMenu();
   }, [initMenu]);
+
   const baseProviderValue = useMemo(() => {
     return {
       addSubMenu,
