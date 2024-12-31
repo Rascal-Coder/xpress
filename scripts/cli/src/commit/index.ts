@@ -7,15 +7,7 @@ import path from 'node:path';
 
 import { colors, execaCommand } from '@xpress/node-utils';
 
-import {
-  intro,
-  isCancel,
-  note,
-  outro,
-  select,
-  spinner,
-  text,
-} from '@clack/prompts';
+import { intro, isCancel, note, outro, select, text } from '@clack/prompts';
 
 import { locales } from './locales';
 
@@ -81,8 +73,8 @@ export async function gitCommit(lang: Lang = 'en-us') {
   const scopePart = scope ? `(${scope})` : '';
   const commitMsg = `${type}${scopePart}${breaking}: ${finalDescription}`;
 
-  const s = spinner();
-  s.start(gitCommitMessages.committing);
+  // const s = spinner();
+  // s.start(gitCommitMessages.committing);
 
   try {
     await execaCommand(`git commit -m "${commitMsg}"`, {
