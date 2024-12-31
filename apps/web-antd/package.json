@@ -14,7 +14,10 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.92.6",
+    "@tanstack/router-devtools": "^1.92.11",
     "@xpress-core/layout-ui": "workspace:*",
+    "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
@@ -24,6 +27,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@xpress-core/typings": "workspace:*",
     "@xpress/tailwind-config": "workspace:*",
     "@xpress/utils": "workspace:*",
     "@xpress/vite-config": "workspace:*",

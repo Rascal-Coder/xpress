@@ -2,7 +2,7 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { type MenuProps, MenuView } from '@xpress-core/react-menu';
 
-interface Props extends MenuProps {
+interface Props extends Omit<MenuProps, 'children'> {
   menus: MenuRecordRaw[];
 }
 function Menu({

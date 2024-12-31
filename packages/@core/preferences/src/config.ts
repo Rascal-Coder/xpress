@@ -18,7 +18,7 @@ const defaultPreferences: Preferences = {
     layout: 'sidebar-nav',
     locale: 'zh-CN',
     loginExpiredMode: 'page',
-    name: 'Vben Admin',
+    name: 'Xpress Admin',
     preferencesButtonPosition: 'auto',
     watermark: false,
   },
