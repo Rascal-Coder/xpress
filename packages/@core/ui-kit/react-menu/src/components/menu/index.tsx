@@ -4,7 +4,7 @@ import { useNamespace } from '@xpress-core/hooks';
 import { Ellipsis } from '@xpress-core/icons';
 import { cn, isHttpUrl } from '@xpress-core/shared/utils';
 
-import { useSize } from 'ahooks';
+import { useDebounceFn, useSize } from 'ahooks';
 import { produce } from 'immer';
 import React, {
   useCallback,
@@ -24,7 +24,7 @@ import {
 import { useMenuStyle } from '../hooks';
 import SubMenu from '../sub-menu';
 
-import './styles.module.scss';
+import './styles.scss';
 
 interface Props extends MenuProps {}
 
@@ -199,19 +199,6 @@ export default function Menu(props: Props) {
     });
   }, [subMenus, getActivePaths, openMenu]);
 
-  const updateActiveName = useCallback(
-    (val: string) => {
-      const itemsInData = items;
-      const item =
-        itemsInData[val] ||
-        (activePath && itemsInData[activePath]) ||
-        itemsInData[defaultActive || ''];
-
-      setActivePath(item ? item.path : val);
-    },
-    [items, activePath, defaultActive],
-  );
-
   function calcMenuItemWidth(menuItem: HTMLElement) {
     const computedStyle = getComputedStyle(menuItem);
     const marginLeft = Number.parseInt(computedStyle.marginLeft, 10);
@@ -265,6 +252,10 @@ export default function Menu(props: Props) {
     }
   }, [sliceIndex, calcSliceIndex, updateSliceIndex]);
 
+  const { run: debouncedHandleResize } = useDebounceFn(handleResize, {
+    wait: 200,
+  });
+
   useEffect(() => {
     if (collapse) {
       setOpenedMenus([]);
@@ -272,16 +263,19 @@ export default function Menu(props: Props) {
   }, [collapse]);
 
   useEffect(() => {
-    if (!items[defaultActive]) {
-      setActivePath(defaultActive);
-    }
-    updateActiveName(defaultActive);
-  }, [defaultActive, items, updateActiveName]);
+    const itemsInData = items;
+    const item =
+      itemsInData[defaultActive] ||
+      (activePath && itemsInData[activePath]) ||
+      itemsInData[defaultActive || ''];
+    setActivePath(item ? item.path : defaultActive);
+  }, [defaultActive, items, activePath]);
+
   useEffect(() => {
     if (mode === 'horizontal' && size) {
-      handleResize();
+      debouncedHandleResize();
     }
-  }, [size, mode, handleResize]);
+  }, [size, mode, debouncedHandleResize]);
 
   useEffect(() => {
     initMenu();
@@ -295,10 +289,28 @@ export default function Menu(props: Props) {
     };
   }, [addSubMenu, mouseInChild, removeSubMenu]);
 
+  const activeMenus = useMemo(() => {
+    const result = new Set<string>();
+
+    if (activePath) {
+      result.add(activePath);
+      // 使用 path 分割来获取父路径，而不是依赖 items 中的 parentPaths
+      const pathParts = activePath.split('/').filter(Boolean);
+      let currentPath = '';
+      pathParts.forEach((part) => {
+        currentPath = `${currentPath}/${part}`;
+        result.add(currentPath);
+      });
+    }
+
+    return result;
+  }, [activePath]);
+
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
       ...baseProviderValue,
-      activePath,
+      activeMenus,
+      // activePath,
       addMenuItem,
       closeMenu,
       handleMenuItemClick,
@@ -316,7 +328,8 @@ export default function Menu(props: Props) {
     };
   }, [
     baseProviderValue,
-    activePath,
+    // activePath,
+    activeMenus,
     addMenuItem,
     closeMenu,
     handleMenuItemClick,

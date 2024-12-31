@@ -17,10 +17,10 @@ interface Props extends MenuItemProps {
 
 function MenuItem(props: Props) {
   const {
-    activeIcon,
+    // activeIcon,
     className,
     disabled = false,
-    icon,
+    // icon,
     onClick,
     path,
     title,
@@ -32,13 +32,13 @@ function MenuItem(props: Props) {
   const subMenu = useSubMenuContext();
   const { parentMenu, parentPaths } = useMenu();
 
-  const active = useMemo(() => {
-    return rootMenu?.activePath === path;
-  }, [path, rootMenu?.activePath]);
+  // const active = useMemo(() => {
+  //   return rootMenu?.activeMenus.has(path);
+  // }, [path, rootMenu?.activeMenus]);
 
-  const menuIcon = useMemo(() => {
-    return active ? activeIcon || icon : icon;
-  }, [active, activeIcon, icon]);
+  // const menuIcon = useMemo(() => {
+  //   return active ? activeIcon || icon : icon;
+  // }, [active, activeIcon, icon]);
 
   const isTopLevelMenuItem = useMemo(() => {
     return parentMenu?.type === MenuSymbols.MENU;
@@ -80,7 +80,6 @@ function MenuItem(props: Props) {
       path,
     });
     onClick?.({
-      active,
       parentPaths,
       path,
     });
@@ -88,35 +87,31 @@ function MenuItem(props: Props) {
 
   useEffect(() => {
     subMenu.addSubMenu({
-      active,
       parentPaths,
       path,
     });
     rootMenu.addMenuItem({
-      active,
       parentPaths,
       path,
     });
     return () => {
       subMenu.removeSubMenu({
-        active,
         parentPaths,
         path,
       });
       rootMenu.removeMenuItem({
-        active,
         parentPaths,
         path,
       });
     };
-  }, [active, parentPaths, path, rootMenu, subMenu]);
+  }, [parentPaths, path, rootMenu, subMenu]);
 
   return (
     <li
       className={cn(
         rootMenu.theme,
         b(),
-        is('active', active),
+        // is('active', active),
         is('disabled', disabled),
         is('collapse-show-title', collapseShowTitle),
         className,
@@ -134,7 +129,7 @@ function MenuItem(props: Props) {
               <XpressIcon
                 className={nsMenu.e('icon')}
                 fallback
-                icon={menuIcon}
+                // icon={menuIcon}
               ></XpressIcon>
               {children}
               {collapseShowTitle && (
@@ -153,7 +148,7 @@ function MenuItem(props: Props) {
           <XpressIcon
             className={nsMenu.e('icon')}
             fallback
-            icon={menuIcon}
+            // icon={menuIcon}
           ></XpressIcon>
           {children}
           {title}

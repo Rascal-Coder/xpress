@@ -89,10 +89,10 @@ export async function gitCommit(lang: Lang = 'en-us') {
       shell: true,
       stdio: 'inherit',
     });
-    s.stop();
+    // s.stop();
     outro(gitCommitMessages.commitSuccess);
   } catch (error) {
-    s.stop();
+    // s.stop();
     note(gitCommitMessages.commitFailed, 'red');
     console.error(error);
   }

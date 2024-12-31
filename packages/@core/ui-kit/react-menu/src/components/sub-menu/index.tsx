@@ -24,6 +24,7 @@ interface Props extends SubMenuProps {
   className?: string;
   isSubMenuMore?: boolean;
 }
+
 function SubMenu({
   activeIcon,
   className,
@@ -43,9 +44,6 @@ function SubMenu({
   const subMenuStyle = useMenuStyle(subMenu);
 
   const mouseInChild = useRef(false);
-
-  // const [items, setItems] = useState<MenuContextType['items']>({});
-  // const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
   // 确保必需的值存在
   if (!rootMenu) {
@@ -55,9 +53,15 @@ function SubMenu({
   const opened = useMemo(() => {
     return rootMenu?.openedMenus.includes(path);
   }, [path, rootMenu?.openedMenus]);
+
+  const active = useMemo(() => {
+    return rootMenu.activeMenus.has(path);
+  }, [rootMenu.activeMenus, path]);
+
   const isTopLevelMenuSubmenu = useMemo(() => {
     return parentMenu?.type === MenuSymbols.MENU;
   }, [parentMenu?.type]);
+
   const mode = useMemo(() => {
     return rootMenu?.props.mode ?? 'vertical';
   }, [rootMenu?.props.mode]);
@@ -84,26 +88,10 @@ function SubMenu({
     };
   }, [isFirstLevel, mode]);
 
-  const active = useMemo(() => {
-    let isActive = false;
+  const menuIcon = useMemo(() => {
+    return active ? activeIcon || icon : icon;
+  }, [active, activeIcon, icon]);
 
-    Object.values(rootMenu?.items).forEach((item) => {
-      if (item.active) {
-        isActive = true;
-      }
-    });
-
-    Object.values(rootMenu?.subMenus).forEach((subItem) => {
-      if (subItem.active) {
-        isActive = true;
-      }
-    });
-    return isActive;
-  }, [rootMenu?.items, rootMenu?.subMenus]);
-
-  /**
-   * 点击submenu展开/关闭
-   */
   function handleClick() {
     const mode = rootMenu?.props.mode;
     if (
@@ -117,7 +105,7 @@ function SubMenu({
     }
 
     rootMenu?.handleSubMenuClick({
-      active,
+      // active,
       parentPaths,
       path,
     });
@@ -169,6 +157,7 @@ function SubMenu({
     },
     [disabled, subMenu, rootMenu, path, parentPaths],
   );
+
   function handleMouseleave(deepDispatch = false) {
     if (
       !rootMenu?.props.collapse &&
@@ -184,6 +173,7 @@ function SubMenu({
     if (subMenu) {
       subMenu.mouseInChild.current = false;
     }
+
     timer.current = setTimeout(() => {
       !mouseInChild.current && rootMenu?.closeMenu(path, parentPaths);
     }, 300);
@@ -192,46 +182,30 @@ function SubMenu({
       subMenu?.handleMouseleave?.(true);
     }
   }
-  const menuIcon = useMemo(() => {
-    return active ? activeIcon || icon : icon;
-  }, [active, activeIcon, icon]);
 
   useEffect(() => {
-    subMenu?.addSubMenu({
-      active,
+    const subMenuInfo = {
       parentPaths,
       path,
-    });
-    rootMenu?.addSubMenu({
-      active,
-      parentPaths,
-      path,
-    });
-    return () => {
-      subMenu?.removeSubMenu({
-        active,
-        parentPaths,
-        path,
-      });
-      rootMenu?.removeSubMenu({
-        active,
-        parentPaths,
-        path,
-      });
     };
-  }, [active, menuIcon, parentPaths, path, rootMenu, subMenu]);
+    rootMenu?.addSubMenu(subMenuInfo);
+    return () => {
+      rootMenu?.removeSubMenu(subMenuInfo);
+    };
+  }, [parentPaths, path, rootMenu]);
+
   const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
     return {
-      addSubMenu: subMenu?.addSubMenu ?? rootMenu.addSubMenu,
+      addSubMenu: subMenu?.addSubMenu ?? parentMenu.addSubMenu,
       handleParentMouseEnter: handleMouseEnter,
       level: (subMenu?.level ?? 0) + 1,
       mouseInChild,
-      parent: subMenu ?? rootMenu,
+      parent: parentMenu,
       path,
-      removeSubMenu: subMenu?.removeSubMenu ?? rootMenu.removeSubMenu,
+      removeSubMenu: subMenu?.removeSubMenu ?? parentMenu.removeSubMenu,
       type: MenuSymbols.SUBMENU,
     };
-  }, [subMenu, rootMenu, handleMouseEnter, path]);
+  }, [subMenu, parentMenu, handleMouseEnter, path, mouseInChild]);
 
   return (
     <SubMenuContext.Provider value={subMenuProviderValue}>

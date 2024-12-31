@@ -10,23 +10,25 @@ export const MenuSymbols = {
 } as const;
 
 // 基础接口，包含共同的属性
-interface BaseMenuContext {
-  addSubMenu: (item: MenuItemRegistered) => void;
+interface BaseContextType {
+  addSubMenu: (subMenu: MenuItemRegistered) => void;
   mouseInChild: React.MutableRefObject<boolean>;
-  removeSubMenu: (item: MenuItemRegistered) => void;
+  removeSubMenu: (subMenu: MenuItemRegistered) => void;
 }
 
 // 继承基础接口，添加特定属性
-interface MenuContextType extends BaseMenuContext {
-  activePath: string;
+interface MenuContextType extends BaseContextType {
+  activeMenus: Set<string>;
+  // activePath: string;
   addMenuItem: (item: MenuItemRegistered) => void;
-  closeMenu: (path: string, parentLinks: string[]) => void;
-  handleMenuItemClick: (item: MenuItemClicked) => void;
-  handleSubMenuClick: (subMenu: MenuItemRegistered) => void;
+  closeMenu: (path: string, parentPaths: string[]) => void;
+  handleMenuItemClick: (data: MenuItemClicked) => void;
+  handleSubMenuClick: (data: MenuItemRegistered) => void;
   isMenuPopup: boolean;
   items: Record<string, MenuItemRegistered>;
   openedMenus: string[];
-  openMenu: (path: string, parentLinks: string[]) => void;
+  openMenu: (path: string, parentPaths: string[]) => void;
+  path: string;
   props: MenuProps;
   removeMenuItem: (item: MenuItemRegistered) => void;
   subMenus: Record<string, MenuItemRegistered>;
@@ -34,7 +36,7 @@ interface MenuContextType extends BaseMenuContext {
   type: typeof MenuSymbols.MENU;
 }
 
-interface SubMenuContextType extends BaseMenuContext {
+interface SubMenuContextType extends BaseContextType {
   handleMouseleave?: (deepDispatch: boolean) => void;
   handleParentMouseEnter?: (
     event: React.FocusEvent | React.MouseEvent,
@@ -47,13 +49,12 @@ interface SubMenuContextType extends BaseMenuContext {
 }
 
 // Context 创建和 hooks
-export const MenuContext = createContext<MenuContextType | undefined>(
-  undefined,
+export const MenuContext = createContext<MenuContextType>(
+  {} as MenuContextType,
 );
-export const SubMenuContext = createContext<SubMenuContextType | undefined>(
-  undefined,
+export const SubMenuContext = createContext<SubMenuContextType>(
+  {} as SubMenuContextType,
 );
-
 // 类型保护函数
 export function isMenuContext(
   context: MenuContextType | SubMenuContextType,

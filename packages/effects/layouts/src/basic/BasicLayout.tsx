@@ -8,6 +8,7 @@ import {
 } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
 
+import { useRouter } from '@tanstack/react-router';
 import { useMemo } from 'react';
 
 import Copyright from './copyright';
@@ -36,6 +37,8 @@ function BasicLayout({ sidebarMenus, content }: Props) {
     sidebarCollapsed,
     theme,
   } = usePreferences();
+  const router = useRouter();
+  const defaultActive = router.state.location.pathname;
   const { preferences, updatePreferences } = usePreferencesContext();
   const sidebarTheme = useMemo(() => {
     const dark = isDark || preferences.theme.semiDarkSidebar;
@@ -154,6 +157,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
           // defaultOpenKeys={sidebarActive}
+          defaultActive={defaultActive}
           menus={sidebarMenus}
           mode="vertical"
           onOpen={handleOpen}
