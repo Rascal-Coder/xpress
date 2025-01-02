@@ -14,6 +14,7 @@ import React, {
   useState,
 } from 'react';
 
+import SubMenuView from '../../SubMenuView';
 import {
   MenuContext,
   type MenuContextType,
@@ -65,13 +66,12 @@ export default function Menu(props: Props) {
 
   const getActivePaths = useCallback(() => {
     const activeItem = activePath && items[activePath];
-
     if (!activeItem || mode === 'horizontal' || collapse) {
       return [];
     }
 
     return activeItem.parentPaths;
-  }, [activePath, items, mode, collapse]);
+  }, [activePath, collapse, items, mode]);
   /**
    * 点击展开菜单
    */
@@ -190,7 +190,6 @@ export default function Menu(props: Props) {
    */
   const initMenu = useCallback(() => {
     const parentPaths = getActivePaths();
-
     // 展开该菜单项的路径上所有子菜单
     // expand all subMenus of the menu item
     parentPaths.forEach((path) => {
@@ -278,8 +277,58 @@ export default function Menu(props: Props) {
   }, [size, mode, debouncedHandleResize]);
 
   useEffect(() => {
-    initMenu();
-  }, [initMenu]);
+    const registerSubMenus = (
+      children: any[] | React.ReactNode,
+      parentPath = '',
+    ) => {
+      // 如果children是数组对象，需要先转换成SubMenuView组件
+      if (
+        Array.isArray(children) &&
+        typeof children[0] === 'object' &&
+        !React.isValidElement(children[0])
+      ) {
+        children = children.map((child) => (
+          <SubMenuView key={child.path} menu={child} />
+        ));
+      }
+
+      React.Children.forEach(children, (child) => {
+        if (!React.isValidElement(child)) return;
+
+        if (child.type === SubMenuView) {
+          const typedChild = child as React.ReactElement<
+            ReturnType<typeof SubMenuView>['props']
+          >;
+          const path = typedChild.props.menu.path;
+
+          setSubMenus(
+            produce((draft) => {
+              draft[path] = {
+                active: false,
+                parentPaths: parentPath ? [parentPath] : [],
+                path,
+              };
+            }),
+          );
+
+          if (typedChild.props.menu.children?.length) {
+            registerSubMenus(typedChild.props.menu.children, path);
+          }
+        }
+      });
+    };
+
+    registerSubMenus(children);
+    return () => {
+      setSubMenus({});
+    };
+  }, [children]);
+
+  useEffect(() => {
+    if (Object.keys(subMenus).length > 0) {
+      initMenu();
+    }
+  }, [items, subMenus, initMenu]);
 
   const baseProviderValue = useMemo(() => {
     return {
@@ -334,6 +383,7 @@ export default function Menu(props: Props) {
       type: MenuSymbols.SUBMENU,
     };
   }, [baseProviderValue, menuProviderValue]);
+
   return (
     <MenuContext.Provider value={menuProviderValue}>
       <SubMenuContext.Provider value={subMenuProviderValue}>

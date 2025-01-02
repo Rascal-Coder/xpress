@@ -15,7 +15,7 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { lazy, memo, Suspense } from 'react';
 
 // 懒加载组件
-const Dashboard = lazy(() => import('./pages/Dashboard'));
+// const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Analysis = lazy(() => import('./pages/Analysis'));
 const Workbench = lazy(() => import('./pages/Workbench'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -25,16 +25,16 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const menus: MenuRecordRaw[] = [
   {
     name: '仪表盘',
-    path: '/dashboard',
+    path: '/',
     icon: 'DashboardIcon',
     children: [
       {
         name: '分析页',
-        path: '/dashboard/analysis',
+        path: '/analysis',
       },
       {
         name: '工作台',
-        path: '/dashboard/workbench',
+        path: '/workbench',
         badge: '新',
         badgeType: 'normal',
         badgeVariants: 'primary',
@@ -44,7 +44,7 @@ const menus: MenuRecordRaw[] = [
   {
     name: '系统设置',
     path: '/settings',
-    icon: 'SettingsIcon',
+    // icon: 'SettingsIcon',
   },
 ];
 
@@ -72,25 +72,21 @@ const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   beforeLoad: () => {
-    throw redirect({ to: '/dashboard' });
+    throw redirect({
+      to: '/analysis',
+    });
   },
 });
 
 // 定义子路由
-const dashboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: 'dashboard',
-  component: Dashboard,
-});
-
 const analysisRoute = createRoute({
-  getParentRoute: () => dashboardRoute,
+  getParentRoute: () => rootRoute,
   path: 'analysis',
   component: Analysis,
 });
 
 const workbenchRoute = createRoute({
-  getParentRoute: () => dashboardRoute,
+  getParentRoute: () => rootRoute,
   path: 'workbench',
   component: Workbench,
 });
@@ -104,7 +100,8 @@ const settingsRoute = createRoute({
 // 创建路由树
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  dashboardRoute.addChildren([analysisRoute, workbenchRoute]),
+  analysisRoute,
+  workbenchRoute,
   settingsRoute,
 ]);
 

@@ -4,7 +4,7 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import CollapseTransition from '../collapse-transition';
 import {
@@ -188,58 +188,6 @@ function SubMenu({
       subMenu?.handleMouseleave?.(true);
     }
   }
-  // TODO
-  // const subMenuInfo = useRef({
-  //   active,
-  //   parentPaths,
-  //   path,
-  // });
-  // useEffect(() => {
-  //   rootMenu?.addSubMenu(subMenuInfo.current);
-  //   subMenu.addSubMenu(subMenuInfo.current);
-  //   return () => {
-  //     rootMenu?.removeSubMenu(subMenuInfo.current);
-  //     subMenu.removeSubMenu(subMenuInfo.current);
-  //   };
-  // }, [parentPaths, path, rootMenu, subMenu]);
-
-  // const [subMenuData, setSubMenuData] = useState({
-  //   active: false,
-  //   parentPaths: [] as string[],
-  //   path: '',
-  // });
-
-  // useEffect(() => {
-  //   setSubMenuData({ active, parentPaths, path });
-  // }, [active, parentPaths, path]);
-
-  // 使用 useRef 存储注册数据
-  const registryData = useRef({
-    active: false,
-    parentPaths: [] as string[],
-    path: '',
-  });
-
-  // 更新数据但不触发重渲染
-  useEffect(() => {
-    registryData.current = {
-      active,
-      parentPaths,
-      path,
-    };
-  }, [active, parentPaths, path]);
-
-  // 只在挂载和卸载时注册/注销
-  useEffect(() => {
-    rootMenu?.addSubMenu(registryData.current);
-    subMenu.addSubMenu(registryData.current);
-
-    return () => {
-      rootMenu?.removeSubMenu(registryData.current);
-      subMenu.removeSubMenu(registryData.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 空依赖数组，只在挂载和卸载时执行
 
   const subMenuProviderValue = useMemo<SubMenuContextType>(
     () => ({
@@ -295,7 +243,7 @@ function SubMenu({
                 isMenuMore={isSubMenuMore}
                 isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
                 level={currentLevel}
-                onClick={handleClick}
+                menuItemClick={handleClick}
                 path={path}
                 title={title}
               />
@@ -323,12 +271,12 @@ function SubMenu({
               isMenuMore={isSubMenuMore}
               isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
               level={currentLevel}
-              onClick={handleClick}
+              menuItemClick={handleClick}
               path={path}
               title={title}
             />
             {content}
-            {opened && (
+            {
               <CollapseTransition>
                 <ul
                   className={cn(nsMenu.b(), is('rounded', rounded))}
@@ -337,7 +285,10 @@ function SubMenu({
                   {children}
                 </ul>
               </CollapseTransition>
-            )}
+            }
+            {/* {opened && (
+
+            )} */}
           </>
         )}
       </li>

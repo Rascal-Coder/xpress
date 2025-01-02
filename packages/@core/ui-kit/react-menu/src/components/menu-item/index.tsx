@@ -4,10 +4,10 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressIcon, XpressTooltip } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 
 import { MenuSymbols } from '../contexts';
-import { useMenu, useMenuContext, useSubMenuContext } from '../hooks';
+import { useMenu, useMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
 
 interface Props extends MenuItemProps {
@@ -20,17 +20,14 @@ function MenuItem(props: Props) {
     className,
     disabled = false,
     icon,
-    onClick,
+    menuItemClick,
     path,
     title,
   } = props;
   const { b, e, is } = useNamespace('menu-item');
   const nsMenu = useNamespace('menu');
   const rootMenu = useMenuContext();
-  const subMenu = useSubMenuContext();
   const { parentMenu, parentPaths } = useMenu();
-
-  // const active = rootMenu?.activePath === path;
   const active = useMemo(() => {
     return rootMenu?.activePath === path;
   }, [rootMenu?.activePath, path]);
@@ -38,8 +35,6 @@ function MenuItem(props: Props) {
   const menuIcon = useMemo(() => {
     return active ? activeIcon || icon : icon;
   }, [active, activeIcon, icon]);
-
-  // const menuIcon = active ? activeIcon || icon : icon;
   const isTopLevelMenuItem = useMemo(() => {
     return parentMenu?.type === MenuSymbols.MENU;
   }, [parentMenu?.type]);
@@ -79,50 +74,22 @@ function MenuItem(props: Props) {
       parentPaths,
       path,
     });
-    onClick?.({
+    rootMenu.addMenuItem({
+      active,
+      parentPaths,
+      path,
+    });
+    rootMenu.addSubMenu({
+      active,
+      parentPaths,
+      path,
+    });
+    menuItemClick?.({
       active,
       parentPaths,
       path,
     });
   };
-  // TODO
-  // const [menuItemData, setMenuItemData] = useState({
-  //   active: false,
-  //   parentPaths: [] as string[],
-  //   path: '',
-  // });
-
-  // useEffect(() => {
-  //   setMenuItemData({ active, parentPaths, path });
-  // }, [active, parentPaths, path]);
-
-  // 使用 useRef 存储注册数据
-  const registryData = useRef({
-    active: false,
-    parentPaths: [] as string[],
-    path: '',
-  });
-
-  // 更新数据但不触发重渲染
-  useEffect(() => {
-    registryData.current = {
-      active,
-      parentPaths,
-      path,
-    };
-  }, [active, parentPaths, path]);
-
-  // 只在挂载和卸载时注册/注销
-  useEffect(() => {
-    subMenu.addSubMenu(registryData.current);
-    rootMenu.addMenuItem(registryData.current);
-
-    return () => {
-      subMenu.removeSubMenu(registryData.current);
-      rootMenu.removeMenuItem(registryData.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // 空依赖数组，只在挂载和卸载时执行
 
   return (
     <li

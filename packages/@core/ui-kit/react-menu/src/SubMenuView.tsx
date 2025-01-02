@@ -18,6 +18,10 @@ function SubMenuView({ menu }: Props) {
       menu.children.length > 0,
     [menu],
   );
+  // const menuItemClick = useCallback(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.info('menuItemClick', menu);
+  // }, [menu]);
   return hasChildren ? (
     <SubMenu
       activeIcon={menu.activeIcon}
@@ -46,6 +50,7 @@ function SubMenuView({ menu }: Props) {
       badgeVariants={menu.badgeVariants}
       icon={menu.icon}
       key={menu.path}
+      // menuItemClick={menuItemClick}
       path={menu.path}
       title={menu.name}
     ></MenuItem>
