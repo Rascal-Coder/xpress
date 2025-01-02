@@ -289,28 +289,10 @@ export default function Menu(props: Props) {
     };
   }, [addSubMenu, mouseInChild, removeSubMenu]);
 
-  const activeMenus = useMemo(() => {
-    const result = new Set<string>();
-
-    if (activePath) {
-      result.add(activePath);
-      // 使用 path 分割来获取父路径，而不是依赖 items 中的 parentPaths
-      const pathParts = activePath.split('/').filter(Boolean);
-      let currentPath = '';
-      pathParts.forEach((part) => {
-        currentPath = `${currentPath}/${part}`;
-        result.add(currentPath);
-      });
-    }
-
-    return result;
-  }, [activePath]);
-
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
       ...baseProviderValue,
-      activeMenus,
-      // activePath,
+      activePath,
       addMenuItem,
       closeMenu,
       handleMenuItemClick,
@@ -328,8 +310,7 @@ export default function Menu(props: Props) {
     };
   }, [
     baseProviderValue,
-    // activePath,
-    activeMenus,
+    activePath,
     addMenuItem,
     closeMenu,
     handleMenuItemClick,
@@ -346,8 +327,8 @@ export default function Menu(props: Props) {
 
   const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
     return {
-      ...baseProviderValue,
       level: 1,
+      ...baseProviderValue,
       parent: menuProviderValue,
       path: '/',
       type: MenuSymbols.SUBMENU,

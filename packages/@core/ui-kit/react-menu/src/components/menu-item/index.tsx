@@ -4,27 +4,25 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressIcon, XpressTooltip } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { MenuSymbols } from '../contexts';
 import { useMenu, useMenuContext, useSubMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
 
 interface Props extends MenuItemProps {
-  children: React.ReactNode;
   className?: string;
 }
 
 function MenuItem(props: Props) {
   const {
-    // activeIcon,
+    activeIcon,
     className,
     disabled = false,
-    // icon,
+    icon,
     onClick,
     path,
     title,
-    children,
   } = props;
   const { b, e, is } = useNamespace('menu-item');
   const nsMenu = useNamespace('menu');
@@ -32,14 +30,16 @@ function MenuItem(props: Props) {
   const subMenu = useSubMenuContext();
   const { parentMenu, parentPaths } = useMenu();
 
-  // const active = useMemo(() => {
-  //   return rootMenu?.activeMenus.has(path);
-  // }, [path, rootMenu?.activeMenus]);
+  // const active = rootMenu?.activePath === path;
+  const active = useMemo(() => {
+    return rootMenu?.activePath === path;
+  }, [rootMenu?.activePath, path]);
 
-  // const menuIcon = useMemo(() => {
-  //   return active ? activeIcon || icon : icon;
-  // }, [active, activeIcon, icon]);
+  const menuIcon = useMemo(() => {
+    return active ? activeIcon || icon : icon;
+  }, [active, activeIcon, icon]);
 
+  // const menuIcon = active ? activeIcon || icon : icon;
   const isTopLevelMenuItem = useMemo(() => {
     return parentMenu?.type === MenuSymbols.MENU;
   }, [parentMenu?.type]);
@@ -80,38 +80,56 @@ function MenuItem(props: Props) {
       path,
     });
     onClick?.({
+      active,
       parentPaths,
       path,
     });
   };
+  // TODO
+  // const [menuItemData, setMenuItemData] = useState({
+  //   active: false,
+  //   parentPaths: [] as string[],
+  //   path: '',
+  // });
 
+  // useEffect(() => {
+  //   setMenuItemData({ active, parentPaths, path });
+  // }, [active, parentPaths, path]);
+
+  // 使用 useRef 存储注册数据
+  const registryData = useRef({
+    active: false,
+    parentPaths: [] as string[],
+    path: '',
+  });
+
+  // 更新数据但不触发重渲染
   useEffect(() => {
-    subMenu.addSubMenu({
+    registryData.current = {
+      active,
       parentPaths,
       path,
-    });
-    rootMenu.addMenuItem({
-      parentPaths,
-      path,
-    });
-    return () => {
-      subMenu.removeSubMenu({
-        parentPaths,
-        path,
-      });
-      rootMenu.removeMenuItem({
-        parentPaths,
-        path,
-      });
     };
-  }, [parentPaths, path, rootMenu, subMenu]);
+  }, [active, parentPaths, path]);
+
+  // 只在挂载和卸载时注册/注销
+  useEffect(() => {
+    subMenu.addSubMenu(registryData.current);
+    rootMenu.addMenuItem(registryData.current);
+
+    return () => {
+      subMenu.removeSubMenu(registryData.current);
+      rootMenu.removeMenuItem(registryData.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // 空依赖数组，只在挂载和卸载时执行
 
   return (
     <li
       className={cn(
         rootMenu.theme,
         b(),
-        // is('active', active),
+        is('active', active),
         is('disabled', disabled),
         is('collapse-show-title', collapseShowTitle),
         className,
@@ -119,7 +137,6 @@ function MenuItem(props: Props) {
       onClick={handleClick}
       role="menuitem"
     >
-      {/* {children} */}
       {showTooltip ? (
         <XpressTooltip
           contentClass={rootMenu.theme}
@@ -129,9 +146,9 @@ function MenuItem(props: Props) {
               <XpressIcon
                 className={nsMenu.e('icon')}
                 fallback
-                // icon={menuIcon}
+                icon={menuIcon}
               ></XpressIcon>
-              {children}
+              {/* {children} */}
               {collapseShowTitle && (
                 <span className={cn(nsMenu.e('name'))}>{title}</span>
               )}
@@ -148,9 +165,9 @@ function MenuItem(props: Props) {
           <XpressIcon
             className={nsMenu.e('icon')}
             fallback
-            // icon={menuIcon}
+            icon={menuIcon}
           ></XpressIcon>
-          {children}
+          {/* {children} */}
           {title}
         </div>
       )}

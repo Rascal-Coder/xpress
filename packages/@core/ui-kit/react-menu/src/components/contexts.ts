@@ -18,8 +18,7 @@ interface BaseContextType {
 
 // 继承基础接口，添加特定属性
 interface MenuContextType extends BaseContextType {
-  activeMenus: Set<string>;
-  // activePath: string;
+  activePath: string;
   addMenuItem: (item: MenuItemRegistered) => void;
   closeMenu: (path: string, parentPaths: string[]) => void;
   handleMenuItemClick: (data: MenuItemClicked) => void;

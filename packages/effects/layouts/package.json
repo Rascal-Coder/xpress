@@ -13,7 +13,7 @@
     }
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.92.6",
+    "@tanstack/react-router": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",

@@ -61,6 +61,7 @@ interface MenuProps {
   theme?: ThemeModeType;
 }
 interface MenuItemRegistered {
+  active: boolean;
   parentPaths: string[];
   path: string;
 }

@@ -47,7 +47,7 @@ function SubMenuContent({
   }, [rootMenu.props.mode]);
 
   const showArrowIcon = useMemo(() => {
-    return mode === 'horizontal' || (isFirstLevel && collapse);
+    return mode === 'horizontal' || !(isFirstLevel && collapse);
   }, [collapse, isFirstLevel, mode]);
 
   const hiddenTitle = useMemo(() => {
@@ -89,7 +89,6 @@ function SubMenuContent({
         ></XpressIcon>
       )}
       {!hiddenTitle && <div className={cn(e('title'))}>{title}</div>}
-
       {!isMenuMore && showArrowIcon && (
         <IconComponent
           className={cn(e('icon-arrow'), 'size-4')}

@@ -55,8 +55,14 @@ function SubMenu({
   }, [path, rootMenu?.openedMenus]);
 
   const active = useMemo(() => {
-    return rootMenu.activeMenus.has(path);
-  }, [rootMenu.activeMenus, path]);
+    const hasActiveItem = Object.values(rootMenu.items).some(
+      (item) => item.active,
+    );
+    const hasActiveSubMenu = Object.values(rootMenu.subMenus).some(
+      (subMenu) => subMenu.active,
+    );
+    return hasActiveItem || hasActiveSubMenu;
+  }, [rootMenu.items, rootMenu.subMenus]);
 
   const isTopLevelMenuSubmenu = useMemo(() => {
     return parentMenu?.type === MenuSymbols.MENU;
@@ -105,12 +111,12 @@ function SubMenu({
     }
 
     rootMenu?.handleSubMenuClick({
-      // active,
+      active,
       parentPaths,
       path,
     });
   }
-  const subMenuRef = useRef<HTMLLIElement>(null);
+  const subMenuRef = useRef<HTMLLIElement | null>(null);
   const handleMouseEnter = useCallback(
     (event: React.FocusEvent | React.MouseEvent, showTimeout = 300) => {
       // 忽略 focus 事件
@@ -155,7 +161,7 @@ function SubMenu({
         parentElement.dispatchEvent(mouseEvent);
       }
     },
-    [disabled, subMenu, rootMenu, path, parentPaths],
+    [rootMenu, disabled, subMenu, timer, subMenuRef, path, parentPaths],
   );
 
   function handleMouseleave(deepDispatch = false) {
@@ -182,30 +188,80 @@ function SubMenu({
       subMenu?.handleMouseleave?.(true);
     }
   }
+  // TODO
+  // const subMenuInfo = useRef({
+  //   active,
+  //   parentPaths,
+  //   path,
+  // });
+  // useEffect(() => {
+  //   rootMenu?.addSubMenu(subMenuInfo.current);
+  //   subMenu.addSubMenu(subMenuInfo.current);
+  //   return () => {
+  //     rootMenu?.removeSubMenu(subMenuInfo.current);
+  //     subMenu.removeSubMenu(subMenuInfo.current);
+  //   };
+  // }, [parentPaths, path, rootMenu, subMenu]);
 
+  // const [subMenuData, setSubMenuData] = useState({
+  //   active: false,
+  //   parentPaths: [] as string[],
+  //   path: '',
+  // });
+
+  // useEffect(() => {
+  //   setSubMenuData({ active, parentPaths, path });
+  // }, [active, parentPaths, path]);
+
+  // 使用 useRef 存储注册数据
+  const registryData = useRef({
+    active: false,
+    parentPaths: [] as string[],
+    path: '',
+  });
+
+  // 更新数据但不触发重渲染
   useEffect(() => {
-    const subMenuInfo = {
+    registryData.current = {
+      active,
       parentPaths,
       path,
     };
-    rootMenu?.addSubMenu(subMenuInfo);
-    return () => {
-      rootMenu?.removeSubMenu(subMenuInfo);
-    };
-  }, [parentPaths, path, rootMenu]);
+  }, [active, parentPaths, path]);
 
-  const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
-    return {
-      addSubMenu: subMenu?.addSubMenu ?? parentMenu.addSubMenu,
+  // 只在挂载和卸载时注册/注销
+  useEffect(() => {
+    rootMenu?.addSubMenu(registryData.current);
+    subMenu.addSubMenu(registryData.current);
+
+    return () => {
+      rootMenu?.removeSubMenu(registryData.current);
+      subMenu.removeSubMenu(registryData.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // 空依赖数组，只在挂载和卸载时执行
+
+  const subMenuProviderValue = useMemo<SubMenuContextType>(
+    () => ({
+      addSubMenu: rootMenu.addSubMenu,
       handleParentMouseEnter: handleMouseEnter,
       level: (subMenu?.level ?? 0) + 1,
       mouseInChild,
       parent: parentMenu,
       path,
-      removeSubMenu: subMenu?.removeSubMenu ?? parentMenu.removeSubMenu,
+      removeSubMenu: rootMenu.removeSubMenu,
       type: MenuSymbols.SUBMENU,
-    };
-  }, [subMenu, parentMenu, handleMouseEnter, path, mouseInChild]);
+    }),
+    [
+      rootMenu.addSubMenu,
+      rootMenu.removeSubMenu,
+      handleMouseEnter,
+      subMenu?.level,
+      mouseInChild,
+      parentMenu,
+      path,
+    ],
+  );
 
   return (
     <SubMenuContext.Provider value={subMenuProviderValue}>

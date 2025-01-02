@@ -8,11 +8,12 @@ import SubMenuView from './SubMenuView';
 interface Props extends Omit<MenuProps, 'children'> {
   menus: MenuRecordRaw[];
 }
+
 function MenuView({ collapse = false, menus, ...props }: Props) {
   return (
     <Menu collapse={collapse} {...props}>
       {menus.map((menu) => (
-        <SubMenuView key={menu.path} menu={menu}></SubMenuView>
+        <SubMenuView key={menu.path} menu={menu} />
       ))}
     </Menu>
   );

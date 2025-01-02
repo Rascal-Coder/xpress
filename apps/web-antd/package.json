@@ -14,8 +14,8 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.92.6",
-    "@tanstack/router-devtools": "^1.92.11",
+    "@tanstack/react-router": "catalog:",
+    "@tanstack/router-devtools": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
