@@ -1,21 +1,20 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { BasicLayout } from '@xpress/layouts';
-import { PreferencesProvider } from '@xpress-core/preferences';
 
 import {
   createRootRoute,
   createRoute,
   createRouter,
-  Outlet,
   redirect,
   RouterProvider,
 } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { lazy, memo, Suspense } from 'react';
+import { lazy, memo } from 'react';
+
+import Layout from './layout';
 
 // 懒加载组件
-// const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Analysis = lazy(() => import('./pages/Analysis'));
 const Workbench = lazy(() => import('./pages/Workbench'));
 const Settings = lazy(() => import('./pages/Settings'));
@@ -26,7 +25,6 @@ const menus: MenuRecordRaw[] = [
   {
     name: '仪表盘',
     path: '/',
-    icon: 'DashboardIcon',
     children: [
       {
         name: '分析页',
@@ -38,13 +36,12 @@ const menus: MenuRecordRaw[] = [
         badge: '新',
         badgeType: 'normal',
         badgeVariants: 'primary',
-      } as MenuRecordRaw,
+      },
     ],
   },
   {
     name: '系统设置',
     path: '/settings',
-    // icon: 'SettingsIcon',
   },
 ];
 
@@ -55,15 +52,7 @@ LayoutWrapper.displayName = 'LayoutWrapper';
 
 // 定义根路由
 const rootRoute = createRootRoute({
-  component: () => (
-    <PreferencesProvider>
-      <LayoutWrapper>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Outlet />
-        </Suspense>
-      </LayoutWrapper>
-    </PreferencesProvider>
-  ),
+  component: () => <Layout menus={menus} />,
   notFoundComponent: () => <NotFound />,
 });
 
@@ -112,7 +101,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
-      <TanStackRouterDevtools router={router} />
+      <TanStackRouterDevtools position="bottom-right" router={router} />
     </>
   );
 }

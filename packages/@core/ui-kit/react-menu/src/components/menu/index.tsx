@@ -43,6 +43,7 @@ export default function Menu(props: Props) {
     theme = 'dark',
     children,
   } = props;
+
   const { b, is } = useNamespace('menu');
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();

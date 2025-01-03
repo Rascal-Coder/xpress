@@ -1,11 +1,7 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { XpressLayout } from '@xpress-core/layout-ui';
-import {
-  // PreferencesProvider,
-  usePreferences,
-  usePreferencesContext,
-} from '@xpress-core/preferences';
+import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
 
 import { useRouter } from '@tanstack/react-router';
@@ -26,7 +22,11 @@ interface Props {
   content: React.ReactNode;
 }
 function BasicLayout({ sidebarMenus, content }: Props) {
+  const router = useRouter();
+  const defaultActive = router.state.location.pathname;
   const {
+    preferences,
+    updatePreferences,
     isDark,
     isHeaderNav,
     isMixedNav,
@@ -36,12 +36,10 @@ function BasicLayout({ sidebarMenus, content }: Props) {
     layout,
     sidebarCollapsed,
     theme,
-  } = usePreferences();
-  const router = useRouter();
-  const defaultActive = router.state.location.pathname;
-  const { preferences, updatePreferences } = usePreferencesContext();
+  } = usePreferencesContext();
   const sidebarTheme = useMemo(() => {
     const dark = isDark || preferences.theme.semiDarkSidebar;
+
     return dark ? 'dark' : 'light';
   }, [isDark, preferences.theme.semiDarkSidebar]);
 
@@ -107,7 +105,6 @@ function BasicLayout({ sidebarMenus, content }: Props) {
   };
 
   return (
-    // <PreferencesProvider>
     <XpressLayout
       components={{
         // 头部
@@ -125,7 +122,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
         // 内容
         content,
         // 内容覆盖层
-        'content-overlay': <div>content-overlay</div>,
+        // 'content-overlay': <div>content-overlay</div>,
         // 额外内容
         extra: <div>extra</div>,
       }}
@@ -156,19 +153,20 @@ function BasicLayout({ sidebarMenus, content }: Props) {
           accordion={preferences.navigation.accordion}
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
-          // defaultOpenKeys={sidebarActive}
           defaultActive={defaultActive}
           menus={sidebarMenus}
           mode="vertical"
           onOpen={handleOpen}
           onSelect={handleSelect}
           rounded={isMenuRounded}
+          // defaultOpenKeys={sidebarActive}
+          theme={theme}
         />
       }
       mixedMenu={<MixedMenu />}
-      onSidebarCollapseChange={(value: boolean) =>
-        updatePreferences({ sidebar: { collapsed: value } })
-      }
+      onSidebarCollapseChange={(value: boolean) => {
+        updatePreferences({ sidebar: { collapsed: value } });
+      }}
       onSidebarEnableChange={(value: boolean) =>
         updatePreferences({ sidebar: { enable: value } })
       }
@@ -194,7 +192,6 @@ function BasicLayout({ sidebarMenus, content }: Props) {
       tabbarEnable={preferences.tabbar.enable}
       tabbarHeight={preferences.tabbar.height}
     ></XpressLayout>
-    // </PreferencesProvider>
   );
 }
 
