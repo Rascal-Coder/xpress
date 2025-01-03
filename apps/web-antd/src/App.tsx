@@ -99,10 +99,10 @@ const router = createRouter({ routeTree });
 
 function App() {
   return (
-    <>
+    <div className="h-full w-full overscroll-none text-inherit">
       <RouterProvider router={router} />
       <TanStackRouterDevtools position="bottom-right" router={router} />
-    </>
+    </div>
   );
 }
 

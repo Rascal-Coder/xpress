@@ -108,7 +108,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
     <XpressLayout
       components={{
         // 头部
-        header: <div>header</div>,
+        // header: ,
         // 页脚
         footer: preferences.footer.enable && (
           <LayoutFooter>
@@ -124,7 +124,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
         // 内容覆盖层
         // 'content-overlay': <div>content-overlay</div>,
         // 额外内容
-        extra: <div>extra</div>,
+        // extra: <div>extra</div>,
       }}
       contentCompact={preferences.app.contentCompact}
       footerEnable={preferences.footer.enable}
