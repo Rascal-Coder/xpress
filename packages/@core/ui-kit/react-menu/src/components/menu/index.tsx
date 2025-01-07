@@ -126,7 +126,10 @@ export default function Menu(props: Props) {
   const addMenuItem = useCallback((item: MenuItemRegistered) => {
     setItems(
       produce((draft) => {
-        draft[item.path] = item;
+        draft[item.path] = {
+          ...item,
+          // type: 'item',
+        };
       }),
     );
   }, []);
@@ -134,7 +137,10 @@ export default function Menu(props: Props) {
   const addSubMenu = useCallback((subMenu: MenuItemRegistered) => {
     setSubMenus(
       produce((draft) => {
-        draft[subMenu.path] = subMenu;
+        draft[subMenu.path] = {
+          ...subMenu,
+          // type: 'submenu',
+        };
       }),
     );
   }, []);
@@ -281,6 +287,7 @@ export default function Menu(props: Props) {
     const registerSubMenus = (
       children: any[] | React.ReactNode,
       parentPath = '',
+      parentPaths: string[] = [],
     ) => {
       // 如果children是数组对象，需要先转换成SubMenuView组件
       if (
@@ -301,24 +308,53 @@ export default function Menu(props: Props) {
             ReturnType<typeof SubMenuView>['props']
           >;
           const path = typedChild.props.menu.path;
+          const isSubMenu = typedChild.props.menu.children?.length > 0;
+          const isRoot = path.startsWith('root-');
 
-          setSubMenus(
-            produce((draft) => {
-              draft[path] = {
-                active: false,
-                parentPaths: parentPath ? [parentPath] : [],
+          // 如果是root路径，不添加到parentPaths中
+          const currentParentPaths =
+            parentPath && !parentPath.startsWith('root-')
+              ? [...parentPaths, parentPath]
+              : [...parentPaths];
+
+          if (isSubMenu) {
+            // 注册SubMenu，只有非root的path才注册
+            if (!isRoot) {
+              setSubMenus(
+                produce((draft) => {
+                  draft[path] = {
+                    active: false,
+                    parentPaths: currentParentPaths,
+                    path,
+                  };
+                }),
+              );
+            }
+
+            if (typedChild.props.menu.children?.length) {
+              registerSubMenus(
+                typedChild.props.menu.children,
                 path,
-              };
-            }),
-          );
-
-          if (typedChild.props.menu.children?.length) {
-            registerSubMenus(typedChild.props.menu.children, path);
+                currentParentPaths,
+              );
+            }
+          } else {
+            // 注册MenuItem
+            setItems(
+              produce((draft) => {
+                draft[path] = {
+                  active: false,
+                  parentPaths: currentParentPaths,
+                  path,
+                };
+              }),
+            );
           }
         }
       });
     };
-
+    // console.log('items', items);
+    // console.log('subMenus', subMenus);
     registerSubMenus(children);
     return () => {
       setSubMenus({});

@@ -45,10 +45,6 @@ function SubMenu({
 
   const mouseInChild = useRef(false);
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
-  // 确保必需的值存在
-  if (!rootMenu) {
-    throw new Error('SubMenu must be used within a Menu component');
-  }
 
   const opened = useMemo(() => {
     return rootMenu?.openedMenus.includes(path);

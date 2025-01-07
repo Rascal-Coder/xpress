@@ -64,6 +64,7 @@ interface MenuItemRegistered {
   active: boolean;
   parentPaths: string[];
   path: string;
+  // type: 'item' | 'submenu';
 }
 
 interface MenuItemClicked {
