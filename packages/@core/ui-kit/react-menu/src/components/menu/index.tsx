@@ -1,4 +1,4 @@
-import type { MenuItemClicked, MenuItemRegistered, MenuProps } from '../types';
+import type { MenuItemClicked, MenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { Ellipsis } from '@xpress-core/icons';
@@ -15,13 +15,7 @@ import React, {
 } from 'react';
 
 import SubMenuView from '../../SubMenuView';
-import {
-  MenuContext,
-  type MenuContextType,
-  MenuSymbols,
-  SubMenuContext,
-  type SubMenuContextType,
-} from '../contexts';
+import { MenuContext, type MenuContextType } from '../contexts';
 import { useMenuStyle } from '../hooks';
 import SubMenu from '../sub-menu';
 
@@ -54,7 +48,7 @@ export default function Menu(props: Props) {
   const [activePath, setActivePath] = useState(defaultActive);
   const [items, setItems] = useState<MenuContextType['items']>({});
   const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
-  const mouseInChild = useRef(false);
+  const [mouseInChild, setMouseInChild] = useState(false);
 
   const isMenuPopup = useMemo(() => {
     return mode === 'horizontal' || (mode === 'vertical' && collapse);
@@ -73,6 +67,7 @@ export default function Menu(props: Props) {
 
     return activeItem.parentPaths;
   }, [activePath, collapse, items, mode]);
+
   /**
    * 点击展开菜单
    */
@@ -123,46 +118,8 @@ export default function Menu(props: Props) {
     },
     [accordion, close, onClose, subMenus],
   );
-  const addMenuItem = useCallback((item: MenuItemRegistered) => {
-    setItems(
-      produce((draft) => {
-        draft[item.path] = {
-          ...item,
-          // type: 'item',
-        };
-      }),
-    );
-  }, []);
-
-  const addSubMenu = useCallback((subMenu: MenuItemRegistered) => {
-    setSubMenus(
-      produce((draft) => {
-        draft[subMenu.path] = {
-          ...subMenu,
-          // type: 'submenu',
-        };
-      }),
-    );
-  }, []);
-
-  const removeSubMenu = useCallback((subMenu: MenuItemRegistered) => {
-    setSubMenus(
-      produce((draft) => {
-        Reflect.deleteProperty(draft, subMenu.path);
-      }),
-    );
-  }, []);
-
-  const removeMenuItem = useCallback((item: MenuItemRegistered) => {
-    setItems(
-      produce((draft) => {
-        Reflect.deleteProperty(draft, item.path);
-      }),
-    );
-  }, []);
-
   const handleSubMenuClick = useCallback(
-    ({ parentPaths, path }: MenuItemRegistered) => {
+    ({ parentPaths, path }: MenuItemClicked) => {
       const isOpened = openedMenus.includes(path);
 
       if (isOpened) {
@@ -282,7 +239,7 @@ export default function Menu(props: Props) {
       debouncedHandleResize();
     }
   }, [size, mode, debouncedHandleResize]);
-
+  // 注册默认数据
   useEffect(() => {
     const registerSubMenus = (
       children: any[] | React.ReactNode,
@@ -309,28 +266,26 @@ export default function Menu(props: Props) {
           >;
           const path = typedChild.props.menu.path;
           const isSubMenu = typedChild.props.menu.children?.length > 0;
-          const isRoot = path.startsWith('root-');
 
-          // 如果是root路径，不添加到parentPaths中
-          const currentParentPaths =
-            parentPath && !parentPath.startsWith('root-')
-              ? [...parentPaths, parentPath]
-              : [...parentPaths];
+          // 构建parentPaths数组
+          const currentParentPaths = parentPath
+            ? [...parentPaths, path] // 包含当前路径
+            : [path]; // 如果是根节点，只包含自身
 
           if (isSubMenu) {
-            // 注册SubMenu，只有非root的path才注册
-            if (!isRoot) {
-              setSubMenus(
-                produce((draft) => {
-                  draft[path] = {
-                    active: false,
-                    parentPaths: currentParentPaths,
-                    path,
-                  };
-                }),
-              );
-            }
-
+            setSubMenus(
+              produce((draft) => {
+                draft[path] = {
+                  active: false,
+                  handleClick: handleSubMenuClick,
+                  handleMouseleave: () => {},
+                  mouseInChild,
+                  parentPaths: currentParentPaths,
+                  path,
+                  setMouseInChild,
+                };
+              }),
+            );
             if (typedChild.props.menu.children?.length) {
               registerSubMenus(
                 typedChild.props.menu.children,
@@ -339,11 +294,11 @@ export default function Menu(props: Props) {
               );
             }
           } else {
-            // 注册MenuItem
             setItems(
               produce((draft) => {
                 draft[path] = {
                   active: false,
+                  handleClick: handleMenuItemClick,
                   parentPaths: currentParentPaths,
                   path,
                 };
@@ -353,51 +308,37 @@ export default function Menu(props: Props) {
         }
       });
     };
-    // console.log('items', items);
-    // console.log('subMenus', subMenus);
+
     registerSubMenus(children);
+
     return () => {
       setSubMenus({});
+      setItems({});
     };
+    // TODO: 需要修改
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 
   useEffect(() => {
-    if (Object.keys(subMenus).length > 0) {
-      initMenu();
-    }
+    initMenu();
   }, [items, subMenus, initMenu]);
-
-  const baseProviderValue = useMemo(() => {
-    return {
-      addSubMenu,
-      mouseInChild,
-      removeSubMenu,
-    };
-  }, [addSubMenu, mouseInChild, removeSubMenu]);
 
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
-      ...baseProviderValue,
       activePath,
-      addMenuItem,
       closeMenu,
       handleMenuItemClick,
       handleSubMenuClick,
       isMenuPopup,
       openedMenus,
       openMenu,
-      path: '/',
       props,
-      removeMenuItem,
       subMenus,
       theme,
-      type: MenuSymbols.MENU,
       items,
     };
   }, [
-    baseProviderValue,
     activePath,
-    addMenuItem,
     closeMenu,
     handleMenuItemClick,
     handleSubMenuClick,
@@ -405,53 +346,40 @@ export default function Menu(props: Props) {
     openedMenus,
     openMenu,
     props,
-    removeMenuItem,
     subMenus,
     theme,
     items,
   ]);
 
-  const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
-    return {
-      level: 1,
-      ...baseProviderValue,
-      parent: menuProviderValue,
-      path: '/',
-      type: MenuSymbols.SUBMENU,
-    };
-  }, [baseProviderValue, menuProviderValue]);
-
   return (
     <MenuContext.Provider value={menuProviderValue}>
-      <SubMenuContext.Provider value={subMenuProviderValue}>
-        <ul
-          className={cn(
-            theme,
-            b(),
-            is(mode, true),
-            is(theme, true),
-            is('rounded', rounded),
-            is('collapse', collapse),
-          )}
-          ref={menuRef}
-          role="menu"
-          style={menuStyle}
-        >
-          {mode === 'horizontal' && moreChildren.length > 0 ? (
-            <>
-              {defaultChildren}
-              <SubMenu
-                path="sub-menu-more"
-                title={<Ellipsis className={'size-4'} />}
-              >
-                {moreChildren}
-              </SubMenu>
-            </>
-          ) : (
-            children
-          )}
-        </ul>
-      </SubMenuContext.Provider>
+      <ul
+        className={cn(
+          theme,
+          b(),
+          is(mode, true),
+          is(theme, true),
+          is('rounded', rounded),
+          is('collapse', collapse),
+        )}
+        ref={menuRef}
+        role="menu"
+        style={menuStyle}
+      >
+        {mode === 'horizontal' && moreChildren.length > 0 ? (
+          <>
+            {defaultChildren}
+            <SubMenu
+              path="sub-menu-more"
+              title={<Ellipsis className={'size-4'} />}
+            >
+              {moreChildren}
+            </SubMenu>
+          </>
+        ) : (
+          children
+        )}
+      </ul>
     </MenuContext.Provider>
   );
 }

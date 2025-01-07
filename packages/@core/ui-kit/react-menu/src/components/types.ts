@@ -60,18 +60,16 @@ interface MenuProps {
    */
   theme?: ThemeModeType;
 }
-interface MenuItemRegistered {
-  active: boolean;
-  parentPaths: string[];
-  path: string;
-  // type: 'item' | 'submenu';
-}
 
 interface MenuItemClicked {
   parentPaths: string[];
   path: string;
 }
-
+interface MenuItemRegistered {
+  active: boolean;
+  parentPaths: string[];
+  path: string;
+}
 interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 激活时的图标

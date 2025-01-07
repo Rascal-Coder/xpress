@@ -6,8 +6,7 @@ import { cn } from '@xpress-core/shared/utils';
 
 import { useMemo } from 'react';
 
-import { MenuSymbols } from '../contexts';
-import { useMenu, useMenuContext } from '../hooks';
+import { useMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
 
 interface Props extends MenuItemProps {
@@ -27,7 +26,8 @@ function MenuItem(props: Props) {
   const { b, e, is } = useNamespace('menu-item');
   const nsMenu = useNamespace('menu');
   const rootMenu = useMenuContext();
-  const { parentMenu, parentPaths } = useMenu();
+  const currentMenu = rootMenu.items[path];
+  const currentMenuParentPaths = currentMenu?.parentPaths ?? [];
   const active = useMemo(() => {
     return rootMenu?.activePath === path;
   }, [rootMenu?.activePath, path]);
@@ -36,8 +36,8 @@ function MenuItem(props: Props) {
     return active ? activeIcon || icon : icon;
   }, [active, activeIcon, icon]);
   const isTopLevelMenuItem = useMemo(() => {
-    return parentMenu?.type === MenuSymbols.MENU;
-  }, [parentMenu?.type]);
+    return currentMenuParentPaths.length === 1;
+  }, [currentMenuParentPaths.length]);
 
   const collapseShowTitle = useMemo(() => {
     return (
@@ -70,23 +70,16 @@ function MenuItem(props: Props) {
    */
   const handleClick = () => {
     if (disabled) return;
-    rootMenu.handleMenuItemClick({
-      parentPaths,
-      path,
-    });
-    rootMenu.addMenuItem({
-      active,
-      parentPaths,
-      path,
-    });
-    rootMenu.addSubMenu({
-      active,
-      parentPaths,
+    const menuItem = rootMenu.items[path];
+    if (!menuItem) return;
+
+    menuItem.handleClick({
+      parentPaths: currentMenuParentPaths,
       path,
     });
     menuItemClick?.({
       active,
-      parentPaths,
+      parentPaths: currentMenuParentPaths,
       path,
     });
   };
