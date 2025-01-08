@@ -5,13 +5,12 @@ import { useMemo } from 'react';
 import { MenuItem, SubMenu } from './components';
 
 interface Props {
-  children?: React.ReactNode;
   /**
    * 菜单项
    */
   menu: MenuRecordRaw;
 }
-function SubMenuView({ menu, children }: Props) {
+function SubMenuView({ menu }: Props) {
   const hasChildren = useMemo(
     () =>
       Reflect.has(menu, 'children') &&
@@ -22,7 +21,14 @@ function SubMenuView({ menu, children }: Props) {
   return hasChildren ? (
     <SubMenu
       activeIcon={menu.activeIcon}
-      className="right-6"
+      // content={
+      //   <MenuBadge
+      //     badge={menu.badge}
+      //     badgeType={menu.badgeType}
+      //     badgeVariants={menu.badgeVariants}
+      //     className="right-6"
+      //   ></MenuBadge>
+      // }
       icon={menu.icon}
       key={`${menu.path}_sub`}
       path={menu.path}
@@ -40,11 +46,10 @@ function SubMenuView({ menu, children }: Props) {
       badgeVariants={menu.badgeVariants}
       icon={menu.icon}
       key={menu.path}
+      // menuItemClick={menuItemClick}
       path={menu.path}
       title={menu.name}
-    >
-      {children}
-    </MenuItem>
+    ></MenuItem>
   );
 }
 

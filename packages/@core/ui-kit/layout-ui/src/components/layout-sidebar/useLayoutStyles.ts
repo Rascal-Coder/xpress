@@ -51,6 +51,7 @@ export function useLayoutStyles({
 
     return (isHiddenDom: boolean) => {
       const widthValue = getWidthValue(isHiddenDom);
+
       return {
         ...(widthValue === '0px' ? { overflow: 'hidden' } : {}),
         flex: `0 0 ${widthValue}`,

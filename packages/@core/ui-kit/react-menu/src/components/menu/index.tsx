@@ -1,30 +1,82 @@
-import type { MenuItemClicked, MenuItemRegistered, MenuProps } from '../types';
+import type { MenuItemClicked, MenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { Ellipsis } from '@xpress-core/icons';
-import { cn, isHttpUrl } from '@xpress-core/shared/utils';
+import { cn } from '@xpress-core/shared/utils';
 
-import { useSize } from 'ahooks';
+import { useDebounceFn, useSize } from 'ahooks';
 import { produce } from 'immer';
 import React, {
   useCallback,
   useEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from 'react';
 
-import {
-  MenuContext,
-  type MenuContextType,
-  MenuSymbols,
-  SubMenuContext,
-  type SubMenuContextType,
-} from '../contexts';
+import SubMenuView from '../../SubMenuView';
+import { MenuContext, type MenuContextType } from '../contexts';
 import { useMenuStyle } from '../hooks';
 import SubMenu from '../sub-menu';
 
-import './styles.module.scss';
+import './styles.scss';
+
+type MenuAction =
+  | {
+      accordion?: boolean;
+      parentPaths: string[];
+      path: string;
+      type: 'OPEN_MENU';
+    }
+  | { menus: string[]; type: 'SET_MENUS' }
+  | { path: string; type: 'CLOSE_MENU' }
+  | { type: 'RESET_MENUS' };
+
+function menuReducer(state: string[], action: MenuAction): string[] {
+  switch (action.type) {
+    case 'CLOSE_MENU': {
+      if (!state.includes(action.path)) {
+        return state;
+      }
+      return state.filter((path) => path !== action.path);
+    }
+
+    case 'OPEN_MENU': {
+      if (state.includes(action.path)) {
+        return state;
+      }
+
+      if (action.accordion) {
+        const filteredMenus = state.filter((path) =>
+          action.parentPaths.includes(path),
+        );
+        const newMenus = [...new Set([action.path, ...filteredMenus])];
+        return newMenus.length === state.length &&
+          newMenus.every((item, i) => item === state[i])
+          ? state
+          : newMenus;
+      }
+
+      return [...state, action.path];
+    }
+
+    case 'RESET_MENUS': {
+      return state.length === 0 ? state : [];
+    }
+
+    case 'SET_MENUS': {
+      return action.menus.length === state.length &&
+        action.menus.every((item, i) => item === state[i])
+        ? state
+        : action.menus;
+    }
+
+    default: {
+      return state;
+    }
+  }
+}
 
 interface Props extends MenuProps {}
 
@@ -42,17 +94,18 @@ export default function Menu(props: Props) {
     theme = 'dark',
     children,
   } = props;
+
   const { b, is } = useNamespace('menu');
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
   const [sliceIndex, setSliceIndex] = useState(-1);
-  const [openedMenus, setOpenedMenus] = useState(
+  const [openedMenus, dispatch] = useReducer(
+    menuReducer,
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
-  const [activePath, setActivePath] = useState(defaultActive);
   const [items, setItems] = useState<MenuContextType['items']>({});
   const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
-  const mouseInChild = useRef(false);
+  const [mouseInChild, setMouseInChild] = useState(false);
 
   const isMenuPopup = useMemo(() => {
     return mode === 'horizontal' || (mode === 'vertical' && collapse);
@@ -64,133 +117,75 @@ export default function Menu(props: Props) {
   const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
 
   const getActivePaths = useCallback(() => {
-    const activeItem = activePath && items[activePath];
-
+    const activeItem = defaultActive && items[defaultActive];
     if (!activeItem || mode === 'horizontal' || collapse) {
       return [];
     }
-
     return activeItem.parentPaths;
-  }, [activePath, items, mode, collapse]);
+  }, [collapse, defaultActive, items, mode]);
+
   /**
    * 点击展开菜单
    */
   const openMenu = useCallback(
     (path: string, parentPaths: string[]) => {
-      if (openedMenus.includes(path)) {
-        return;
-      }
-      // 手风琴模式菜单
-      if (accordion) {
-        const activeParentPaths = getActivePaths();
-        if (activeParentPaths.includes(path)) {
-          parentPaths = activeParentPaths;
-        }
-        setOpenedMenus(
-          openedMenus.filter((path: string) => parentPaths.includes(path)),
-        );
-      }
-      setOpenedMenus([...openedMenus, path]);
+      dispatch({
+        accordion,
+        parentPaths,
+        path,
+        type: 'OPEN_MENU',
+      });
+
       onOpen?.(path, parentPaths);
     },
-    [openedMenus, onOpen, accordion, getActivePaths],
+    [accordion, onOpen],
   );
 
-  const close = useCallback(
-    (path: string) => {
-      const i = openedMenus.indexOf(path);
-
-      if (i !== -1) {
-        setOpenedMenus(openedMenus.filter((p) => p !== path));
-      }
-    },
-    [openedMenus],
-  );
-
-  /**
-   * 关闭、折叠菜单
-   */
   const closeMenu = useCallback(
     (path: string, parentPaths: string[]) => {
       if (accordion) {
-        setOpenedMenus(subMenus[path]?.parentPaths ?? []);
+        dispatch({
+          menus: subMenus[path]?.parentPaths ?? [],
+          type: 'SET_MENUS',
+        });
       }
 
-      close(path);
-
+      dispatch({ path, type: 'CLOSE_MENU' });
       onClose?.(path, parentPaths);
     },
-    [accordion, close, onClose, subMenus],
+    [accordion, onClose, subMenus],
   );
-  const addMenuItem = useCallback((item: MenuItemRegistered) => {
-    setItems(
-      produce((draft) => {
-        draft[item.path] = item;
-      }),
-    );
-  }, []);
-
-  const addSubMenu = useCallback((subMenu: MenuItemRegistered) => {
-    setSubMenus(
-      produce((draft) => {
-        draft[subMenu.path] = subMenu;
-      }),
-    );
-  }, []);
-
-  const removeSubMenu = useCallback((subMenu: MenuItemRegistered) => {
-    setSubMenus(
-      produce((draft) => {
-        Reflect.deleteProperty(draft, subMenu.path);
-      }),
-    );
-  }, []);
-
-  const removeMenuItem = useCallback((item: MenuItemRegistered) => {
-    setItems(
-      produce((draft) => {
-        Reflect.deleteProperty(draft, item.path);
-      }),
-    );
-  }, []);
 
   const handleSubMenuClick = useCallback(
-    ({ parentPaths, path }: MenuItemRegistered) => {
-      const isOpened = openedMenus.includes(path);
-
-      if (isOpened) {
+    ({ openedMenus, parentPaths, path }: MenuItemClicked) => {
+      if (openedMenus && openedMenus?.includes(path)) {
         closeMenu(path, parentPaths);
       } else {
         openMenu(path, parentPaths);
       }
     },
-
-    [closeMenu, openMenu, openedMenus],
+    [closeMenu, openMenu],
   );
 
   const handleMenuItemClick = useCallback(
-    (data: MenuItemClicked) => {
+    ({ parentPaths, path }: MenuItemClicked) => {
       if (mode === 'horizontal' || collapse) {
-        setOpenedMenus([]);
+        dispatch({ type: 'RESET_MENUS' });
       }
-      const { parentPaths, path } = data;
       if (!path || !parentPaths) {
         return;
-      }
-      if (!isHttpUrl(path)) {
-        setActivePath(path);
       }
 
       onSelect?.(path, parentPaths);
     },
-    [mode, collapse, setActivePath, onSelect],
+    [mode, collapse, onSelect],
   );
   /**
    * 初始化菜单
    */
   const initMenu = useCallback(() => {
     const parentPaths = getActivePaths();
-
+    // console.log('parentPaths', parentPaths);
     // 展开该菜单项的路径上所有子菜单
     // expand all subMenus of the menu item
     parentPaths.forEach((path) => {
@@ -198,19 +193,6 @@ export default function Menu(props: Props) {
       subMenu && openMenu(path, subMenu.parentPaths);
     });
   }, [subMenus, getActivePaths, openMenu]);
-
-  const updateActiveName = useCallback(
-    (val: string) => {
-      const itemsInData = items;
-      const item =
-        itemsInData[val] ||
-        (activePath && itemsInData[activePath]) ||
-        itemsInData[defaultActive || ''];
-
-      setActivePath(item ? item.path : val);
-    },
-    [items, activePath, defaultActive],
-  );
 
   function calcMenuItemWidth(menuItem: HTMLElement) {
     const computedStyle = getComputedStyle(menuItem);
@@ -265,110 +247,172 @@ export default function Menu(props: Props) {
     }
   }, [sliceIndex, calcSliceIndex, updateSliceIndex]);
 
+  const { run: debouncedHandleResize } = useDebounceFn(handleResize, {
+    wait: 200,
+  });
+
   useEffect(() => {
     if (collapse) {
-      setOpenedMenus([]);
+      dispatch({ type: 'RESET_MENUS' });
     }
   }, [collapse]);
 
-  useEffect(() => {
-    if (!items[defaultActive]) {
-      setActivePath(defaultActive);
-    }
-    updateActiveName(defaultActive);
-  }, [defaultActive, items, updateActiveName]);
+  // useEffect(() => {
+  //   const itemsInData = items;
+  //   const item =
+  //     itemsInData[defaultActive] ||
+  //     (activePath && itemsInData[activePath]) ||
+  //     itemsInData[defaultActive || ''];
+  //   setActivePath(item ? item.path : defaultActive);
+  // }, [defaultActive, items, activePath]);
+
   useEffect(() => {
     if (mode === 'horizontal' && size) {
-      handleResize();
+      debouncedHandleResize();
     }
-  }, [size, mode, handleResize]);
+  }, [size, mode, debouncedHandleResize]);
+  // 注册默认数据
+  useEffect(() => {
+    const registerSubMenus = (
+      children: any[] | React.ReactNode,
+      parentPath = '',
+      parentPaths: string[] = [],
+    ) => {
+      // 如果children是数组对象，需要先转换成SubMenuView组件
+      if (
+        Array.isArray(children) &&
+        typeof children[0] === 'object' &&
+        !React.isValidElement(children[0])
+      ) {
+        children = children.map((child) => (
+          <SubMenuView key={child.path} menu={child} />
+        ));
+      }
+
+      React.Children.forEach(children, (child) => {
+        if (!React.isValidElement(child)) return;
+
+        if (child.type === SubMenuView) {
+          const typedChild = child as React.ReactElement<
+            ReturnType<typeof SubMenuView>['props']
+          >;
+          const path = typedChild.props.menu.path;
+          const isSubMenu = typedChild.props.menu.children?.length > 0;
+
+          // 构建parentPaths数组
+          const currentParentPaths = parentPath
+            ? [...parentPaths, path] // 包含当前路径
+            : [path]; // 如果是根节点，只包含自身
+          if (isSubMenu) {
+            setSubMenus(
+              produce((draft) => {
+                draft[path] = {
+                  active: currentParentPaths.includes(defaultActive),
+                  handleClick: handleSubMenuClick,
+                  handleMouseleave: () => {},
+                  mouseInChild,
+                  parentPaths: currentParentPaths,
+                  path,
+                  setMouseInChild,
+                };
+              }),
+            );
+            if (typedChild.props.menu.children?.length) {
+              registerSubMenus(
+                typedChild.props.menu.children,
+                path,
+                currentParentPaths,
+              );
+            }
+          } else {
+            setItems(
+              produce((draft) => {
+                draft[path] = {
+                  active: currentParentPaths.includes(defaultActive),
+                  handleClick: handleMenuItemClick,
+                  parentPaths: currentParentPaths,
+                  path,
+                };
+              }),
+            );
+          }
+        }
+      });
+    };
+
+    registerSubMenus(children);
+    // console.log('items', items);
+    // console.log('subMenus', subMenus);
+
+    return () => {
+      dispatch({ type: 'RESET_MENUS' });
+      // setActivePath('');
+      setItems({});
+      setSubMenus({});
+      setMouseInChild(false);
+      setSliceIndex(-1);
+    };
+    // TODO: 需要修改
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children]);
+
   useEffect(() => {
     initMenu();
-  }, [initMenu]);
-  const baseProviderValue = useMemo(() => {
-    return {
-      addSubMenu,
-      mouseInChild,
-      removeSubMenu,
-    };
-  }, [addSubMenu, mouseInChild, removeSubMenu]);
+  }, [items, subMenus, initMenu]);
 
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
-      ...baseProviderValue,
-      activePath,
-      addMenuItem,
+      activePath: defaultActive,
       closeMenu,
-      handleMenuItemClick,
-      handleSubMenuClick,
       isMenuPopup,
       openedMenus,
       openMenu,
-      path: '/',
       props,
-      removeMenuItem,
       subMenus,
       theme,
-      type: MenuSymbols.MENU,
       items,
     };
   }, [
-    baseProviderValue,
-    activePath,
-    addMenuItem,
+    defaultActive,
     closeMenu,
-    handleMenuItemClick,
-    handleSubMenuClick,
     isMenuPopup,
     openedMenus,
     openMenu,
     props,
-    removeMenuItem,
     subMenus,
     theme,
     items,
   ]);
 
-  const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
-    return {
-      ...baseProviderValue,
-      level: 1,
-      parent: menuProviderValue,
-      path: '/',
-      type: MenuSymbols.SUBMENU,
-    };
-  }, [baseProviderValue, menuProviderValue]);
   return (
     <MenuContext.Provider value={menuProviderValue}>
-      <SubMenuContext.Provider value={subMenuProviderValue}>
-        <ul
-          className={cn(
-            theme,
-            b(),
-            is(mode, true),
-            is(theme, true),
-            is('rounded', rounded),
-            is('collapse', collapse),
-          )}
-          ref={menuRef}
-          role="menu"
-          style={menuStyle}
-        >
-          {mode === 'horizontal' && moreChildren.length > 0 ? (
-            <>
-              {defaultChildren}
-              <SubMenu
-                path="sub-menu-more"
-                title={<Ellipsis className={'size-4'} />}
-              >
-                {moreChildren}
-              </SubMenu>
-            </>
-          ) : (
-            children
-          )}
-        </ul>
-      </SubMenuContext.Provider>
+      <ul
+        className={cn(
+          theme,
+          b(),
+          is(mode, true),
+          is(theme, true),
+          is('rounded', rounded),
+          is('collapse', collapse),
+        )}
+        ref={menuRef}
+        role="menu"
+        style={menuStyle}
+      >
+        {mode === 'horizontal' && moreChildren.length > 0 ? (
+          <>
+            {defaultChildren}
+            <SubMenu
+              path="sub-menu-more"
+              title={<Ellipsis className={'size-4'} />}
+            >
+              {moreChildren}
+            </SubMenu>
+          </>
+        ) : (
+          children
+        )}
+      </ul>
     </MenuContext.Provider>
   );
 }

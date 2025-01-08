@@ -36,7 +36,7 @@ interface Props {
 export function XpressLogo({
   className,
   collapsed = false,
-  href = 'javascript:void 0',
+  href = '#',
   src = '',
   text,
   theme = 'light',

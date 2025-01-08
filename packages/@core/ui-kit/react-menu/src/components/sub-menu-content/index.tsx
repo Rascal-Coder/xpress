@@ -14,12 +14,14 @@ interface SubMenuContentProps extends MenuItemProps {
   isMenuMore: boolean;
   isTopLevelMenuSubMenu: boolean;
   level?: number;
+  menuItemClick?: () => void;
 }
 function SubMenuContent({
   className,
   icon,
   isMenuMore = false,
   level = 0,
+  menuItemClick,
   path,
   title,
   children,
@@ -30,7 +32,6 @@ function SubMenuContent({
   const opened = useMemo(() => {
     return rootMenu.openedMenus.includes(path);
   }, [path, rootMenu.openedMenus]);
-
   const collapse = useMemo(() => {
     return rootMenu.props.collapse;
   }, [rootMenu.props.collapse]);
@@ -47,7 +48,7 @@ function SubMenuContent({
   }, [rootMenu.props.mode]);
 
   const showArrowIcon = useMemo(() => {
-    return mode === 'horizontal' || (isFirstLevel && collapse);
+    return mode === 'horizontal' || !(isFirstLevel && collapse);
   }, [collapse, isFirstLevel, mode]);
 
   const hiddenTitle = useMemo(() => {
@@ -77,8 +78,10 @@ function SubMenuContent({
         b(),
         is('collapse-show-title', getCollapseShowTitle),
         is('more', isMenuMore),
+        rootMenu.isMenuPopup && !isFirstLevel && '!justify-normal',
         className,
       )}
+      onClick={() => menuItemClick?.()}
     >
       {children}
       {!isMenuMore && (
@@ -89,7 +92,6 @@ function SubMenuContent({
         ></XpressIcon>
       )}
       {!hiddenTitle && <div className={cn(e('title'))}>{title}</div>}
-
       {!isMenuMore && showArrowIcon && (
         <IconComponent
           className={cn(e('icon-arrow'), 'size-4')}

@@ -275,12 +275,12 @@ $namespace: xpress;
 
   &.is-collapse {
     .#{$namespace}-menu__icon {
-      margin-right: 0;
+      // margin-right: 0;
+      margin: 0 var(--menu-item-margin-x) 0 var(--menu-item-margin-x);
     }
     .#{$namespace}-sub-menu__icon-arrow {
       display: none;
     }
-
     .#{$namespace}-sub-menu-content,
     .#{$namespace}-menu-item {
       display: flex;

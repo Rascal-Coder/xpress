@@ -60,17 +60,17 @@ interface MenuProps {
    */
   theme?: ThemeModeType;
 }
+
+interface MenuItemClicked {
+  openedMenus?: string[];
+  parentPaths: string[];
+  path: string;
+}
 interface MenuItemRegistered {
   active: boolean;
   parentPaths: string[];
   path: string;
 }
-
-interface MenuItemClicked {
-  parentPaths: string[];
-  path: string;
-}
-
 interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 激活时的图标
@@ -94,7 +94,7 @@ interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 点击事件
    */
-  onClick?: (item: MenuItemRegistered) => void;
+  // menuItemClick?: () => void;
   /**
    * @zh_CN 路径
    */
@@ -110,10 +110,6 @@ interface SubMenuProps extends MenuRecordBadgeRaw, PropsWithChildren {
    * @zh_CN 激活图标
    */
   activeIcon?: IconType;
-  /**
-   * @zh_CN submenu 内容
-   */
-  content?: React.ReactNode;
   /**
    * @zh_CN 是否禁用
    */

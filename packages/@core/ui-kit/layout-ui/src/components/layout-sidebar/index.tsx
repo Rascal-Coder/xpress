@@ -197,7 +197,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
     <>
       {hiddenSidebarNode}
       <aside
-        className={`fixed left-0 top-0 h-full transition-all duration-150 ${theme} ${
+        className={`fixed left-0 top-0 h-full transition-all duration-200 ${theme} ${
           isSidebarMixed
             ? 'bg-sidebar-deep'
             : 'bg-sidebar border-border border-r'

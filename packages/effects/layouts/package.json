@@ -13,11 +13,12 @@
     }
   },
   "dependencies": {
-    "@tanstack/react-router": "^1.92.6",
+    "@tanstack/react-router": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "react": "catalog:"
   },

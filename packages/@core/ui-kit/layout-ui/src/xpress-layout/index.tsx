@@ -27,6 +27,7 @@ import { useLayoutContext } from './context';
 import { LayoutProvider } from './LayoutProvider';
 
 const XpressLayoutInner: FC<XpressLayoutProps> = ({
+  components,
   contentCompact = 'wide',
   contentCompactWidth = 1200,
   contentPadding = 0,
@@ -60,7 +61,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   tabbarEnable = true,
   tabbarHeight = 40,
   zIndex = 200,
-  children,
 }) => {
   const {
     setSidebarCollapse,
@@ -588,7 +588,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
           )
         }
       >
-        {children?.header}
+        {components?.header}
       </LayoutHeader>
     ),
   );
@@ -600,7 +600,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       height={tabbarHeight}
       style={tabbarStyle}
     >
-      {children?.tabbar}
+      {components?.tabbar}
     </LayoutTabbar>
   ));
 
@@ -613,7 +613,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       width={footerWidth}
       zIndex={zIndex}
     >
-      {children?.footer}
+      {components?.footer}
     </LayoutFooter>
   ));
 
@@ -650,7 +650,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
           className="transition-[margin-top] duration-200"
           contentCompact={contentCompact}
           contentCompactWidth={contentCompactWidth}
-          overlay={children?.['content-overlay']}
+          overlay={components?.['content-overlay']}
           padding={contentPadding}
           paddingBottom={contentPaddingBottom}
           paddingLeft={contentPaddingLeft}
@@ -658,13 +658,13 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
           paddingTop={contentPaddingTop}
           style={contentStyle}
         >
-          {children?.content}
+          {components?.content}
         </LayoutContent>
 
         {footerNode}
       </div>
 
-      {children?.extra}
+      {components?.extra}
       {maskNode}
     </div>
   );

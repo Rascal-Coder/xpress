@@ -29,6 +29,7 @@ function updateCSSVariables(preferences: Preferences) {
   // html 设置 data-theme=[builtinType]
   if (Reflect.has(theme, 'builtinType')) {
     const rootTheme = root.dataset.theme;
+
     if (rootTheme !== builtinType) {
       root.dataset.theme = builtinType;
     }

@@ -1,35 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { SubMenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import CollapseTransition from '../collapse-transition';
-import {
-  type MenuContextType,
-  MenuSymbols,
-  SubMenuContext,
-  type SubMenuContextType,
-} from '../contexts';
-import {
-  useMenu,
-  useMenuContext,
-  useMenuStyle,
-  useSubMenuContext,
-} from '../hooks';
+import { useMenuContext, useMenuStyle } from '../hooks';
 import SubMenuContent from '../sub-menu-content';
 
 interface Props extends SubMenuProps {
   className?: string;
   isSubMenuMore?: boolean;
 }
+
 function SubMenu({
   activeIcon,
   className,
-  content,
   disabled = false,
   icon,
   isSubMenuMore = false,
@@ -37,29 +25,39 @@ function SubMenu({
   title,
   children,
 }: Props) {
-  const { parentMenu, parentPaths } = useMenu();
   const { b, is } = useNamespace('sub-menu');
   const nsMenu = useNamespace('menu');
   const rootMenu = useMenuContext();
-  const subMenu = useSubMenuContext();
-  const subMenuStyle = useMenuStyle(subMenu);
+  const currentSubMenu = rootMenu?.subMenus[path];
+  const parentPaths = useMemo(
+    () => currentSubMenu?.parentPaths ?? [],
+    [currentSubMenu?.parentPaths],
+  );
+  const level = useMemo(() => {
+    const level = parentPaths.length - 1;
+    return level;
+  }, [parentPaths.length]);
+  const subMenuStyle = useMenuStyle(level - 1);
 
   const mouseInChild = useRef(false);
-
-  const [items, setItems] = useState<MenuContextType['items']>({});
-  const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
-  // 确保必需的值存在
-  if (!rootMenu) {
-    throw new Error('SubMenu must be used within a Menu component');
-  }
 
   const opened = useMemo(() => {
     return rootMenu?.openedMenus.includes(path);
   }, [path, rootMenu?.openedMenus]);
-  const isTopLevelMenuSubmenu = useMemo(() => {
-    return parentMenu?.type === MenuSymbols.MENU;
-  }, [parentMenu?.type]);
+
+  const active = useMemo(() => {
+    const hasActiveItem = Object.values(rootMenu.items).some(
+      (item) => item.parentPaths.includes(path) && item.active,
+    );
+    const hasActiveSubMenu = currentSubMenu?.active;
+    return hasActiveItem || hasActiveSubMenu;
+  }, [currentSubMenu?.active, path, rootMenu.items]);
+
+  const currentLevel = useMemo(() => {
+    return parentPaths.length;
+  }, [parentPaths.length]);
+
   const mode = useMemo(() => {
     return rootMenu?.props.mode ?? 'vertical';
   }, [rootMenu?.props.mode]);
@@ -67,10 +65,6 @@ function SubMenu({
   const rounded = useMemo(() => {
     return rootMenu?.props.rounded;
   }, [rootMenu?.props.rounded]);
-
-  const currentLevel = useMemo(() => {
-    return subMenu?.level ?? 0;
-  }, [subMenu?.level]);
 
   const isFirstLevel = useMemo(() => {
     return currentLevel === 1;
@@ -86,26 +80,10 @@ function SubMenu({
     };
   }, [isFirstLevel, mode]);
 
-  const active = useMemo(() => {
-    let isActive = false;
+  const menuIcon = useMemo(() => {
+    return active ? activeIcon || icon : icon;
+  }, [active, activeIcon, icon]);
 
-    Object.values(items).forEach((item) => {
-      if (item.active) {
-        isActive = true;
-      }
-    });
-
-    Object.values(subMenus).forEach((subItem) => {
-      if (subItem.active) {
-        isActive = true;
-      }
-    });
-    return isActive;
-  }, [items, subMenus]);
-
-  /**
-   * 点击submenu展开/关闭
-   */
   function handleClick() {
     const mode = rootMenu?.props.mode;
     if (
@@ -117,16 +95,15 @@ function SubMenu({
     ) {
       return;
     }
-
-    rootMenu?.handleSubMenuClick({
-      active,
+    currentSubMenu?.handleClick?.({
+      openedMenus: rootMenu?.openedMenus,
       parentPaths,
       path,
     });
   }
-  const subMenuRef = useRef<HTMLLIElement>(null);
+  const subMenuRef = useRef<HTMLLIElement | null>(null);
   const handleMouseEnter = useCallback(
-    (event: React.FocusEvent | React.MouseEvent, showTimeout = 300) => {
+    (event: React.FocusEvent | React.MouseEvent, showTimeout = 100) => {
       // 忽略 focus 事件
       if (event.type === 'focus') {
         return;
@@ -137,15 +114,15 @@ function SubMenu({
         (!rootMenu?.props.collapse && rootMenu?.props.mode === 'vertical') ||
         disabled
       ) {
-        if (subMenu) {
-          subMenu.mouseInChild.current = true;
+        if (currentSubMenu) {
+          currentSubMenu.setMouseInChild(true);
         }
         return;
       }
 
       // 更新鼠标状态
-      if (subMenu) {
-        subMenu.mouseInChild.current = true;
+      if (currentSubMenu) {
+        currentSubMenu.setMouseInChild(true);
       }
 
       // 清除现有定时器
@@ -157,163 +134,108 @@ function SubMenu({
       timer.current = window.setTimeout(() => {
         rootMenu?.openMenu(path, parentPaths);
       }, showTimeout);
-
-      // 触发父元素的鼠标进入事件
-      const parentElement = subMenuRef.current?.parentElement;
-      if (parentElement) {
-        const mouseEvent = new MouseEvent('mouseenter', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        });
-        parentElement.dispatchEvent(mouseEvent);
-      }
     },
-    [disabled, subMenu, rootMenu, path, parentPaths],
+    [rootMenu, disabled, currentSubMenu, timer, path, parentPaths],
   );
-  function handleMouseleave(deepDispatch = false) {
+
+  // TODO: 需要修改
+  function handleMouseleave() {
     if (
       !rootMenu?.props.collapse &&
       rootMenu?.props.mode === 'vertical' &&
-      subMenu
+      currentSubMenu
     ) {
-      subMenu.mouseInChild.current = false;
+      currentSubMenu.setMouseInChild(false);
       return;
     }
 
     timer.current && window.clearTimeout(timer.current);
 
-    if (subMenu) {
-      subMenu.mouseInChild.current = false;
+    if (currentSubMenu) {
+      currentSubMenu.setMouseInChild(false);
     }
     timer.current = setTimeout(() => {
       !mouseInChild.current && rootMenu?.closeMenu(path, parentPaths);
-    }, 300);
-
-    if (deepDispatch) {
-      subMenu?.handleMouseleave?.(true);
-    }
+    }, 100);
   }
-  const menuIcon = useMemo(() => {
-    return active ? activeIcon || icon : icon;
-  }, [active, activeIcon, icon]);
-
-  useEffect(() => {
-    subMenu?.addSubMenu({
-      active,
-      parentPaths,
-      path,
-    });
-    rootMenu?.addSubMenu({
-      active,
-      parentPaths,
-      path,
-    });
-    return () => {
-      subMenu?.removeSubMenu({
-        active,
-        parentPaths,
-        path,
-      });
-      rootMenu?.removeSubMenu({
-        active,
-        parentPaths,
-        path,
-      });
-    };
-  }, [active, menuIcon, parentPaths, path, rootMenu, subMenu]);
-  const subMenuProviderValue = useMemo<SubMenuContextType>(() => {
-    return {
-      addSubMenu: subMenu?.addSubMenu ?? rootMenu.addSubMenu,
-      handleParentMouseEnter: handleMouseEnter,
-      level: (subMenu?.level ?? 0) + 1,
-      mouseInChild,
-      parent: subMenu ?? rootMenu,
-      path,
-      removeSubMenu: subMenu?.removeSubMenu ?? rootMenu.removeSubMenu,
-      type: MenuSymbols.SUBMENU,
-    };
-  }, [subMenu, rootMenu, handleMouseEnter, path]);
-
+  //  mode === 'horizontal' || (mode === 'vertical' && collapse) 这个情况下新增一个样式
   return (
-    <SubMenuContext.Provider value={subMenuProviderValue}>
-      <li
-        className={cn(
-          b(),
-          is('opened', opened),
-          is('active', active),
-          is('disabled', disabled),
-          className,
-        )}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={() => handleMouseleave()}
-        ref={subMenuRef}
-      >
-        {rootMenu.isMenuPopup ? (
-          <XpressHoverCard
-            contentClass={cn(
-              rootMenu.theme,
-              nsMenu.e('popup-container'),
-              is(rootMenu.theme, true),
-              opened ? '' : 'hidden',
-            )}
-            contentProps={contentProps}
-            open
-            openDelay={0}
-            trigger={
-              <SubMenuContent
-                className={cn(is('active', active))}
-                icon={menuIcon}
-                isMenuMore={isSubMenuMore}
-                isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
-                level={currentLevel}
-                onClick={handleClick}
-                path={path}
-                title={title}
-              />
-            }
+    <li
+      className={cn(
+        b(),
+        is('opened', opened),
+        is('active', active),
+        is('disabled', disabled),
+        className,
+      )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => handleMouseleave()}
+      ref={subMenuRef}
+    >
+      {/* mode === 'horizontal' || (mode === 'vertical' && collapse) */}
+      {rootMenu.isMenuPopup ? (
+        <XpressHoverCard
+          contentClass={cn(
+            rootMenu.theme,
+            nsMenu.e('popup-container'),
+            is(rootMenu.theme, true),
+            opened ? '' : 'hidden',
+          )}
+          contentProps={contentProps}
+          open
+          openDelay={0}
+          trigger={
+            <SubMenuContent
+              className={cn(is('active', active))}
+              icon={menuIcon}
+              isMenuMore={isSubMenuMore}
+              isTopLevelMenuSubMenu={isFirstLevel}
+              level={currentLevel}
+              menuItemClick={handleClick}
+              path={path}
+              title={title}
+            />
+          }
+        >
+          <div
+            className={cn(nsMenu.e('popup'), nsMenu.is(mode, true))}
+            onFocus={(e) => handleMouseEnter(e, 100)}
+            onMouseEnter={(e) => handleMouseEnter(e, 100)}
+            onMouseLeave={() => handleMouseleave()}
           >
-            <div
-              className={cn(nsMenu.e('popup'), nsMenu.is(mode, true))}
-              onFocus={(e) => handleMouseEnter(e, 100)}
-              onMouseEnter={(e) => handleMouseEnter(e, 100)}
-              onMouseLeave={() => handleMouseleave(true)}
+            <ul
+              className={cn(nsMenu.b(), is('rounded', rounded))}
+              style={subMenuStyle}
             >
+              {children}
+            </ul>
+          </div>
+        </XpressHoverCard>
+      ) : (
+        <>
+          <SubMenuContent
+            className={cn(is('active', active))}
+            icon={menuIcon}
+            isMenuMore={isSubMenuMore}
+            isTopLevelMenuSubMenu={isFirstLevel}
+            level={currentLevel}
+            menuItemClick={handleClick}
+            path={path}
+            title={title}
+          />
+          {opened && (
+            <CollapseTransition>
               <ul
                 className={cn(nsMenu.b(), is('rounded', rounded))}
                 style={subMenuStyle}
               >
                 {children}
               </ul>
-            </div>
-          </XpressHoverCard>
-        ) : (
-          <>
-            <SubMenuContent
-              className={cn(is('active', active))}
-              icon={menuIcon}
-              isMenuMore={isSubMenuMore}
-              isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
-              level={currentLevel}
-              onClick={handleClick}
-              path={path}
-              title={title}
-            />
-            {content}
-            {opened && (
-              <CollapseTransition>
-                <ul
-                  className={cn(nsMenu.b(), is('rounded', rounded))}
-                  style={subMenuStyle}
-                >
-                  {children}
-                </ul>
-              </CollapseTransition>
-            )}
-          </>
-        )}
-      </li>
-    </SubMenuContext.Provider>
+            </CollapseTransition>
+          )}
+        </>
+      )}
+    </li>
   );
 }
 

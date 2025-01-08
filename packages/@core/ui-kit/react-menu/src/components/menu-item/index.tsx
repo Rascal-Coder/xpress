@@ -4,14 +4,12 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressIcon, XpressTooltip } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { MenuSymbols } from '../contexts';
-import { useMenu, useMenuContext, useSubMenuContext } from '../hooks';
+import { useMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
 
 interface Props extends MenuItemProps {
-  children: React.ReactNode;
   className?: string;
 }
 
@@ -21,28 +19,25 @@ function MenuItem(props: Props) {
     className,
     disabled = false,
     icon,
-    onClick,
+    // menuItemClick,
     path,
     title,
-    children,
   } = props;
   const { b, e, is } = useNamespace('menu-item');
   const nsMenu = useNamespace('menu');
   const rootMenu = useMenuContext();
-  const subMenu = useSubMenuContext();
-  const { parentMenu, parentPaths } = useMenu();
-
+  const currentMenu = rootMenu.items[path];
+  const currentMenuParentPaths = currentMenu?.parentPaths ?? [];
   const active = useMemo(() => {
     return rootMenu?.activePath === path;
-  }, [path, rootMenu?.activePath]);
+  }, [rootMenu?.activePath, path]);
 
   const menuIcon = useMemo(() => {
     return active ? activeIcon || icon : icon;
   }, [active, activeIcon, icon]);
-
   const isTopLevelMenuItem = useMemo(() => {
-    return parentMenu?.type === MenuSymbols.MENU;
-  }, [parentMenu?.type]);
+    return currentMenuParentPaths.length === 1;
+  }, [currentMenuParentPaths.length]);
 
   const collapseShowTitle = useMemo(() => {
     return (
@@ -75,41 +70,14 @@ function MenuItem(props: Props) {
    */
   const handleClick = () => {
     if (disabled) return;
-    rootMenu.handleMenuItemClick({
-      parentPaths,
-      path,
-    });
-    onClick?.({
-      active,
-      parentPaths,
+    const menuItem = rootMenu.items[path];
+    if (!menuItem) return;
+
+    menuItem.handleClick({
+      parentPaths: currentMenuParentPaths,
       path,
     });
   };
-
-  useEffect(() => {
-    subMenu.addSubMenu({
-      active,
-      parentPaths,
-      path,
-    });
-    rootMenu.addMenuItem({
-      active,
-      parentPaths,
-      path,
-    });
-    return () => {
-      subMenu.removeSubMenu({
-        active,
-        parentPaths,
-        path,
-      });
-      rootMenu.removeMenuItem({
-        active,
-        parentPaths,
-        path,
-      });
-    };
-  }, [active, parentPaths, path, rootMenu, subMenu]);
 
   return (
     <li
@@ -124,7 +92,6 @@ function MenuItem(props: Props) {
       onClick={handleClick}
       role="menuitem"
     >
-      {/* {children} */}
       {showTooltip ? (
         <XpressTooltip
           contentClass={rootMenu.theme}
@@ -136,7 +103,7 @@ function MenuItem(props: Props) {
                 fallback
                 icon={menuIcon}
               ></XpressIcon>
-              {children}
+              {/* {children} */}
               {collapseShowTitle && (
                 <span className={cn(nsMenu.e('name'))}>{title}</span>
               )}
@@ -155,7 +122,7 @@ function MenuItem(props: Props) {
             fallback
             icon={menuIcon}
           ></XpressIcon>
-          {children}
+          {/* {children} */}
           {title}
         </div>
       )}

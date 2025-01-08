@@ -18,7 +18,7 @@ interface LayoutSlots {
 }
 
 interface XpressLayoutProps extends BaseXpressLayoutProps, LayoutComponents {
-  children?: LayoutSlots;
+  components?: LayoutSlots;
   /** 侧边栏折叠状态改变回调 */
   onSidebarCollapseChange?: (collapse: boolean) => void;
   /** 侧边栏启用状态改变回调 */
