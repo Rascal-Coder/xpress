@@ -94,7 +94,7 @@ interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 点击事件
    */
-  menuItemClick?: () => void;
+  // menuItemClick?: () => void;
   /**
    * @zh_CN 路径
    */

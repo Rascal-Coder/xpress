@@ -3,9 +3,10 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
+import { isHttpUrl } from '@xpress-core/shared/utils';
 
 import { useRouter } from '@tanstack/react-router';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import Copyright from './copyright';
 import LayoutFooter from './footer';
@@ -23,7 +24,10 @@ interface Props {
 }
 function BasicLayout({ sidebarMenus, content }: Props) {
   const router = useRouter();
-  const defaultActive = router.state.location.pathname;
+  // const defaultActive = router.state.location.pathname;
+  const [defaultActive, setDefaultActive] = useState(
+    router.state.location.pathname,
+  );
   const {
     preferences,
     updatePreferences,
@@ -100,8 +104,13 @@ function BasicLayout({ sidebarMenus, content }: Props) {
     // console.log('handleOpen');
   };
 
-  const handleSelect = () => {
-    // console.log('handleSelect');
+  const handleSelect = (path: string) => {
+    router.navigate({
+      href: path,
+    });
+    if (!isHttpUrl(path)) {
+      setDefaultActive(path);
+    }
   };
 
   return (

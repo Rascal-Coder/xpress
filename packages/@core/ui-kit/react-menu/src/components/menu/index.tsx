@@ -2,7 +2,7 @@ import type { MenuItemClicked, MenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
 import { Ellipsis } from '@xpress-core/icons';
-import { cn, isHttpUrl } from '@xpress-core/shared/utils';
+import { cn } from '@xpress-core/shared/utils';
 
 import { useDebounceFn, useSize } from 'ahooks';
 import { produce } from 'immer';
@@ -103,7 +103,6 @@ export default function Menu(props: Props) {
     menuReducer,
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
-  const [activePath, setActivePath] = useState(defaultActive);
   const [items, setItems] = useState<MenuContextType['items']>({});
   const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
   const [mouseInChild, setMouseInChild] = useState(false);
@@ -118,12 +117,12 @@ export default function Menu(props: Props) {
   const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
 
   const getActivePaths = useCallback(() => {
-    const activeItem = activePath && items[activePath];
+    const activeItem = defaultActive && items[defaultActive];
     if (!activeItem || mode === 'horizontal' || collapse) {
       return [];
     }
     return activeItem.parentPaths;
-  }, [activePath, collapse, items, mode]);
+  }, [collapse, defaultActive, items, mode]);
 
   /**
    * 点击展开菜单
@@ -176,13 +175,10 @@ export default function Menu(props: Props) {
       if (!path || !parentPaths) {
         return;
       }
-      if (!isHttpUrl(path)) {
-        setActivePath(path);
-      }
 
       onSelect?.(path, parentPaths);
     },
-    [mode, collapse, setActivePath, onSelect],
+    [mode, collapse, onSelect],
   );
   /**
    * 初始化菜单
@@ -261,14 +257,14 @@ export default function Menu(props: Props) {
     }
   }, [collapse]);
 
-  useEffect(() => {
-    const itemsInData = items;
-    const item =
-      itemsInData[defaultActive] ||
-      (activePath && itemsInData[activePath]) ||
-      itemsInData[defaultActive || ''];
-    setActivePath(item ? item.path : defaultActive);
-  }, [defaultActive, items, activePath]);
+  // useEffect(() => {
+  //   const itemsInData = items;
+  //   const item =
+  //     itemsInData[defaultActive] ||
+  //     (activePath && itemsInData[activePath]) ||
+  //     itemsInData[defaultActive || ''];
+  //   setActivePath(item ? item.path : defaultActive);
+  // }, [defaultActive, items, activePath]);
 
   useEffect(() => {
     if (mode === 'horizontal' && size) {
@@ -311,7 +307,7 @@ export default function Menu(props: Props) {
             setSubMenus(
               produce((draft) => {
                 draft[path] = {
-                  active: currentParentPaths.includes(activePath),
+                  active: currentParentPaths.includes(defaultActive),
                   handleClick: handleSubMenuClick,
                   handleMouseleave: () => {},
                   mouseInChild,
@@ -332,7 +328,7 @@ export default function Menu(props: Props) {
             setItems(
               produce((draft) => {
                 draft[path] = {
-                  active: currentParentPaths.includes(activePath),
+                  active: currentParentPaths.includes(defaultActive),
                   handleClick: handleMenuItemClick,
                   parentPaths: currentParentPaths,
                   path,
@@ -349,8 +345,12 @@ export default function Menu(props: Props) {
     // console.log('subMenus', subMenus);
 
     return () => {
-      setSubMenus({});
+      dispatch({ type: 'RESET_MENUS' });
+      // setActivePath('');
       setItems({});
+      setSubMenus({});
+      setMouseInChild(false);
+      setSliceIndex(-1);
     };
     // TODO: 需要修改
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -362,7 +362,7 @@ export default function Menu(props: Props) {
 
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
-      activePath,
+      activePath: defaultActive,
       closeMenu,
       isMenuPopup,
       openedMenus,
@@ -373,7 +373,7 @@ export default function Menu(props: Props) {
       items,
     };
   }, [
-    activePath,
+    defaultActive,
     closeMenu,
     isMenuPopup,
     openedMenus,

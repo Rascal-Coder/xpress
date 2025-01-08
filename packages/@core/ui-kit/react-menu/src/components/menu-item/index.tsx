@@ -19,7 +19,7 @@ function MenuItem(props: Props) {
     className,
     disabled = false,
     icon,
-    menuItemClick,
+    // menuItemClick,
     path,
     title,
   } = props;
@@ -74,11 +74,6 @@ function MenuItem(props: Props) {
     if (!menuItem) return;
 
     menuItem.handleClick({
-      parentPaths: currentMenuParentPaths,
-      path,
-    });
-    menuItemClick?.({
-      active,
       parentPaths: currentMenuParentPaths,
       path,
     });

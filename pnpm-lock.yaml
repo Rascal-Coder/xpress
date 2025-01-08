@@ -1078,6 +1078,9 @@ importers:
       '@xpress-core/shadcn-ui':
         specifier: workspace:*
         version: link:../../@core/ui-kit/shadcn-ui
+      '@xpress-core/shared':
+        specifier: workspace:*
+        version: link:../../@core/base/shared
       '@xpress-core/typings':
         specifier: workspace:*
         version: link:../../@core/base/typings
