@@ -110,10 +110,6 @@ interface SubMenuProps extends MenuRecordBadgeRaw, PropsWithChildren {
    */
   activeIcon?: IconType;
   /**
-   * @zh_CN submenu 内容
-   */
-  content?: React.ReactNode;
-  /**
    * @zh_CN 是否禁用
    */
   disabled?: boolean;

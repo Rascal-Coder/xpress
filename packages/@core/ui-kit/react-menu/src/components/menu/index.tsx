@@ -64,7 +64,6 @@ export default function Menu(props: Props) {
     if (!activeItem || mode === 'horizontal' || collapse) {
       return [];
     }
-
     return activeItem.parentPaths;
   }, [activePath, collapse, items, mode]);
 
@@ -133,11 +132,10 @@ export default function Menu(props: Props) {
   );
 
   const handleMenuItemClick = useCallback(
-    (data: MenuItemClicked) => {
+    ({ parentPaths, path }: MenuItemClicked) => {
       if (mode === 'horizontal' || collapse) {
         setOpenedMenus([]);
       }
-      const { parentPaths, path } = data;
       if (!path || !parentPaths) {
         return;
       }
@@ -154,6 +152,7 @@ export default function Menu(props: Props) {
    */
   const initMenu = useCallback(() => {
     const parentPaths = getActivePaths();
+    // console.log('parentPaths', parentPaths);
     // 展开该菜单项的路径上所有子菜单
     // expand all subMenus of the menu item
     parentPaths.forEach((path) => {
@@ -271,12 +270,11 @@ export default function Menu(props: Props) {
           const currentParentPaths = parentPath
             ? [...parentPaths, path] // 包含当前路径
             : [path]; // 如果是根节点，只包含自身
-
           if (isSubMenu) {
             setSubMenus(
               produce((draft) => {
                 draft[path] = {
-                  active: false,
+                  active: currentParentPaths.includes(activePath),
                   handleClick: handleSubMenuClick,
                   handleMouseleave: () => {},
                   mouseInChild,
@@ -297,7 +295,7 @@ export default function Menu(props: Props) {
             setItems(
               produce((draft) => {
                 draft[path] = {
-                  active: false,
+                  active: currentParentPaths.includes(activePath),
                   handleClick: handleMenuItemClick,
                   parentPaths: currentParentPaths,
                   path,
@@ -310,6 +308,8 @@ export default function Menu(props: Props) {
     };
 
     registerSubMenus(children);
+    // console.log('items', items);
+    // console.log('subMenus', subMenus);
 
     return () => {
       setSubMenus({});
@@ -327,8 +327,6 @@ export default function Menu(props: Props) {
     return {
       activePath,
       closeMenu,
-      handleMenuItemClick,
-      handleSubMenuClick,
       isMenuPopup,
       openedMenus,
       openMenu,
@@ -340,8 +338,6 @@ export default function Menu(props: Props) {
   }, [
     activePath,
     closeMenu,
-    handleMenuItemClick,
-    handleSubMenuClick,
     isMenuPopup,
     openedMenus,
     openMenu,

@@ -18,7 +18,6 @@ interface Props extends SubMenuProps {
 function SubMenu({
   activeIcon,
   className,
-  content,
   disabled = false,
   icon,
   isSubMenuMore = false,
@@ -49,13 +48,11 @@ function SubMenu({
 
   const active = useMemo(() => {
     const hasActiveItem = Object.values(rootMenu.items).some(
-      (item) => item.active,
+      (item) => item.parentPaths.includes(path) && item.active,
     );
-    const hasActiveSubMenu = Object.values(rootMenu.subMenus).some(
-      (subMenu) => subMenu.active,
-    );
+    const hasActiveSubMenu = currentSubMenu?.active;
     return hasActiveItem || hasActiveSubMenu;
-  }, [rootMenu.items, rootMenu.subMenus]);
+  }, [currentSubMenu?.active, path, rootMenu.items]);
 
   // TODO: 需要修改 找到父节点 type=== Menu
   const isTopLevelMenuSubmenu = useMemo(() => {
@@ -103,7 +100,6 @@ function SubMenu({
     ) {
       return;
     }
-    // const currentSubMenu = rootMenu?.subMenus[path];
     currentSubMenu?.handleClick?.({
       parentPaths,
       path,
@@ -251,8 +247,7 @@ function SubMenu({
             path={path}
             title={title}
           />
-          {content}
-
+          {/* {content}2222222222 */}
           {opened && (
             <CollapseTransition>
               <ul
