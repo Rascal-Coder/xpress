@@ -37,14 +37,12 @@ function SubMenu({
     const level = parentPaths.length - 1;
     return level;
   }, [parentPaths.length]);
-  const subMenuStyle = useMenuStyle(level);
+  const subMenuStyle = useMenuStyle(level - 1);
 
   const mouseInChild = useRef(false);
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
 
   const opened = useMemo(() => {
-    // console.log('rootMenu?.openedMenus', rootMenu?.openedMenus);
-
     return rootMenu?.openedMenus.includes(path);
   }, [path, rootMenu?.openedMenus]);
 
@@ -136,23 +134,12 @@ function SubMenu({
       timer.current = window.setTimeout(() => {
         rootMenu?.openMenu(path, parentPaths);
       }, showTimeout);
-
-      // 触发父元素的鼠标进入事件
-      const parentElement = subMenuRef.current?.parentElement;
-      if (parentElement) {
-        const mouseEvent = new MouseEvent('mouseenter', {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        });
-        parentElement.dispatchEvent(mouseEvent);
-      }
     },
-    [rootMenu, disabled, currentSubMenu, timer, subMenuRef, path, parentPaths],
+    [rootMenu, disabled, currentSubMenu, timer, path, parentPaths],
   );
 
   // TODO: 需要修改
-  function handleMouseleave(deepDispatch = false) {
+  function handleMouseleave() {
     if (
       !rootMenu?.props.collapse &&
       rootMenu?.props.mode === 'vertical' &&
@@ -170,18 +157,8 @@ function SubMenu({
     timer.current = setTimeout(() => {
       !mouseInChild.current && rootMenu?.closeMenu(path, parentPaths);
     }, 100);
-    // 如果需要深度传递，则调用父级子菜单的handleMouseleave
-    if (deepDispatch) {
-      // 获取父级子菜单
-      const parentPath = parentPaths[parentPaths.length - 2];
-      const parentSubMenu = parentPath ? rootMenu?.subMenus[parentPath] : null;
-
-      if (parentSubMenu?.handleMouseleave) {
-        // 触发父级子菜单的鼠标离开事件
-        parentSubMenu.handleMouseleave(true);
-      }
-    }
   }
+  //  mode === 'horizontal' || (mode === 'vertical' && collapse) 这个情况下新增一个样式
   return (
     <li
       className={cn(
@@ -224,7 +201,7 @@ function SubMenu({
             className={cn(nsMenu.e('popup'), nsMenu.is(mode, true))}
             onFocus={(e) => handleMouseEnter(e, 100)}
             onMouseEnter={(e) => handleMouseEnter(e, 100)}
-            onMouseLeave={() => handleMouseleave(true)}
+            onMouseLeave={() => handleMouseleave()}
           >
             <ul
               className={cn(nsMenu.b(), is('rounded', rounded))}

@@ -14,6 +14,7 @@ interface SubMenuContentProps extends MenuItemProps {
   isMenuMore: boolean;
   isTopLevelMenuSubMenu: boolean;
   level?: number;
+  menuItemClick?: () => void;
 }
 function SubMenuContent({
   className,
@@ -31,7 +32,6 @@ function SubMenuContent({
   const opened = useMemo(() => {
     return rootMenu.openedMenus.includes(path);
   }, [path, rootMenu.openedMenus]);
-
   const collapse = useMemo(() => {
     return rootMenu.props.collapse;
   }, [rootMenu.props.collapse]);
@@ -78,6 +78,7 @@ function SubMenuContent({
         b(),
         is('collapse-show-title', getCollapseShowTitle),
         is('more', isMenuMore),
+        rootMenu.isMenuPopup && !isFirstLevel && '!justify-normal',
         className,
       )}
       onClick={() => menuItemClick?.()}
