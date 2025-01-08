@@ -62,6 +62,7 @@ interface MenuProps {
 }
 
 interface MenuItemClicked {
+  openedMenus?: string[];
   parentPaths: string[];
   path: string;
 }
@@ -93,7 +94,7 @@ interface MenuItemProps extends MenuRecordBadgeRaw {
   /**
    * @zh_CN 点击事件
    */
-  menuItemClick?: (item: MenuItemRegistered) => void;
+  menuItemClick?: () => void;
   /**
    * @zh_CN 路径
    */

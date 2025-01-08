@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from 'react';
@@ -20,6 +21,62 @@ import { useMenuStyle } from '../hooks';
 import SubMenu from '../sub-menu';
 
 import './styles.scss';
+
+type MenuAction =
+  | {
+      accordion?: boolean;
+      parentPaths: string[];
+      path: string;
+      type: 'OPEN_MENU';
+    }
+  | { menus: string[]; type: 'SET_MENUS' }
+  | { path: string; type: 'CLOSE_MENU' }
+  | { type: 'RESET_MENUS' };
+
+function menuReducer(state: string[], action: MenuAction): string[] {
+  switch (action.type) {
+    case 'CLOSE_MENU': {
+      if (!state.includes(action.path)) {
+        return state;
+      }
+      return state.filter((path) => path !== action.path);
+    }
+
+    case 'OPEN_MENU': {
+      if (state.includes(action.path)) {
+        return state;
+      }
+
+      if (action.accordion) {
+        const filteredMenus = state.filter((path) =>
+          action.parentPaths.includes(path),
+        );
+        const newMenus = [...new Set([action.path, ...filteredMenus])];
+        return newMenus.length === state.length &&
+          newMenus.every((item, i) => item === state[i])
+          ? state
+          : newMenus;
+      }
+
+      return [...state, action.path];
+    }
+
+    case 'RESET_MENUS': {
+      return state.length === 0 ? state : [];
+    }
+
+    case 'SET_MENUS': {
+      return action.menus.length === state.length &&
+        action.menus.every((item, i) => item === state[i])
+        ? state
+        : action.menus;
+    }
+
+    default: {
+      return state;
+    }
+  }
+}
 
 interface Props extends MenuProps {}
 
@@ -42,7 +99,8 @@ export default function Menu(props: Props) {
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
   const [sliceIndex, setSliceIndex] = useState(-1);
-  const [openedMenus, setOpenedMenus] = useState(
+  const [openedMenus, dispatch] = useReducer(
+    menuReducer,
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
   const [activePath, setActivePath] = useState(defaultActive);
@@ -72,69 +130,48 @@ export default function Menu(props: Props) {
    */
   const openMenu = useCallback(
     (path: string, parentPaths: string[]) => {
-      if (openedMenus.includes(path)) {
-        return;
-      }
-      // 手风琴模式菜单
-      if (accordion) {
-        const activeParentPaths = getActivePaths();
-        if (activeParentPaths.includes(path)) {
-          parentPaths = activeParentPaths;
-        }
-        setOpenedMenus(
-          openedMenus.filter((path: string) => parentPaths.includes(path)),
-        );
-      }
-      setOpenedMenus([...openedMenus, path]);
+      dispatch({
+        accordion,
+        parentPaths,
+        path,
+        type: 'OPEN_MENU',
+      });
+
       onOpen?.(path, parentPaths);
     },
-    [openedMenus, onOpen, accordion, getActivePaths],
+    [accordion, onOpen],
   );
 
-  const close = useCallback(
-    (path: string) => {
-      const i = openedMenus.indexOf(path);
-
-      if (i !== -1) {
-        setOpenedMenus(openedMenus.filter((p) => p !== path));
-      }
-    },
-    [openedMenus],
-  );
-
-  /**
-   * 关闭、折叠菜单
-   */
   const closeMenu = useCallback(
     (path: string, parentPaths: string[]) => {
       if (accordion) {
-        setOpenedMenus(subMenus[path]?.parentPaths ?? []);
+        dispatch({
+          menus: subMenus[path]?.parentPaths ?? [],
+          type: 'SET_MENUS',
+        });
       }
 
-      close(path);
-
+      dispatch({ path, type: 'CLOSE_MENU' });
       onClose?.(path, parentPaths);
     },
-    [accordion, close, onClose, subMenus],
+    [accordion, onClose, subMenus],
   );
-  const handleSubMenuClick = useCallback(
-    ({ parentPaths, path }: MenuItemClicked) => {
-      const isOpened = openedMenus.includes(path);
 
-      if (isOpened) {
+  const handleSubMenuClick = useCallback(
+    ({ openedMenus, parentPaths, path }: MenuItemClicked) => {
+      if (openedMenus && openedMenus?.includes(path)) {
         closeMenu(path, parentPaths);
       } else {
         openMenu(path, parentPaths);
       }
     },
-
-    [closeMenu, openMenu, openedMenus],
+    [closeMenu, openMenu],
   );
 
   const handleMenuItemClick = useCallback(
     ({ parentPaths, path }: MenuItemClicked) => {
       if (mode === 'horizontal' || collapse) {
-        setOpenedMenus([]);
+        dispatch({ type: 'RESET_MENUS' });
       }
       if (!path || !parentPaths) {
         return;
@@ -220,7 +257,7 @@ export default function Menu(props: Props) {
 
   useEffect(() => {
     if (collapse) {
-      setOpenedMenus([]);
+      dispatch({ type: 'RESET_MENUS' });
     }
   }, [collapse]);
 

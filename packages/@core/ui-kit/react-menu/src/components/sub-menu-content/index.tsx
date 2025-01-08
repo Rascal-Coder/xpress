@@ -20,6 +20,7 @@ function SubMenuContent({
   icon,
   isMenuMore = false,
   level = 0,
+  menuItemClick,
   path,
   title,
   children,
@@ -79,6 +80,7 @@ function SubMenuContent({
         is('more', isMenuMore),
         className,
       )}
+      onClick={() => menuItemClick?.()}
     >
       {children}
       {!isMenuMore && (

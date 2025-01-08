@@ -43,6 +43,8 @@ function SubMenu({
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
 
   const opened = useMemo(() => {
+    // console.log('rootMenu?.openedMenus', rootMenu?.openedMenus);
+
     return rootMenu?.openedMenus.includes(path);
   }, [path, rootMenu?.openedMenus]);
 
@@ -54,9 +56,8 @@ function SubMenu({
     return hasActiveItem || hasActiveSubMenu;
   }, [currentSubMenu?.active, path, rootMenu.items]);
 
-  // TODO: 需要修改 找到父节点 type=== Menu
-  const isTopLevelMenuSubmenu = useMemo(() => {
-    return parentPaths.length - 1 === 0;
+  const currentLevel = useMemo(() => {
+    return parentPaths.length;
   }, [parentPaths.length]);
 
   const mode = useMemo(() => {
@@ -66,10 +67,6 @@ function SubMenu({
   const rounded = useMemo(() => {
     return rootMenu?.props.rounded;
   }, [rootMenu?.props.rounded]);
-
-  const currentLevel = useMemo(() => {
-    return parentPaths.length;
-  }, [parentPaths.length]);
 
   const isFirstLevel = useMemo(() => {
     return currentLevel === 1;
@@ -101,6 +98,7 @@ function SubMenu({
       return;
     }
     currentSubMenu?.handleClick?.({
+      openedMenus: rootMenu?.openedMenus,
       parentPaths,
       path,
     });
@@ -197,6 +195,7 @@ function SubMenu({
       onMouseLeave={() => handleMouseleave()}
       ref={subMenuRef}
     >
+      {/* mode === 'horizontal' || (mode === 'vertical' && collapse) */}
       {rootMenu.isMenuPopup ? (
         <XpressHoverCard
           contentClass={cn(
@@ -213,7 +212,7 @@ function SubMenu({
               className={cn(is('active', active))}
               icon={menuIcon}
               isMenuMore={isSubMenuMore}
-              isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
+              isTopLevelMenuSubMenu={isFirstLevel}
               level={currentLevel}
               menuItemClick={handleClick}
               path={path}
@@ -241,13 +240,12 @@ function SubMenu({
             className={cn(is('active', active))}
             icon={menuIcon}
             isMenuMore={isSubMenuMore}
-            isTopLevelMenuSubMenu={isTopLevelMenuSubmenu}
+            isTopLevelMenuSubMenu={isFirstLevel}
             level={currentLevel}
             menuItemClick={handleClick}
             path={path}
             title={title}
           />
-          {/* {content}2222222222 */}
           {opened && (
             <CollapseTransition>
               <ul
