@@ -18,6 +18,7 @@ interface Props extends SubMenuProps {
 function SubMenu({
   activeIcon,
   className,
+  content,
   disabled = false,
   icon,
   isSubMenuMore = false,
@@ -138,7 +139,6 @@ function SubMenu({
     [rootMenu, disabled, currentSubMenu, timer, path, parentPaths],
   );
 
-  // TODO: 需要修改
   function handleMouseleave() {
     if (
       !rootMenu?.props.collapse &&
@@ -222,7 +222,9 @@ function SubMenu({
             menuItemClick={handleClick}
             path={path}
             title={title}
-          />
+          >
+            {content}
+          </SubMenuContent>
           {opened && (
             <CollapseTransition>
               <ul

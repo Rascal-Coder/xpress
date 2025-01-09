@@ -3,6 +3,7 @@ import type {
   MenuRecordBadgeRaw,
   ThemeModeType,
 } from '@xpress-core/typings';
+import type React from 'react';
 import type { PropsWithChildren } from 'react';
 
 interface MenuProps {
@@ -110,6 +111,10 @@ interface SubMenuProps extends MenuRecordBadgeRaw, PropsWithChildren {
    * @zh_CN 激活图标
    */
   activeIcon?: IconType;
+  /**
+   * @zh_CN  内容
+   */
+  content?: React.ReactNode;
   /**
    * @zh_CN 是否禁用
    */

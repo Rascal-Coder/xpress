@@ -71,7 +71,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     sidebarExtraCollapse,
     sidebarExtraVisible,
   } = useLayoutContext();
-
   const [headerIsHidden, setHeaderIsHidden] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const {
@@ -673,17 +672,17 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
 const XpressLayout: FC<XpressLayoutProps> = (props) => {
   return (
     <LayoutProvider
-      defaultSidebarCollapse={props.sidebarCollapse}
-      defaultSidebarEnable={props.sidebarEnable}
-      defaultSidebarExpandOnHover={props.sidebarExpandOnHover}
-      defaultSidebarExtraCollapse={props.sidebarExtraCollapse}
-      defaultSidebarExtraVisible={props.sidebarExtraVisible}
       onSidebarCollapseChange={props.onSidebarCollapseChange}
       onSidebarEnableChange={props.onSidebarEnableChange}
       onSidebarExpandOnHoverChange={props.onSidebarExpandOnHoverChange}
       onSidebarExtraCollapseChange={props.onSidebarExtraCollapseChange}
       onSidebarExtraVisibleChange={props.onSidebarExtraVisibleChange}
       onSideMouseLeave={props.onSideMouseLeave}
+      sidebarCollapse={props.sidebarCollapse ?? false}
+      sidebarEnable={props.sidebarEnable ?? true}
+      sidebarExpandOnHover={props.sidebarExpandOnHover ?? false}
+      sidebarExtraCollapse={props.sidebarExtraCollapse ?? false}
+      sidebarExtraVisible={props.sidebarExtraVisible ?? false}
     >
       <XpressLayoutInner {...props} />
     </LayoutProvider>

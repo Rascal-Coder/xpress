@@ -110,7 +110,6 @@ class PreferenceManager {
       this.loadCachedPreferences() || {},
       this.initialPreferences,
     );
-
     this.initPlatform();
     this.isInitialized = true;
 
@@ -197,24 +196,25 @@ export function PreferencesProvider({ children }: PreferencesProviderProps) {
   const getInitialPreferences = useCallback(() => {
     return preferenceManager.current.getInitialPreferences();
   }, []);
-  const value = useMemo(
-    () => ({
+
+  const value = useMemo<PreferencesContextType>(() => {
+    return {
       clearCache,
       getInitialPreferences,
       initPreferences,
       preferences,
       resetPreferences,
       updatePreferences,
-    }),
-    [
-      preferences,
-      updatePreferences,
-      resetPreferences,
-      clearCache,
-      initPreferences,
-      getInitialPreferences,
-    ],
-  );
+    };
+  }, [
+    clearCache,
+    getInitialPreferences,
+    initPreferences,
+    preferences,
+    resetPreferences,
+    updatePreferences,
+  ]);
+
   return (
     <PreferencesContext.Provider value={value}>
       {children}
@@ -230,6 +230,7 @@ export function usePreferencesContext() {
   }
   // 当前偏好设置
   const preferences = context.preferences;
+
   // 初始偏好设置
   const initialPreferences = context.getInitialPreferences();
   /**
@@ -433,7 +434,6 @@ export function usePreferencesContext() {
     authPanelLeft,
     authPanelRight,
     contentIsMaximize,
-    context,
     diffPreference,
     globalLockScreenShortcutKey,
     globalLogoutShortcutKey,

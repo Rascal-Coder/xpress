@@ -6,11 +6,10 @@ import {
   usePreferencesContext,
 } from '@xpress-core/preferences';
 
-import { memo, Suspense, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function Layout({ menus }: { menus: MenuRecordRaw[] }) {
-  const LayoutWrapper = memo(({ children }: { children: React.ReactNode }) => {
+  const LayoutWrapper = () => {
     const { initPreferences } = usePreferencesContext();
     const env = import.meta.env.PROD ? 'prod' : 'dev';
     const appVersion = import.meta.env.VITE_APP_VERSION;
@@ -18,16 +17,11 @@ function Layout({ menus }: { menus: MenuRecordRaw[] }) {
     useEffect(() => {
       initPreferences({ namespace });
     }, [initPreferences, namespace]);
-    return <BasicLayout content={children} sidebarMenus={menus} />;
-  });
-  LayoutWrapper.displayName = 'LayoutWrapper';
+    return <BasicLayout sidebarMenus={menus} />;
+  };
   return (
     <PreferencesProvider>
-      <LayoutWrapper>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Outlet />
-        </Suspense>
-      </LayoutWrapper>
+      <LayoutWrapper></LayoutWrapper>
     </PreferencesProvider>
   );
 }

@@ -108,7 +108,8 @@ export default function Menu(props: Props) {
   const [mouseInChild, setMouseInChild] = useState(false);
 
   const isMenuPopup = useMemo(() => {
-    return mode === 'horizontal' || (mode === 'vertical' && collapse);
+    const res = mode === 'horizontal' || (mode === 'vertical' && collapse);
+    return res;
   }, [collapse, mode]);
 
   const childrenArray = React.Children.toArray(children);
@@ -341,8 +342,6 @@ export default function Menu(props: Props) {
     };
 
     registerSubMenus(children);
-    // console.log('items', items);
-    // console.log('subMenus', subMenus);
 
     return () => {
       dispatch({ type: 'RESET_MENUS' });
@@ -352,7 +351,6 @@ export default function Menu(props: Props) {
       setMouseInChild(false);
       setSliceIndex(-1);
     };
-    // TODO: 需要修改
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children]);
 

@@ -8,6 +8,7 @@ import { isHttpUrl } from '@xpress-core/shared/utils';
 import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import MemoContent from './content-components/content';
 import Copyright from './copyright';
 import LayoutFooter from './footer';
 import { Menu, MixedMenu } from './menu';
@@ -20,9 +21,9 @@ interface Props {
   /**
    * 内容
    */
-  content: React.ReactNode;
+  // content: React.ReactNode;
 }
-function BasicLayout({ sidebarMenus, content }: Props) {
+function BasicLayout({ sidebarMenus }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [defaultActive, setDefaultActive] = useState(location.pathname);
@@ -95,6 +96,11 @@ function BasicLayout({ sidebarMenus, content }: Props) {
   };
 
   const handleToggleSidebar = () => {
+    updatePreferences({
+      sidebar: {
+        hidden: !preferences.sidebar.hidden,
+      },
+    });
     // console.log('handleToggleSidebar');
   };
 
@@ -108,7 +114,6 @@ function BasicLayout({ sidebarMenus, content }: Props) {
       setDefaultActive(path);
     }
   };
-
   return (
     <XpressLayout
       components={{
@@ -125,7 +130,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
         // 标签栏
         tabbar: <div>tabbar</div>,
         // 内容
-        content,
+        content: <MemoContent></MemoContent>,
         // 内容覆盖层
         // 'content-overlay': <div>content-overlay</div>,
         // 额外内容
