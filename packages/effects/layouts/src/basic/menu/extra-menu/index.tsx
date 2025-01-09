@@ -3,7 +3,7 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { MenuView } from '@xpress-core/react-menu';
 
-import { useRouter } from '@tanstack/react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface ExtraMenuProps extends MenuProps {
   collapse?: boolean;
@@ -19,18 +19,18 @@ const ExtraMenu: React.FC<ExtraMenuProps> = ({
   rounded,
   theme,
 }) => {
-  const router = useRouter();
-  const currentPath = router.state.location.pathname;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-  const handleSelect = async (path: string) => {
-    await router.navigate({ to: path });
+  const handleSelect = (path: string) => {
+    navigate(path);
   };
 
   return (
     <MenuView
       accordion={accordion}
       collapse={collapse}
-      // TODO: Provide activePath
       defaultActive={currentPath}
       menus={menus}
       mode="vertical"

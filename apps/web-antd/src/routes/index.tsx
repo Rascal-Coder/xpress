@@ -1,23 +1,21 @@
-import { createRoute, createRouter, redirect } from '@tanstack/react-router';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { dashboardRoutes } from './modules/dashboard';
 import { settingsRoutes } from './modules/settings';
-import { rootRoute } from './root';
+import { RootLayout } from './root';
 
-const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/',
-  beforeLoad: () => {
-    throw redirect({ to: '/analysis' });
-  },
-});
-
-// 创建路由树
-const routeTree = rootRoute.addChildren([
-  indexRoute,
-  ...dashboardRoutes,
-  ...settingsRoutes,
-]);
-
-// 创建路由器
-export const router = createRouter({ routeTree });
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<RootLayout />}>
+        <Route element={<Navigate replace to="/analysis" />} path="/" />
+        {dashboardRoutes.map((route) => (
+          <Route element={route.element} key={route.path} path={route.path} />
+        ))}
+        {settingsRoutes.map((route) => (
+          <Route element={route.element} key={route.path} path={route.path} />
+        ))}
+      </Route>
+    </Routes>
+  );
+}

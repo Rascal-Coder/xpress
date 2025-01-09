@@ -5,8 +5,8 @@ import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
 import { isHttpUrl } from '@xpress-core/shared/utils';
 
-import { useRouter } from '@tanstack/react-router';
 import { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Copyright from './copyright';
 import LayoutFooter from './footer';
@@ -23,11 +23,9 @@ interface Props {
   content: React.ReactNode;
 }
 function BasicLayout({ sidebarMenus, content }: Props) {
-  const router = useRouter();
-  // const defaultActive = router.state.location.pathname;
-  const [defaultActive, setDefaultActive] = useState(
-    router.state.location.pathname,
-  );
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [defaultActive, setDefaultActive] = useState(location.pathname);
   const {
     preferences,
     updatePreferences,
@@ -105,9 +103,7 @@ function BasicLayout({ sidebarMenus, content }: Props) {
   };
 
   const handleSelect = (path: string) => {
-    router.navigate({
-      href: path,
-    });
+    navigate(path);
     if (!isHttpUrl(path)) {
       setDefaultActive(path);
     }

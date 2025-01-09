@@ -5,6 +5,10 @@
       "path": "apps/backend-mock",
     },
     {
+      "name": "@xpress/dev-server",
+      "path": "apps/dev-server",
+    },
+    {
       "name": "@xpress/web-antd",
       "path": "apps/web-antd",
     },

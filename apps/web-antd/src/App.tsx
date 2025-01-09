@@ -1,13 +1,13 @@
-import { RouterProvider } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { BrowserRouter } from 'react-router-dom';
 
-import { router } from './routes';
+import { AppRoutes } from './routes';
 
 function App() {
   return (
     <div className="h-full w-full overscroll-none text-inherit">
-      <RouterProvider router={router} />
-      <TanStackRouterDevtools position="bottom-right" router={router} />
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
     </div>
   );
 }

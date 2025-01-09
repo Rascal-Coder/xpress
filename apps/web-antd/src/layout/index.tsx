@@ -6,8 +6,8 @@ import {
   usePreferencesContext,
 } from '@xpress-core/preferences';
 
-import { Outlet } from '@tanstack/react-router';
 import { memo, Suspense, useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 
 function Layout({ menus }: { menus: MenuRecordRaw[] }) {
   const LayoutWrapper = memo(({ children }: { children: React.ReactNode }) => {
