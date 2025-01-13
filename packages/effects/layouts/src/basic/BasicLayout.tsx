@@ -5,7 +5,7 @@ import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
 import { isHttpUrl } from '@xpress-core/shared/utils';
 
-import { Suspense, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import MemoContent from './content-components/content';
@@ -36,6 +36,10 @@ function BasicLayout({ sidebarMenus }: Props) {
   const navigate = useNavigate();
   const location = useLocation();
   const [defaultActive, setDefaultActive] = useState(location.pathname);
+
+  useEffect(() => {
+    setDefaultActive(location.pathname);
+  }, [location.pathname]);
 
   const {
     preferences,

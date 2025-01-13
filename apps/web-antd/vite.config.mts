@@ -52,7 +52,7 @@ export default defineConfig(async () => {
       // loadingTemplate: 'default-loading-antd.html',
     },
     vite: {
-      plugins: [setupElegantRouter()],
+      // plugins: [setupElegantRouter()],
       server: {
         proxy: {
           '/api': {

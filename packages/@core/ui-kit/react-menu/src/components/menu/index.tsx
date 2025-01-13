@@ -63,6 +63,7 @@ export default function Menu(props: Props) {
   const menuStyle = useMenuStyle();
   const [sliceIndex, setSliceIndex] = useState(-1);
 
+  const [mouseInChild, setMouseInChild] = useState(false);
   /**
    * 初始化菜单展开状态
    * 当提供了 defaultOpeneds 且菜单未折叠时，使用默认展开的菜单列表
@@ -72,8 +73,6 @@ export default function Menu(props: Props) {
     menuReducer,
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
-
-  const [mouseInChild, setMouseInChild] = useState(false);
 
   /**
    * 判断菜单是否需要弹出显示
@@ -157,7 +156,7 @@ export default function Menu(props: Props) {
   );
 
   const { subMenus, items } = useMenuStructure({
-    // accordion,
+    accordion,
     defaultActive,
     defaultOpeneds,
     dispatch,
@@ -167,6 +166,7 @@ export default function Menu(props: Props) {
     setMouseInChild,
     children,
   });
+
   const childrenArray = React.Children.toArray(children);
   const defaultChildren =
     sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
@@ -266,7 +266,6 @@ export default function Menu(props: Props) {
       debouncedHandleResize();
     }
   }, [size, mode, debouncedHandleResize]);
-
   /**
    * 创建菜单上下文值
    */
