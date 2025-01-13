@@ -159,6 +159,7 @@ function SubMenu({
     }
     timer.current = setTimeout(() => {
       !currentSubMenu?.mouseInChild && rootMenu?.closeMenu(path, parentPaths);
+      setIsHovering(false);
     }, 100);
   }
   return (

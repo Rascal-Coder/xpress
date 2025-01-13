@@ -1,4 +1,5 @@
-import Layout from '../layout';
+import Layout from '#/pages/layouts/base';
+
 import { menus } from './menus';
 
 export function RootLayout() {

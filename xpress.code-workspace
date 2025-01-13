@@ -61,6 +61,10 @@
       "path": "packages/@core/base/typings",
     },
     {
+      "name": "@xpress-core/file-router",
+      "path": "packages/@core/file-router",
+    },
+    {
       "name": "@xpress-core/hooks",
       "path": "packages/@core/hooks",
     },

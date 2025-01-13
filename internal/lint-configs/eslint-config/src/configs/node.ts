@@ -63,6 +63,7 @@ export async function node(): Promise<Linter.Config[]> {
         'scripts/**/*.?([cm])[jt]s?(x)',
         'internal/**/*.?([cm])[jt]s?(x)',
         'apps/dev-server/**/*.?([cm])[jt]s?(x)',
+        'packages/@core/file-router/**/*.?([cm])[jt]s?(x)',
       ],
       rules: {
         // 在脚本和内部文件中允许使用全局 process

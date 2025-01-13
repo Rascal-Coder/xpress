@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@koa/cors": "^5.0.0",
+    "@xpress-core/file-router": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
