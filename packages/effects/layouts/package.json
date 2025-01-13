@@ -13,14 +13,14 @@
     }
   },
   "dependencies": {
-    "@tanstack/react-router": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
-    "react": "catalog:"
+    "react": "catalog:",
+    "react-router-dom": "^6.28.1"
   },
   "devDependencies": {
     "@types/react": "catalog:"

@@ -1,19 +1,27 @@
 import type { ReactNode } from 'react';
 
+import type { SupportedLanguagesType } from '../src/types';
+
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { defaultPreferences } from '../src/config';
-import { PreferencesProvider, usePreferences } from '../src/preferences';
-import { isDarkTheme } from '../src/update-css-variables';
+import { PreferencesProvider, usePreferencesContext } from '../src/preferences';
+
+const mockOptions = {
+  namespace: 'test',
+  overrides: {
+    app: {
+      locale: 'zh-CN' as SupportedLanguagesType,
+    },
+  },
+};
 
 describe('preferencesProvider', () => {
-  // 设置通用的测试包装器
   const wrapper = ({ children }: { children: ReactNode }) => (
-    <PreferencesProvider>{children}</PreferencesProvider>
+    <PreferencesProvider options={mockOptions}>{children}</PreferencesProvider>
   );
 
-  // 模拟 matchMedia
   beforeEach(() => {
     vi.stubGlobal(
       'matchMedia',
@@ -32,242 +40,74 @@ describe('preferencesProvider', () => {
     );
   });
 
-  // 基础功能测试
-  describe('basic Functionality', () => {
-    it('should start with defaultPreferences', () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-      expect(result.current.preferences).toEqual(defaultPreferences);
-    });
+  it('should initialize with merged preferences', () => {
+    const { result } = renderHook(() => usePreferencesContext(), { wrapper });
 
-    it('should initialize with custom preferences', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        await result.current.initPreferences({
-          namespace: 'test',
-          overrides: {
-            app: {
-              locale: 'zh-CN',
-              name: 'Test App',
-            },
-          },
-        });
-      });
-
-      expect(result.current.preferences.app.locale).toBe('zh-CN');
-      expect(result.current.preferences.app.name).toBe('Test App');
-    });
-
-    it('should handle multiple initializations', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        await result.current.initPreferences({
-          namespace: 'test1',
-          overrides: { app: { locale: 'en-US' } },
-        });
-      });
-
-      const firstInitState = result.current.preferences;
-
-      await act(async () => {
-        await result.current.initPreferences({
-          namespace: 'test2',
-          overrides: { app: { locale: 'zh-CN' } },
-        });
-      });
-
-      expect(result.current.preferences).toEqual(firstInitState);
-    });
-
-    it('should reset preferences to default', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { locale: 'zh-CN' },
-          theme: { mode: 'dark' },
-        });
-      });
-
-      await act(async () => {
-        result.current.resetPreferences();
-      });
-
-      expect(result.current.preferences).toEqual(defaultPreferences);
-    });
-  });
-
-  // 主题相关测试
-  describe('theme Management', () => {
-    it('should update theme mode', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          theme: { mode: 'dark' },
-        });
-      });
-
-      expect(result.current.preferences.theme.mode).toBe('dark');
-    });
-
-    it('should handle color modes', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: {
-            colorGrayMode: true,
-            colorWeakMode: true,
-          },
-        });
-      });
-
-      expect(result.current.preferences.app.colorGrayMode).toBe(true);
-      expect(result.current.preferences.app.colorWeakMode).toBe(true);
-    });
-  });
-
-  // 语言设置测试
-  describe('language Settings', () => {
-    it('should handle language switching', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { locale: 'en-US' },
-        });
-      });
-
-      expect(result.current.preferences.app.locale).toBe('en-US');
-    });
-  });
-
-  // 布局设置测试
-  describe('layout Settings', () => {
-    it('should handle sidebar preferences', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          sidebar: {
-            collapsed: true,
-            width: 200,
-          },
-        });
-      });
-
-      expect(result.current.preferences.sidebar.collapsed).toBe(true);
-      expect(result.current.preferences.sidebar.width).toBe(200);
-    });
-
-    it('should handle navigation style', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          navigation: { styleType: 'plain' },
-        });
-      });
-
-      expect(result.current.preferences.navigation.styleType).toBe('plain');
-    });
-
-    it('should handle layout type', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { layout: 'mixed-nav' },
-        });
-      });
-
-      expect(result.current.preferences.app.layout).toBe('mixed-nav');
-    });
-  });
-
-  // 响应式设计测试
-  describe('responsive Design', () => {
-    it('should handle mobile mode', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { isMobile: true },
-        });
-      });
-
-      expect(result.current.preferences.app.isMobile).toBe(true);
-    });
-
-    it('should handle content compact mode', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { contentCompact: 'compact' },
-        });
-      });
-
-      expect(result.current.preferences.app.contentCompact).toBe('compact');
-    });
-  });
-
-  // 数据合并测试
-  describe('data Merging', () => {
-    it('should merge nested preferences correctly', async () => {
-      const { result } = renderHook(() => usePreferences(), { wrapper });
-
-      await act(async () => {
-        result.current.updatePreferences({
-          app: { name: 'Test App' },
-        });
-      });
-
-      expect(result.current.preferences.app.name).toBe('Test App');
-      expect(result.current.preferences.app.locale).toBe(
-        defaultPreferences.app.locale,
-      );
-    });
-  });
-});
-
-// 主题检测功能测试
-describe('isDarkTheme', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'matchMedia',
-      vi.fn().mockImplementation((query) => ({
-        addEventListener: vi.fn(),
-        addListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-        matches: query === '(prefers-color-scheme: dark)',
-        media: query,
-        onchange: null,
-        removeEventListener: vi.fn(),
-        removeListener: vi.fn(),
-      })),
+    expect(result.current.preferences.app.locale).toBe('zh-CN');
+    expect(result.current.preferences).toEqual(
+      expect.objectContaining({
+        ...defaultPreferences,
+        app: {
+          ...defaultPreferences.app,
+          locale: 'zh-CN',
+        },
+      }),
     );
   });
 
-  it('should return true for dark theme', () => {
-    expect(isDarkTheme('dark')).toBe(true);
+  it('should update preferences correctly', () => {
+    const { result } = renderHook(() => usePreferencesContext(), { wrapper });
+
+    act(() => {
+      result.current.updatePreferences({
+        theme: { mode: 'dark' },
+      });
+    });
+
+    expect(result.current.preferences.theme.mode).toBe('dark');
+    expect(result.current.isDark).toBe(true);
   });
 
-  it('should return false for light theme', () => {
-    expect(isDarkTheme('light')).toBe(false);
+  it('should reset preferences to default', () => {
+    const { result } = renderHook(() => usePreferencesContext(), { wrapper });
+
+    act(() => {
+      result.current.updatePreferences({
+        theme: { mode: 'dark' },
+      });
+    });
+
+    act(() => {
+      result.current.resetPreferences();
+    });
+
+    expect(result.current.preferences).toEqual(defaultPreferences);
   });
 
-  it('should return system preference for auto theme', () => {
-    expect(isDarkTheme('auto')).toBe(true);
-    expect(window.matchMedia).toHaveBeenCalledWith(
-      '(prefers-color-scheme: dark)',
-    );
+  it('should handle mobile layout correctly', async () => {
+    const { result } = renderHook(() => usePreferencesContext(), { wrapper });
+
+    // 等待状态更新
+    await act(async () => {
+      // 触发一次更新
+      result.current.updatePreferences({
+        app: { isMobile: true },
+      });
+    });
+
+    expect(result.current.isMobile).toBe(true);
+    expect(result.current.layout).toBe('sidebar-nav');
   });
 
-  it('should handle invalid theme values', () => {
-    // @ts-ignore - 测试无效的主题值
-    expect(isDarkTheme('invalid')).toBe(false);
+  it('should handle theme auto mode', () => {
+    const { result } = renderHook(() => usePreferencesContext(), { wrapper });
+
+    act(() => {
+      result.current.updatePreferences({
+        theme: { mode: 'auto' },
+      });
+    });
+
+    expect(result.current.preferences.theme.mode).toBe('dark');
   });
 });

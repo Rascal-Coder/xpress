@@ -14,17 +14,21 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@tanstack/react-router": "catalog:",
-    "@tanstack/router-devtools": "catalog:",
+    "@koa/cors": "^5.0.0",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-router-dom": "6"
   },
   "devDependencies": {
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-json": "^2.0.23",
+    "@types/koa-logger": "^3.1.5",
+    "@types/koa-router": "^7.4.8",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",

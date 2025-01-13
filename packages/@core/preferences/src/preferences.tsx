@@ -26,10 +26,10 @@ const STORAGE_KEY_LOCALE = `${STORAGE_KEY}-locale`;
 const STORAGE_KEY_THEME = `${STORAGE_KEY}-theme`;
 
 class PreferenceManager {
-  private cache: null | StorageManager = null;
   private initialPreferences: Preferences = defaultPreferences;
   private isInitialized: boolean = false;
   private state: Preferences = this.loadPreferences();
+  public cache: null | StorageManager = null;
 
   constructor() {
     this.cache = new StorageManager();
@@ -97,14 +97,13 @@ class PreferenceManager {
     }
   }
 
-  public async initPreferences({ namespace, overrides }: InitialOptions) {
+  public initPreferences({ namespace, overrides }: InitialOptions) {
     if (this.isInitialized) {
-      return;
+      return this.state;
     }
 
     this.cache = new StorageManager({ prefix: namespace });
     this.initialPreferences = merge({}, overrides, defaultPreferences);
-
     const mergedPreference = merge(
       {},
       this.loadCachedPreferences() || {},
@@ -129,7 +128,6 @@ class PreferenceManager {
 interface PreferencesContextType {
   clearCache: () => void;
   getInitialPreferences: () => Preferences;
-  initPreferences: (options: InitialOptions) => Promise<void>;
   preferences: Preferences;
   resetPreferences: () => void;
   updatePreferences: (updates: DeepPartial<Preferences>) => void;
@@ -140,12 +138,23 @@ const PreferencesContext = createContext<null | PreferencesContextType>(null);
 // Provider组件
 interface PreferencesProviderProps {
   children: React.ReactNode;
+  options: InitialOptions;
 }
 
-export function PreferencesProvider({ children }: PreferencesProviderProps) {
-  const [preferences, setPreferences] =
-    useState<Preferences>(defaultPreferences);
+export function PreferencesProvider({
+  options,
+  children,
+}: PreferencesProviderProps) {
   const preferenceManager = useRef(new PreferenceManager());
+  // 初始化
+  const getInitialState = () => {
+    const initialPreferences =
+      preferenceManager.current.initPreferences(options);
+
+    return initialPreferences;
+  };
+
+  const [preferences, setPreferences] = useState<Preferences>(getInitialState);
 
   const updatePreferences = useCallback((updates: DeepPartial<Preferences>) => {
     setPreferences((prev) => {
@@ -164,57 +173,47 @@ export function PreferencesProvider({ children }: PreferencesProviderProps) {
     });
   }, []);
 
+  const clearCache = useCallback(() => {
+    preferenceManager.current.clearCache();
+  }, []);
+
+  const getInitialPreferences = useCallback(() => {
+    return defaultPreferences;
+  }, []);
+
   // 监听系统主题变化
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+  // 监听移动端断点
+  const breakpoints = useBreakpoints(breakpointsTailwind);
+  const isMobile = breakpoints.smaller('md');
+
   useEffect(() => {
     if (preferences.theme.mode === 'auto') {
       updatePreferences({
         theme: { mode: prefersDark ? 'dark' : 'light' },
       });
     }
-  }, [preferences.theme.mode, prefersDark, updatePreferences]);
-
-  // 监听移动端断点
-  const breakpoints = useBreakpoints(breakpointsTailwind);
-  const isMobile = breakpoints.smaller('md');
-  useEffect(() => {
     updatePreferences({
       app: { isMobile },
     });
-  }, [isMobile, updatePreferences]);
+  }, [isMobile, preferences.theme.mode, prefersDark, updatePreferences]);
 
-  const clearCache = useCallback(() => {
-    preferenceManager.current.clearCache();
-  }, []);
-
-  const initPreferences = useCallback(async (options: InitialOptions) => {
-    const initialPrefs =
-      await preferenceManager.current.initPreferences(options);
-    if (initialPrefs) {
-      setPreferences(initialPrefs);
-    }
-  }, []);
-  const getInitialPreferences = useCallback(() => {
-    return preferenceManager.current.getInitialPreferences();
-  }, []);
-  const value = useMemo(
-    () => ({
+  const value = useMemo<PreferencesContextType>(() => {
+    return {
       clearCache,
       getInitialPreferences,
-      initPreferences,
       preferences,
       resetPreferences,
       updatePreferences,
-    }),
-    [
-      preferences,
-      updatePreferences,
-      resetPreferences,
-      clearCache,
-      initPreferences,
-      getInitialPreferences,
-    ],
-  );
+    };
+  }, [
+    clearCache,
+    getInitialPreferences,
+    preferences,
+    resetPreferences,
+    updatePreferences,
+  ]);
+
   return (
     <PreferencesContext.Provider value={value}>
       {children}
@@ -230,6 +229,7 @@ export function usePreferencesContext() {
   }
   // 当前偏好设置
   const preferences = context.preferences;
+
   // 初始偏好设置
   const initialPreferences = context.getInitialPreferences();
   /**
@@ -433,7 +433,6 @@ export function usePreferencesContext() {
     authPanelLeft,
     authPanelRight,
     contentIsMaximize,
-    context,
     diffPreference,
     globalLockScreenShortcutKey,
     globalLogoutShortcutKey,

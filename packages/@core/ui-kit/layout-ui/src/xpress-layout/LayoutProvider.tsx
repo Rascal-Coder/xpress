@@ -4,70 +4,52 @@ import { LayoutContext } from './context';
 
 interface LayoutProviderProps {
   children: ReactNode;
-  defaultSidebarCollapse?: boolean;
-  defaultSidebarEnable?: boolean;
-  defaultSidebarExpandOnHover?: boolean;
-  defaultSidebarExtraCollapse?: boolean;
-  defaultSidebarExtraVisible?: boolean;
   onSidebarCollapseChange?: (value: boolean) => void;
   onSidebarEnableChange?: (value: boolean) => void;
   onSidebarExpandOnHoverChange?: (value: boolean) => void;
   onSidebarExtraCollapseChange?: (value: boolean) => void;
   onSidebarExtraVisibleChange?: (value: boolean) => void;
   onSideMouseLeave?: () => void;
+  sidebarCollapse: boolean;
+  sidebarEnable: boolean;
+  sidebarExpandOnHover: boolean;
+  sidebarExtraCollapse: boolean;
+  sidebarExtraVisible: boolean;
 }
 
 export const LayoutProvider: FC<LayoutProviderProps> = ({
-  defaultSidebarCollapse = true,
-  defaultSidebarEnable = true,
-  defaultSidebarExpandOnHover = false,
-  defaultSidebarExtraCollapse = false,
-  defaultSidebarExtraVisible = false,
   onSidebarCollapseChange,
   onSidebarEnableChange,
   onSidebarExpandOnHoverChange,
   onSidebarExtraCollapseChange,
   onSidebarExtraVisibleChange,
   onSideMouseLeave,
+  sidebarCollapse,
+  sidebarEnable,
+  sidebarExpandOnHover,
+  sidebarExtraCollapse,
+  sidebarExtraVisible,
   children,
 }) => {
-  const [sidebarCollapse, setSidebarCollapse] = useState(
-    defaultSidebarCollapse,
-  );
-  const [sidebarExtraVisible, setSidebarExtraVisible] = useState(
-    defaultSidebarExtraVisible,
-  );
-  const [sidebarExtraCollapse, setSidebarExtraCollapse] = useState(
-    defaultSidebarExtraCollapse,
-  );
-  const [sidebarExpandOnHover, setSidebarExpandOnHover] = useState(
-    defaultSidebarExpandOnHover,
-  );
-  const [sidebarEnable, setSidebarEnable] = useState(defaultSidebarEnable);
   const [sidebarExpandOnHovering, setSidebarExpandOnHovering] = useState(false);
 
   const handleSidebarCollapseChange = (value: boolean) => {
-    setSidebarCollapse(value);
     onSidebarCollapseChange?.(value);
   };
 
   const handleSidebarExtraVisibleChange = (value: boolean) => {
-    setSidebarExtraVisible(value);
     onSidebarExtraVisibleChange?.(value);
   };
 
   const handleSidebarExtraCollapseChange = (value: boolean) => {
-    setSidebarExtraCollapse(value);
     onSidebarExtraCollapseChange?.(value);
   };
 
   const handleSidebarExpandOnHoverChange = (value: boolean) => {
-    setSidebarExpandOnHover(value);
     onSidebarExpandOnHoverChange?.(value);
   };
 
   const handleSidebarEnableChange = (value: boolean) => {
-    setSidebarEnable(value);
     onSidebarEnableChange?.(value);
   };
 

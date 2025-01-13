@@ -2,7 +2,7 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { useMemo } from 'react';
 
-import { MenuItem, SubMenu } from './components';
+import { MenuBadge, MenuItem, SubMenu } from './components';
 
 interface Props {
   /**
@@ -21,14 +21,16 @@ function SubMenuView({ menu }: Props) {
   return hasChildren ? (
     <SubMenu
       activeIcon={menu.activeIcon}
-      // content={
-      //   <MenuBadge
-      //     badge={menu.badge}
-      //     badgeType={menu.badgeType}
-      //     badgeVariants={menu.badgeVariants}
-      //     className="right-6"
-      //   ></MenuBadge>
-      // }
+      content={
+        <div>
+          <MenuBadge
+            badge={menu.badge}
+            badgeType={menu.badgeType}
+            badgeVariants={menu.badgeVariants}
+            className="right-6"
+          ></MenuBadge>
+        </div>
+      }
       icon={menu.icon}
       key={`${menu.path}_sub`}
       path={menu.path}

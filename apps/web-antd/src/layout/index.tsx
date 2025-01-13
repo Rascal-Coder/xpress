@@ -1,33 +1,19 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { BasicLayout } from '@xpress/layouts';
-import {
-  PreferencesProvider,
-  usePreferencesContext,
-} from '@xpress-core/preferences';
+import { PreferencesProvider } from '@xpress-core/preferences';
 
-import { Outlet } from '@tanstack/react-router';
-import { memo, Suspense, useEffect } from 'react';
+import { overridesPreferences } from '#/preferences';
 
 function Layout({ menus }: { menus: MenuRecordRaw[] }) {
-  const LayoutWrapper = memo(({ children }: { children: React.ReactNode }) => {
-    const { initPreferences } = usePreferencesContext();
-    const env = import.meta.env.PROD ? 'prod' : 'dev';
-    const appVersion = import.meta.env.VITE_APP_VERSION;
-    const namespace = `${import.meta.env.VITE_APP_NAMESPACE}-${appVersion}-${env}`;
-    useEffect(() => {
-      initPreferences({ namespace });
-    }, [initPreferences, namespace]);
-    return <BasicLayout content={children} sidebarMenus={menus} />;
-  });
-  LayoutWrapper.displayName = 'LayoutWrapper';
+  const env = import.meta.env.PROD ? 'prod' : 'dev';
+  const appVersion = import.meta.env.VITE_APP_VERSION;
+  const namespace = `${import.meta.env.VITE_APP_NAMESPACE}-${appVersion}-${env}`;
   return (
-    <PreferencesProvider>
-      <LayoutWrapper>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Outlet />
-        </Suspense>
-      </LayoutWrapper>
+    <PreferencesProvider
+      options={{ namespace, overrides: overridesPreferences }}
+    >
+      <BasicLayout sidebarMenus={menus} />;
     </PreferencesProvider>
   );
 }

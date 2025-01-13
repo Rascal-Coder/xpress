@@ -4,7 +4,7 @@ import { useNamespace } from '@xpress-core/hooks';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 
 import CollapseTransition from '../collapse-transition';
 import { useMenuContext, useMenuStyle } from '../hooks';
@@ -18,6 +18,7 @@ interface Props extends SubMenuProps {
 function SubMenu({
   activeIcon,
   className,
+  content,
   disabled = false,
   icon,
   isSubMenuMore = false,
@@ -39,8 +40,9 @@ function SubMenu({
   }, [parentPaths.length]);
   const subMenuStyle = useMenuStyle(level - 1);
 
-  const mouseInChild = useRef(false);
   const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
+  const [isHovering, setIsHovering] = useState(false);
+  const subMenuRef = useRef<HTMLLIElement | null>(null);
 
   const opened = useMemo(() => {
     return rootMenu?.openedMenus.includes(path);
@@ -101,13 +103,15 @@ function SubMenu({
       path,
     });
   }
-  const subMenuRef = useRef<HTMLLIElement | null>(null);
+
   const handleMouseEnter = useCallback(
     (event: React.FocusEvent | React.MouseEvent, showTimeout = 100) => {
       // 忽略 focus 事件
       if (event.type === 'focus') {
         return;
       }
+
+      setIsHovering(true);
 
       // 检查是否应该处理鼠标进入
       if (
@@ -138,7 +142,6 @@ function SubMenu({
     [rootMenu, disabled, currentSubMenu, timer, path, parentPaths],
   );
 
-  // TODO: 需要修改
   function handleMouseleave() {
     if (
       !rootMenu?.props.collapse &&
@@ -155,10 +158,9 @@ function SubMenu({
       currentSubMenu.setMouseInChild(false);
     }
     timer.current = setTimeout(() => {
-      !mouseInChild.current && rootMenu?.closeMenu(path, parentPaths);
+      !currentSubMenu?.mouseInChild && rootMenu?.closeMenu(path, parentPaths);
     }, 100);
   }
-  //  mode === 'horizontal' || (mode === 'vertical' && collapse) 这个情况下新增一个样式
   return (
     <li
       className={cn(
@@ -182,7 +184,7 @@ function SubMenu({
             opened ? '' : 'hidden',
           )}
           contentProps={contentProps}
-          open
+          open={isHovering}
           openDelay={0}
           trigger={
             <SubMenuContent
@@ -222,7 +224,9 @@ function SubMenu({
             menuItemClick={handleClick}
             path={path}
             title={title}
-          />
+          >
+            {content}
+          </SubMenuContent>
           {opened && (
             <CollapseTransition>
               <ul

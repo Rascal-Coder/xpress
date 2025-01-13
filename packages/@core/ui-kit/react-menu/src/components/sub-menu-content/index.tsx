@@ -83,7 +83,6 @@ function SubMenuContent({
       )}
       onClick={() => menuItemClick?.()}
     >
-      {children}
       {!isMenuMore && (
         <XpressIcon
           className={cn(nsMenu.e('icon'))}
@@ -98,6 +97,7 @@ function SubMenuContent({
           style={iconArrowStyle}
         ></IconComponent>
       )}
+      {children}
     </div>
   );
 }
