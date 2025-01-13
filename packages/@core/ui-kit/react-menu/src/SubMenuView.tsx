@@ -1,6 +1,6 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { MenuBadge, MenuItem, SubMenu } from './components';
 

@@ -5,7 +5,6 @@ import { Ellipsis } from '@xpress-core/icons';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useDebounceFn, useSize } from 'ahooks';
-import { produce } from 'immer';
 import React, {
   useCallback,
   useEffect,
@@ -15,71 +14,35 @@ import React, {
   useState,
 } from 'react';
 
-import SubMenuView from '../../SubMenuView';
 import { MenuContext, type MenuContextType } from '../contexts';
 import { useMenuStyle } from '../hooks';
+import { useMenuStructure } from '../hooks/useMenuStructure';
 import SubMenu from '../sub-menu';
+import { menuReducer } from './menuReducer';
 
 import './styles.scss';
 
-type MenuAction =
-  | {
-      accordion?: boolean;
-      parentPaths: string[];
-      path: string;
-      type: 'OPEN_MENU';
-    }
-  | { menus: string[]; type: 'SET_MENUS' }
-  | { path: string; type: 'CLOSE_MENU' }
-  | { type: 'RESET_MENUS' };
-
-function menuReducer(state: string[], action: MenuAction): string[] {
-  switch (action.type) {
-    case 'CLOSE_MENU': {
-      if (!state.includes(action.path)) {
-        return state;
-      }
-      return state.filter((path) => path !== action.path);
-    }
-
-    case 'OPEN_MENU': {
-      if (state.includes(action.path)) {
-        return state;
-      }
-
-      if (action.accordion) {
-        const filteredMenus = state.filter((path) =>
-          action.parentPaths.includes(path),
-        );
-        const newMenus = [...new Set([action.path, ...filteredMenus])];
-        return newMenus.length === state.length &&
-          newMenus.every((item, i) => item === state[i])
-          ? state
-          : newMenus;
-      }
-
-      return [...state, action.path];
-    }
-
-    case 'RESET_MENUS': {
-      return state.length === 0 ? state : [];
-    }
-
-    case 'SET_MENUS': {
-      return action.menus.length === state.length &&
-        action.menus.every((item, i) => item === state[i])
-        ? state
-        : action.menus;
-    }
-
-    default: {
-      return state;
-    }
-  }
-}
-
 interface Props extends MenuProps {}
 
+/**
+ * Menu 组件 - 一个功能丰富的菜单组件，支持垂直和水平布局、折叠展开、手风琴模式等特性
+ *
+ * @component
+ * @param props - 组件属性
+ * @param props.accordion - 是否启用手风琴模式，默认为 true
+ * @param props.collapse - 是否折叠菜单，默认为 false
+ * @param props.defaultActive - 默认激活的菜单项路径，默认为空字符串
+ * @param props.defaultOpeneds - 默认展开的子菜单路径数组
+ * @param props.mode - 菜单模式，可选 'vertical' | 'horizontal'，默认为 'vertical'
+ * @param props.onClose - 子菜单关闭时的回调函数
+ * @param props.onOpen - 子菜单打开时的回调函数
+ * @param props.onSelect - 菜单项选中时的回调函数
+ * @param props.rounded - 是否使用圆角样式，默认为 true
+ * @param props.theme - 菜单主题，可选 'dark' | 'light'，默认为 'dark'
+ * @param props.children - 菜单内容
+ *
+ * @returns React 组件
+ */
 export default function Menu(props: Props) {
   const {
     accordion = true,
@@ -99,34 +62,30 @@ export default function Menu(props: Props) {
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
   const [sliceIndex, setSliceIndex] = useState(-1);
+
+  /**
+   * 初始化菜单展开状态
+   * 当提供了 defaultOpeneds 且菜单未折叠时，使用默认展开的菜单列表
+   * 否则使用空数组作为初始状态
+   */
   const [openedMenus, dispatch] = useReducer(
     menuReducer,
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
-  const [items, setItems] = useState<MenuContextType['items']>({});
-  const [subMenus, setSubMenus] = useState<MenuContextType['subMenus']>({});
+
   const [mouseInChild, setMouseInChild] = useState(false);
 
+  /**
+   * 判断菜单是否需要弹出显示
+   */
   const isMenuPopup = useMemo(() => {
-    const res = mode === 'horizontal' || (mode === 'vertical' && collapse);
-    return res;
+    return mode === 'horizontal' || (mode === 'vertical' && collapse);
   }, [collapse, mode]);
 
-  const childrenArray = React.Children.toArray(children);
-  const defaultChildren =
-    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
-  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
-
-  const getActivePaths = useCallback(() => {
-    const activeItem = defaultActive && items[defaultActive];
-    if (!activeItem || mode === 'horizontal' || collapse) {
-      return [];
-    }
-    return activeItem.parentPaths;
-  }, [collapse, defaultActive, items, mode]);
-
   /**
-   * 点击展开菜单
+   * 打开指定路径的菜单
+   * @param path - 要打开的菜单路径
+   * @param parentPaths - 父菜单路径列表
    */
   const openMenu = useCallback(
     (path: string, parentPaths: string[]) => {
@@ -142,24 +101,33 @@ export default function Menu(props: Props) {
     [accordion, onOpen],
   );
 
+  /**
+   * 关闭指定路径的菜单
+   * @param path - 要关闭的菜单路径
+   * @param parentPaths - 父菜单路径列表
+   */
   const closeMenu = useCallback(
     (path: string, parentPaths: string[]) => {
-      if (accordion) {
-        dispatch({
-          menus: subMenus[path]?.parentPaths ?? [],
-          type: 'SET_MENUS',
-        });
-      }
-
       dispatch({ path, type: 'CLOSE_MENU' });
       onClose?.(path, parentPaths);
     },
-    [accordion, onClose, subMenus],
+    [onClose],
   );
 
+  /**
+   * 处理子菜单的点击事件
+   * @param param0 - 菜单点击事件参数
+   * @param param0.openedMenus - 当前打开的菜单列表
+   * @param param0.parentPaths - 父菜单路径列表
+   * @param param0.path - 当前点击的菜单路径
+   */
   const handleSubMenuClick = useCallback(
-    ({ openedMenus, parentPaths, path }: MenuItemClicked) => {
-      if (openedMenus && openedMenus?.includes(path)) {
+    ({
+      openedMenus: currentOpenedMenus,
+      parentPaths,
+      path,
+    }: MenuItemClicked) => {
+      if (currentOpenedMenus && currentOpenedMenus?.includes(path)) {
         closeMenu(path, parentPaths);
       } else {
         openMenu(path, parentPaths);
@@ -168,6 +136,12 @@ export default function Menu(props: Props) {
     [closeMenu, openMenu],
   );
 
+  /**
+   * 处理菜单项的点击事件
+   * @param param0 - 菜单项点击事件参数
+   * @param param0.parentPaths - 父菜单路径列表
+   * @param param0.path - 当前点击的菜单项路径
+   */
   const handleMenuItemClick = useCallback(
     ({ parentPaths, path }: MenuItemClicked) => {
       if (mode === 'horizontal' || collapse) {
@@ -181,26 +155,39 @@ export default function Menu(props: Props) {
     },
     [mode, collapse, onSelect],
   );
-  /**
-   * 初始化菜单
-   */
-  const initMenu = useCallback(() => {
-    const parentPaths = getActivePaths();
-    // console.log('parentPaths', parentPaths);
-    // 展开该菜单项的路径上所有子菜单
-    // expand all subMenus of the menu item
-    parentPaths.forEach((path) => {
-      const subMenu = subMenus[path];
-      subMenu && openMenu(path, subMenu.parentPaths);
-    });
-  }, [subMenus, getActivePaths, openMenu]);
 
+  const { subMenus, items } = useMenuStructure({
+    // accordion,
+    defaultActive,
+    defaultOpeneds,
+    dispatch,
+    handleMenuItemClick,
+    handleSubMenuClick,
+    mouseInChild,
+    setMouseInChild,
+    children,
+  });
+  const childrenArray = React.Children.toArray(children);
+  const defaultChildren =
+    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
+  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
+
+  /**
+   * 计算菜单项的实际宽度，包括外边距
+   * @param menuItem - 菜单项 DOM 元素
+   * @returns 菜单项的总宽度（包括外边距）
+   */
   function calcMenuItemWidth(menuItem: HTMLElement) {
     const computedStyle = getComputedStyle(menuItem);
     const marginLeft = Number.parseInt(computedStyle.marginLeft, 10);
     const marginRight = Number.parseInt(computedStyle.marginRight, 10);
     return menuItem.offsetWidth + marginLeft + marginRight || 0;
   }
+
+  /**
+   * 计算水平模式下需要移入更多菜单的切片索引
+   * @returns 切片索引，-1 表示不需要更多菜单
+   */
   const calcSliceIndex = useCallback(() => {
     if (!menuRef.current) {
       return -1;
@@ -227,12 +214,20 @@ export default function Menu(props: Props) {
 
   const size = useSize(mode === 'horizontal' ? menuRef : null);
   const isFirstTimeRenderRef = useRef(true);
+
+  /**
+   * 更新切片索引，用于处理水平模式下的响应式布局
+   */
   const updateSliceIndex = useCallback(() => {
     setSliceIndex(-1);
     requestAnimationFrame(() => {
       setSliceIndex(calcSliceIndex());
     });
   }, [calcSliceIndex]);
+
+  /**
+   * 处理窗口大小变化，更新菜单布局
+   */
   const handleResize = useCallback(() => {
     if (sliceIndex === calcSliceIndex()) {
       return;
@@ -252,112 +247,29 @@ export default function Menu(props: Props) {
     wait: 200,
   });
 
+  /**
+   * 监听折叠状态变化
+   * 当菜单被折叠时，重置所有已展开的菜单
+   */
   useEffect(() => {
     if (collapse) {
       dispatch({ type: 'RESET_MENUS' });
     }
   }, [collapse]);
 
-  // useEffect(() => {
-  //   const itemsInData = items;
-  //   const item =
-  //     itemsInData[defaultActive] ||
-  //     (activePath && itemsInData[activePath]) ||
-  //     itemsInData[defaultActive || ''];
-  //   setActivePath(item ? item.path : defaultActive);
-  // }, [defaultActive, items, activePath]);
-
+  /**
+   * 监听水平模式下的尺寸变化
+   * 当菜单处于水平模式且尺寸发生变化时，重新计算更多菜单的显示
+   */
   useEffect(() => {
     if (mode === 'horizontal' && size) {
       debouncedHandleResize();
     }
   }, [size, mode, debouncedHandleResize]);
-  // 注册默认数据
-  useEffect(() => {
-    const registerSubMenus = (
-      children: any[] | React.ReactNode,
-      parentPath = '',
-      parentPaths: string[] = [],
-    ) => {
-      // 如果children是数组对象，需要先转换成SubMenuView组件
-      if (
-        Array.isArray(children) &&
-        typeof children[0] === 'object' &&
-        !React.isValidElement(children[0])
-      ) {
-        children = children.map((child) => (
-          <SubMenuView key={child.path} menu={child} />
-        ));
-      }
 
-      React.Children.forEach(children, (child) => {
-        if (!React.isValidElement(child)) return;
-
-        if (child.type === SubMenuView) {
-          const typedChild = child as React.ReactElement<
-            ReturnType<typeof SubMenuView>['props']
-          >;
-          const path = typedChild.props.menu.path;
-          const isSubMenu = typedChild.props.menu.children?.length > 0;
-
-          // 构建parentPaths数组
-          const currentParentPaths = parentPath
-            ? [...parentPaths, path] // 包含当前路径
-            : [path]; // 如果是根节点，只包含自身
-          if (isSubMenu) {
-            setSubMenus(
-              produce((draft) => {
-                draft[path] = {
-                  active: currentParentPaths.includes(defaultActive),
-                  handleClick: handleSubMenuClick,
-                  handleMouseleave: () => {},
-                  mouseInChild,
-                  parentPaths: currentParentPaths,
-                  path,
-                  setMouseInChild,
-                };
-              }),
-            );
-            if (typedChild.props.menu.children?.length) {
-              registerSubMenus(
-                typedChild.props.menu.children,
-                path,
-                currentParentPaths,
-              );
-            }
-          } else {
-            setItems(
-              produce((draft) => {
-                draft[path] = {
-                  active: currentParentPaths.includes(defaultActive),
-                  handleClick: handleMenuItemClick,
-                  parentPaths: currentParentPaths,
-                  path,
-                };
-              }),
-            );
-          }
-        }
-      });
-    };
-
-    registerSubMenus(children);
-
-    return () => {
-      dispatch({ type: 'RESET_MENUS' });
-      // setActivePath('');
-      setItems({});
-      setSubMenus({});
-      setMouseInChild(false);
-      setSliceIndex(-1);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [children]);
-
-  useEffect(() => {
-    initMenu();
-  }, [items, subMenus, initMenu]);
-
+  /**
+   * 创建菜单上下文值
+   */
   const menuProviderValue = useMemo<MenuContextType>(() => {
     return {
       activePath: defaultActive,
