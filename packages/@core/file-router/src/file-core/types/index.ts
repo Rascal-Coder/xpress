@@ -1,4 +1,4 @@
-export interface ElegantRouterOption {
+export interface XpressRouterOption {
   /**
    * alias
    *
@@ -25,7 +25,7 @@ export interface ElegantRouterOption {
   /**
    * the relative path to the root directory of the pages
    *
-   * @default 'src/views'
+   * @default 'src/pages'
    */
   pageDir: string;
   /**
@@ -47,30 +47,9 @@ export interface ElegantRouterOption {
    * @link the detail syntax: https://github.com/micromatch/micromatch
    */
   pagePatterns: string[];
-  /**
-   * transform the route name
-   *
-   * @default
-   * ```ts
-   * routeName => routeName
-   * ```
-   * @param routeName the route name
-   */
-  routeNameTransformer: (routeName: string) => string;
-  /**
-   * transform the route path
-   *
-   * @default
-   * ```ts
-   * (_transformedName, path) => path
-   * ```
-   * @param transformedName the transformed route name
-   * @param path the route path
-   */
-  routePathTransformer: (transformedName: string, path: string) => string;
 }
 
-export interface ElegantRouterFile {
+export interface XpressRouterFile {
   /** the full path of the page */
   fullPath: string;
   /** the glob of the page */
@@ -124,7 +103,7 @@ export interface ElegantRouterFile {
  *
  * Map<name, path>
  */
-export type ElegantRouterNamePathMap = Map<string, string>;
+export type XpressRouterNamePathMap = Map<string, string>;
 
 /**
  * the map of the route path and the route name
@@ -134,11 +113,11 @@ export type ElegantRouterNamePathMap = Map<string, string>;
  * @example
  *   ['a', '/a'];
  */
-export type ElegantRouterNamePathEntry = [string, string];
+export type XpressRouterNamePathEntry = [string, string];
 
 /** the tree of the route */
-export interface ElegantRouterTree {
-  children?: ElegantRouterTree[];
-  routeName: string;
-  routePath: string;
+export interface XpressRouterTree {
+  children?: XpressRouterTree[];
+  name: string;
+  path: string;
 }

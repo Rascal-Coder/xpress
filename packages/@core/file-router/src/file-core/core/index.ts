@@ -1,11 +1,10 @@
 import type { FSWatcher } from 'chokidar';
 
 import type {
-  ElegantRouterFile,
-  ElegantRouterNamePathEntry,
-  ElegantRouterNamePathMap,
-  ElegantRouterOption,
-  ElegantRouterTree,
+  XpressRouterNamePathEntry,
+  XpressRouterNamePathMap,
+  XpressRouterOption,
+  XpressRouterTree,
 } from '../types';
 
 import micromatch from 'micromatch';
@@ -13,15 +12,8 @@ import micromatch from 'micromatch';
 import { getGlobs } from '../shared/glob';
 import { createPluginOptions } from './options';
 import { getFullPathOfPageGlob } from './path';
-import {
-  transformPageGlobToRouterFile,
-  transformRouterEntriesToTrees,
-  transformRouterFilesToMaps,
-  transformRouterMapsToEntries,
-} from './transform';
 import { handleValidatePageGlob } from './validate';
 import { setupWatcher } from './watcher';
-
 /**
  * 优雅路由核心类
  *
@@ -44,14 +36,14 @@ import { setupWatcher } from './watcher';
  * });
  * ```
  */
-export default class ElegantRouter {
+export default class XpressRouter {
   /**
    * 路由名称和路径的映射条目数组
    *
    * 每个条目是一个元组 [routeName, routePath]
    * 按照路由名称排序
    */
-  entries: ElegantRouterNamePathEntry[] = [];
+  entries: XpressRouterNamePathEntry[] = [];
 
   /**
    * 路由文件信息数组
@@ -62,7 +54,7 @@ export default class ElegantRouter {
    * - 路由名称
    * - 路由参数
    */
-  files: ElegantRouterFile[] = [];
+  files: string[] = [];
 
   /**
    * 文件系统监听器实例
@@ -79,14 +71,14 @@ export default class ElegantRouter {
    * key: 路由名称
    * value: 路由路径
    */
-  maps: ElegantRouterNamePathMap = new Map<string, string>();
+  maps: XpressRouterNamePathMap = new Map<string, string>();
 
   /**
    * 插件配置选项
    *
    * 包含所有的路由配置信息
    */
-  options: ElegantRouterOption;
+  options: XpressRouterOption;
 
   /**
    * 页面文件的 glob 匹配模式数组
@@ -101,14 +93,14 @@ export default class ElegantRouter {
    * 按照路由层级组织的树形结构
    * 用于生成嵌套路由配置
    */
-  trees: ElegantRouterTree[] = [];
+  trees: XpressRouterTree[] = [];
 
   /**
    * 创建路由实例
    *
    * @param options - 路由配置选项
    */
-  constructor(options: Partial<ElegantRouterOption> = {}) {
+  constructor(options: Partial<XpressRouterOption> = {}) {
     this.options = createPluginOptions(options);
     this.scanPages();
   }
@@ -157,12 +149,16 @@ export default class ElegantRouter {
    * 4. 路由条目数组 -> 路由树
    */
   getRouterContextProps() {
-    this.files = this.pageGlobs.map((glob) =>
-      transformPageGlobToRouterFile(glob, this.options),
+    this.files = this.pageGlobs.map(
+      (glob) => {
+        // console.log('glob', glob);
+        return glob;
+      },
+      // transformPageGlobToRouterFile(glob, this.options),
     );
-    this.maps = transformRouterFilesToMaps(this.files, this.options);
-    this.entries = transformRouterMapsToEntries(this.maps);
-    this.trees = transformRouterEntriesToTrees(this.entries, this.maps);
+    // this.maps = transformRouterFilesToMaps(this.files, this.options);
+    // this.entries = transformRouterMapsToEntries(this.maps);
+    // this.trees = transformRouterEntriesToTrees(this.entries, this.maps);
   }
 
   /**
@@ -171,9 +167,9 @@ export default class ElegantRouter {
    * @param glob - glob 模式
    * @returns 路由文件信息对象
    */
-  getRouterFileByGlob(glob: string) {
-    return transformPageGlobToRouterFile(glob, this.options);
-  }
+  // getRouterFileByGlob(glob: string) {
+  //   return transformPageGlobToRouterFile(glob, this.options);
+  // }
 
   /**
    * 检查 glob 模式是否匹配页面模式
@@ -196,7 +192,7 @@ export default class ElegantRouter {
    */
   scanPages() {
     this.getPageGlobs();
-    this.getRouterContextProps();
+    // this.getRouterContextProps();
   }
 
   /**

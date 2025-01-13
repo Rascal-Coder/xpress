@@ -1,4 +1,4 @@
-import type { ElegantRouterOption } from '../types';
+import type { XpressRouterOption } from '../types';
 
 import process from 'node:process';
 
@@ -10,23 +10,20 @@ import { normalizeWindowsPath } from './path';
  * @param options the plugin options
  */
 export function createPluginOptions(
-  options?: Partial<ElegantRouterOption>,
-): ElegantRouterOption {
-  const PAGE_DIR = 'src/pages';
+  options?: Partial<XpressRouterOption>,
+): XpressRouterOption {
+  const PAGE_DIR = 'src/@routes';
   const PAGE_PATTERNS = ['**/index.tsx', '**/[[]*[]].tsx'];
   const PAGE_EXCLUDE_PATTERNS = ['**/components/**'];
-
-  const opts: ElegantRouterOption = {
+  const opts: XpressRouterOption = {
     alias: {
-      '@': 'src',
+      '#': 'src',
     },
     cwd: process.cwd(),
     log: true,
     pageDir: PAGE_DIR,
     pageExcludePatterns: PAGE_EXCLUDE_PATTERNS,
     pagePatterns: PAGE_PATTERNS,
-    routeNameTransformer: (name) => name,
-    routePathTransformer: (_transformedName, path) => path,
     ...options,
   };
 

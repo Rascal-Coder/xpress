@@ -1,37 +1,28 @@
 import type { ViteDevServer } from 'vite';
 
-import type { ElegantReactRouterOption } from '../types';
-
-import ElegantRouter from '../core';
-import { genConstFile } from './const';
-import { genDtsFile } from './dts';
-import { genImportsFile } from './imports';
+import XpressRouter from '../file-core';
 import { log } from './log';
-import { createPluginOptions } from './options';
-import { genTransformFile } from './transform';
 
-export default class ElegantReactRouter {
-  elegantRouter: ElegantRouter;
+export default class XpressReactRouter {
+  elegantRouter: XpressRouter;
 
-  options: ElegantReactRouterOption;
+  options: Record<string, any>;
 
   viteServer?: ViteDevServer;
 
-  constructor(options: Partial<ElegantReactRouterOption> = {}) {
-    this.elegantRouter = new ElegantRouter(options);
+  constructor(options: Partial<Record<string, any>> = {}) {
+    this.elegantRouter = new XpressRouter(options);
 
-    this.options = createPluginOptions(this.elegantRouter.options, options);
+    this.options = options;
 
     this.generate();
   }
 
   async generate() {
-    const { entries, files, trees } = this.elegantRouter;
-
-    genTransformFile(this.options, entries);
-    await genDtsFile(files, entries, this.options);
-    await genImportsFile(files, this.options);
-    await genConstFile(trees, this.options);
+    // const { entries, files, trees } = this.elegantRouter;
+    // console.log('entries', entries);
+    // console.log('files', files);
+    // console.log('trees', trees);
   }
 
   reloadViteServer() {
