@@ -23,5 +23,3 @@ export default createUnplugin<undefined>((options) => {
     },
   ];
 });
-
-// export type { ElegantConstRoute, ElegantReactRouterOption };

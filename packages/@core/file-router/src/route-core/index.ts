@@ -1,28 +1,39 @@
 import type { ViteDevServer } from 'vite';
 
+import type { XpressRouterOption } from '../file-core/types';
+
 import XpressRouter from '../file-core';
+import {
+  genConstFile,
+  genDtsFile,
+  genImportsFile,
+  genTransformFile,
+} from './generate';
 import { log } from './log';
 
 export default class XpressReactRouter {
-  elegantRouter: XpressRouter;
-
-  options: Record<string, any>;
+  options: XpressRouterOption;
 
   viteServer?: ViteDevServer;
 
-  constructor(options: Partial<Record<string, any>> = {}) {
-    this.elegantRouter = new XpressRouter(options);
+  xpressRouter: XpressRouter;
 
-    this.options = options;
-
+  constructor(options: Partial<XpressRouterOption> = {}) {
+    this.xpressRouter = new XpressRouter(options);
+    this.options = this.xpressRouter.options;
     this.generate();
   }
 
   async generate() {
-    // const { entries, files, trees } = this.elegantRouter;
-    // console.log('entries', entries);
-    // console.log('files', files);
-    // console.log('trees', trees);
+    const { entries, files, trees } = this.xpressRouter;
+    log('开始生成路由文件...', 'info', this.options.log);
+
+    await genTransformFile(this.options, entries);
+    await genDtsFile(files, entries, this.options);
+    await genImportsFile(files, this.options);
+    await genConstFile(trees, this.options);
+
+    log('路由文件生成完成', 'success', this.options.log);
   }
 
   reloadViteServer() {
@@ -30,7 +41,7 @@ export default class XpressReactRouter {
   }
 
   setupFSWatcher() {
-    this.elegantRouter.setupFSWatcher(async () => {
+    this.xpressRouter.setupFSWatcher(async () => {
       log(
         'The pages changed, regenerating the dts file and routes...',
         'info',
@@ -54,6 +65,6 @@ export default class XpressReactRouter {
   }
 
   stopFSWatcher() {
-    this.elegantRouter.stopFSWatcher();
+    this.xpressRouter.stopFSWatcher();
   }
 }

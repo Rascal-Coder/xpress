@@ -1,10 +1,11 @@
 import type { FSWatcher } from 'chokidar';
 
 import type {
+  RouteFile,
+  RouteTreeNode,
   XpressRouterNamePathEntry,
   XpressRouterNamePathMap,
   XpressRouterOption,
-  XpressRouterTree,
 } from '../types';
 
 import micromatch from 'micromatch';
@@ -12,10 +13,17 @@ import micromatch from 'micromatch';
 import { getGlobs } from '../shared/glob';
 import { createPluginOptions } from './options';
 import { getFullPathOfPageGlob } from './path';
+import {
+  transformEntriesToTrees,
+  transformFilesToMaps,
+  transformGlobToRouteFile,
+  transformMapsToEntries,
+} from './transform';
 import { handleValidatePageGlob } from './validate';
 import { setupWatcher } from './watcher';
+
 /**
- * 优雅路由核心类
+ * 路由核心类
  *
  * 负责处理文件系统路由的核心逻辑，包括：
  * - 文件系统扫描
@@ -54,7 +62,7 @@ export default class XpressRouter {
    * - 路由名称
    * - 路由参数
    */
-  files: string[] = [];
+  files: RouteFile[] = [];
 
   /**
    * 文件系统监听器实例
@@ -93,7 +101,7 @@ export default class XpressRouter {
    * 按照路由层级组织的树形结构
    * 用于生成嵌套路由配置
    */
-  trees: XpressRouterTree[] = [];
+  trees: RouteTreeNode[] = [];
 
   /**
    * 创建路由实例
@@ -106,6 +114,16 @@ export default class XpressRouter {
   }
 
   /**
+   * 将 glob 路径转换为路由路径
+   *
+   * @param glob - glob 路径
+   * @returns 路由路径
+   */
+  private globToRoutePath(glob: string): string {
+    // TODO: 实现路由路径转换逻辑
+    return `/${glob}`;
+  }
+  /**
    * 过滤有效的页面 glob 模式
    *
    * @param globs - 要过滤的 glob 模式数组
@@ -114,8 +132,7 @@ export default class XpressRouter {
    */
   filterValidPageGlobs(globs: string[], needMatch = false) {
     const { cwd, pageDir } = this.options;
-
-    return globs.filter((glob) => {
+    const result = globs.filter((glob) => {
       const fullGlob = getFullPathOfPageGlob(glob, pageDir, cwd);
 
       const isValid = handleValidatePageGlob(glob, fullGlob);
@@ -124,6 +141,7 @@ export default class XpressRouter {
 
       return isValid && isMatch;
     });
+    return result;
   }
 
   /**
@@ -149,33 +167,34 @@ export default class XpressRouter {
    * 4. 路由条目数组 -> 路由树
    */
   getRouterContextProps() {
-    this.files = this.pageGlobs.map(
-      (glob) => {
-        // console.log('glob', glob);
-        return glob;
-      },
-      // transformPageGlobToRouterFile(glob, this.options),
-    );
-    // this.maps = transformRouterFilesToMaps(this.files, this.options);
-    // this.entries = transformRouterMapsToEntries(this.maps);
-    // this.trees = transformRouterEntriesToTrees(this.entries, this.maps);
-  }
+    // 转换 glob 到路由文件信息
+    this.files = this.pageGlobs.map((glob) => transformGlobToRouteFile(glob));
 
-  /**
-   * 根据 glob 模式获取路由文件信息
-   *
-   * @param glob - glob 模式
-   * @returns 路由文件信息对象
-   */
-  // getRouterFileByGlob(glob: string) {
-  //   return transformPageGlobToRouterFile(glob, this.options);
-  // }
+    // 执行其他转换步骤
+    this.maps = transformFilesToMaps(this.files);
+    this.entries = transformMapsToEntries(this.maps);
+    this.trees = transformEntriesToTrees(this.entries);
+  }
 
   /**
    * 检查 glob 模式是否匹配页面模式
    *
-   * @param glob - 要检查的 glob 模式
-   * @returns 是否匹配
+   * 使用 micromatch 库检查给定的 glob 字符串是否匹配配置中的页面模式，
+   * 同时排除掉需要忽略的模式。这个函数主要用于过滤页面文件，确保它们
+   * 符合我们预期的文件模式。
+   *
+   * @param glob - 要检查的 glob 字符串
+   * @returns 如果 glob 匹配页面模式且不在排除列表中，则返回 true
+   *
+   * @example
+   * // 假设配置如下：
+   * // pagePatterns: ['**\/index.tsx', '**\/[[]*.tsx']
+   * // pageExcludePatterns: ['**\/components/**']
+   *
+   * isMatchPageGlob('pages/users/index.tsx');     // 返回 true
+   * isMatchPageGlob('pages/users/[id].tsx');      // 返回 true
+   * isMatchPageGlob('pages/components/foo.tsx');  // 返回 false，被排除
+   * isMatchPageGlob('pages/about.tsx');          // 返回 false，不匹配模式
    */
   isMatchPageGlob(glob: string) {
     const { pageExcludePatterns, pagePatterns } = this.options;
@@ -192,7 +211,7 @@ export default class XpressRouter {
    */
   scanPages() {
     this.getPageGlobs();
-    // this.getRouterContextProps();
+    this.getRouterContextProps();
   }
 
   /**

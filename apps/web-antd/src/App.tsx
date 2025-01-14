@@ -1,13 +1,13 @@
-import { BrowserRouter } from 'react-router-dom';
+// import { BrowserRouter } from 'react-router-dom';
 
-import { AppRoutes } from './routes';
+// import { AppRoutes } from './routes';
 
 function App() {
   return (
     <div className="h-full w-full overscroll-none text-inherit">
-      <BrowserRouter>
+      {/* <BrowserRouter>
         <AppRoutes />
-      </BrowserRouter>
+      </BrowserRouter> */}
     </div>
   );
 }

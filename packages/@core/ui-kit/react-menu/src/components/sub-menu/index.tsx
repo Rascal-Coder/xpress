@@ -228,16 +228,14 @@ function SubMenu({
           >
             {content}
           </SubMenuContent>
-          {opened && (
-            <CollapseTransition>
-              <ul
-                className={cn(nsMenu.b(), is('rounded', rounded))}
-                style={subMenuStyle}
-              >
-                {children}
-              </ul>
-            </CollapseTransition>
-          )}
+          <CollapseTransition show={opened}>
+            <ul
+              className={cn(nsMenu.b(), is('rounded', rounded))}
+              style={subMenuStyle}
+            >
+              {children}
+            </ul>
+          </CollapseTransition>
         </>
       )}
     </li>

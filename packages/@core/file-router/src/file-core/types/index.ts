@@ -1,123 +1,126 @@
+/**
+ * 路由文件类型
+ */
+export type RouteFileType =
+  | 'error' // 错误处理
+  | 'layout' // 布局文件
+  | 'loading' // 加载状态
+  | 'not-found' // 404页面
+  | 'page'; // 普通页面
+
+/**
+ * 路由参数类型
+ */
+export interface RouteParams {
+  dynamic?: string[]; // 动态参数 [id]
+  group?: string; // 分组名称 (group)
+  optional?: string[]; // 可选参数 [[id]]
+  query?: string[]; // 查询参数 $page
+}
+
+/**
+ * 路由配置选项
+ */
 export interface XpressRouterOption {
   /**
-   * alias
-   *
-   * it can be used for the page and layout file import path
-   *
-   * @default
-   * ```ts
-   * { "@": "src" }
-   * ```
+   * 路径别名配置
    */
   alias: Record<string, string>;
+
   /**
-   * the root directory of the project
-   *
-   * @default process.cwd()
+   * 工作目录
    */
   cwd: string;
+
   /**
-   * show log
-   *
-   * @default true
+   * 是否启用日志
    */
   log: boolean;
+
   /**
-   * the relative path to the root directory of the pages
-   *
-   * @default 'src/pages'
+   * 页面文件目录
    */
   pageDir: string;
+
   /**
-   * the patterns to exclude the page files
-   *
-   * @example
-   *   components / a / index.vue;
-   *
-   * @default ['**‍/components/**']
+   * 要排除的页面文件匹配模式
    */
   pageExcludePatterns: string[];
+
   /**
-   * the patterns to match the page files
-   *
-   * @example
-   *   index.vue, '[id.vue]';
-   *
-   * @default ['**‍/index.vue', '**‍/[[]*[]].vue']
-   * @link the detail syntax: https://github.com/micromatch/micromatch
+   * 页面文件的匹配模式
    */
   pagePatterns: string[];
 }
 
-export interface XpressRouterFile {
-  /** the full path of the page */
-  fullPath: string;
-  /** the glob of the page */
-  glob: string;
+/**
+ * 路由文件信息
+ */
+export interface RouteFile {
   /**
-   * the import path of the page file
-   *
-   * - the path is relative to the root directory of the project
-   * - if set alias for the page directory, the path will be relative to the alias
+   * 导入路径
    */
   importPath: string;
+
   /**
-   * the route name transformed from the glob
-   *
-   * - transform the path splitter "/" of the glob to the underline "_"
-   * - if the glob is start with "_", this part will be ignored
-   * - if the glob contains uppercase letters, it will be transformed to lowercase letters
-   * - if the glob is like "demo/[id].vue", the "[id]" will be transformed to param "id" of the route
-   *
-   * @example
-   *   "a/b/c" => "a_b_c"
-   *   "a/b/[id]" => "a_b", the id will be recognized as the param of the route
-   *   "a/b_c/d" => "a_b_c_d"
-   *   "_a/b_c/d" => "b_c_d", because "_a" start with "_", so it does not appear in the route name
+   * 路由参数信息
    */
-  routeName: string;
+  params: RouteParams;
+
   /**
-   * the route param key of the route
-   *
-   * if the glob is like "demo/[id].vue", "id" will be the param key of the route
-   *
-   * @default ''
+   * 文件路径
    */
-  routeParamKey: string;
+  path: string;
+
   /**
-   * the route path transformed from the glob
-   *
-   * - transform the underline "_" to the path splitter "/"
-   * - if the glob is like "demo/[id].vue", the "[id]" will be transformed to ":id" of the route path
-   *
-   * @example
-   *   "a/b/c" => "/a/b/c"
-   *   "a/b_c/d" => "/a/b/c/d"
-   *   "a/b/[id]" => "/a/b/:id"
+   * 路由路径
    */
   routePath: string;
+
+  /**
+   * 文件类型
+   */
+  type: RouteFileType;
 }
 
 /**
- * the map of the route name and the route path
- *
- * Map<name, path>
+ * 路由树节点
  */
-export type XpressRouterNamePathMap = Map<string, string>;
+export interface RouteTreeNode {
+  /**
+   * 子节点
+   */
+  children?: RouteTreeNode[];
+
+  /**
+   * 路由文件信息
+   */
+  file?: RouteFile;
+
+  /**
+   * 分组信息
+   */
+  group?: string;
+
+  /**
+   * 节点名称
+   */
+  name: string;
+
+  /**
+   * 节点路径
+   */
+  path: string;
+}
 
 /**
- * the map of the route path and the route name
+ * 路由名称到路径的映射条目
  *
- * sorted by the route name
- *
- * @example
- *   ['a', '/a'];
+ * 每个条目是一个元组 [routeName, routePath]
  */
 export type XpressRouterNamePathEntry = [string, string];
 
-/** the tree of the route */
-export interface XpressRouterTree {
-  children?: XpressRouterTree[];
-  name: string;
-  path: string;
-}
+/**
+ * 路由名称到路径的映射表
+ */
+export type XpressRouterNamePathMap = Map<string, string>;
