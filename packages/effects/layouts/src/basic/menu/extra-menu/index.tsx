@@ -3,7 +3,7 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { MenuView } from '@xpress-core/react-menu';
 
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 interface ExtraMenuProps extends MenuProps {
   collapse?: boolean;

@@ -11,25 +11,25 @@
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
   "imports": {
-    "#/*": "./src/*"
+    "#/*": "./app/*"
   },
   "dependencies": {
-    "@koa/cors": "^5.0.0",
-    "@xpress-core/file-router": "workspace:*",
+    "@react-router/node": "^7.1.1",
+    "@react-router/serve": "^7.1.1",
+    "@remix-run/node": "^2.15.2",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
+    "isbot": "^5.1.17",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "^6.28.1"
+    "react-router": "^7.1.1"
   },
   "devDependencies": {
-    "@types/koa-bodyparser": "^4.3.12",
-    "@types/koa-json": "^2.0.23",
-    "@types/koa-logger": "^3.1.5",
-    "@types/koa-router": "^7.4.8",
+    "@react-router/dev": "^7.1.1",
+    "@react-router/fs-routes": "^7.1.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",
@@ -38,6 +38,7 @@
     "@xpress/vite-config": "workspace:*",
     "autoprefixer": "catalog:",
     "postcss": "catalog:",
-    "tailwindcss": "catalog:"
+    "tailwindcss": "catalog:",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

@@ -4,6 +4,7 @@
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "moduleResolution": "bundler",
     "noEmit": false
   },
   "include": ["vite.config.mts"]

@@ -18,6 +18,7 @@ coverage
 .temp
 dev-dist
 .stylelintcache
+.react-router
 yarn.lock
 package-lock.json
 .VSCodeCounter

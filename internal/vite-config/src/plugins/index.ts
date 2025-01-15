@@ -7,7 +7,7 @@ import type {
   LibraryPluginOptions,
 } from '../typing';
 
-import viteReact from '@vitejs/plugin-react';
+// import viteReact from '@vitejs/plugin-react';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
@@ -45,10 +45,10 @@ async function loadCommonPlugins(
 ): Promise<ConditionPlugin[]> {
   const { injectMetadata, isBuild, visualizer } = options;
   return [
-    {
-      condition: true,
-      plugins: () => [viteReact({})],
-    },
+    // {
+    //   condition: true,
+    //   plugins: () => [viteReact({})],
+    // },
     {
       condition: injectMetadata,
       plugins: async () => [await viteMetadataPlugin()],

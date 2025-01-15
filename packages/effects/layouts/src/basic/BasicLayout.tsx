@@ -6,7 +6,7 @@ import { XpressLogo } from '@xpress-core/shadcn-ui';
 import { isHttpUrl } from '@xpress-core/shared/utils';
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
