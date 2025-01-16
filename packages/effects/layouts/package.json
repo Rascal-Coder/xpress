@@ -12,6 +12,9 @@
       "default": "./src/index.ts"
     }
   },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
   "dependencies": {
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
@@ -19,11 +22,9 @@
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
-    "react": "catalog:",
     "react-router": "^7.1.1"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.1.1",
     "@types/react": "catalog:"
   }
 }

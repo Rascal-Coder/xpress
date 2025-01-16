@@ -9,7 +9,7 @@ import { findMonorepoRoot } from '@xpress/node-utils';
 import { NodePackageImporter } from 'sass';
 import { defineConfig, loadEnv, mergeConfig } from 'vite';
 
-import { defaultImportmapOptions, getDefaultPwaOptions } from '../options';
+import { getDefaultPwaOptions } from '../options';
 import { loadApplicationPlugins } from '../plugins';
 import { loadAndConvertEnv } from '../utils/env';
 import { getCommonConfig } from './common';
@@ -32,7 +32,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       env,
       extraAppConfig: true,
       html: true,
-      importmapOptions: defaultImportmapOptions,
+      // importmapOptions: defaultImportmapOptions,
       injectAppLoading: true,
       injectMetadata: true,
       isBuild,

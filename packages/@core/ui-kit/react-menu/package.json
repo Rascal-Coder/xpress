@@ -12,9 +12,7 @@
   "files": [
     "dist"
   ],
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -41,8 +39,7 @@
     "framer-motion": "^11.17.0",
     "immer": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-transition-group": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

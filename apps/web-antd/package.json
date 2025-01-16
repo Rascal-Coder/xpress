@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm vite build --mode production",
-    "build:analyze": "pnpm vite build --mode analyze",
-    "dev": "pnpm vite --mode development",
+    "build": "react-router build --mode production",
+    "build:analyze": "react-router build --mode analyze",
+    "dev": "react-router dev --mode development",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "@react-router/node": "^7.1.1",
-    "@react-router/serve": "^7.1.1",
-    "@remix-run/node": "^2.15.2",
+    "@xpress-core/design": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
@@ -29,7 +28,6 @@
   },
   "devDependencies": {
     "@react-router/dev": "^7.1.1",
-    "@react-router/fs-routes": "^7.1.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",

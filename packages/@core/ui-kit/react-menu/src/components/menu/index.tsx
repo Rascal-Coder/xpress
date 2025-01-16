@@ -20,8 +20,6 @@ import { useMenuStructure } from '../hooks/useMenuStructure';
 import SubMenu from '../sub-menu';
 import { menuReducer } from './menuReducer';
 
-import './styles.scss';
-
 interface Props extends MenuProps {}
 
 /**

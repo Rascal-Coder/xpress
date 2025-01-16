@@ -1,3 +1,4 @@
+'use client';
 export * from './create-icon';
 
 export * from './lucide';

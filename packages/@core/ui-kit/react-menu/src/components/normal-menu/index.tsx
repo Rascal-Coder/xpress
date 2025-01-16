@@ -8,8 +8,6 @@ import { cn } from '@xpress-core/shared/utils';
 
 import React from 'react';
 
-import './styles.scss';
-
 const NormalMenu: React.FC<NormalMenuProps> = ({
   activePath = '',
   collapse = false,
