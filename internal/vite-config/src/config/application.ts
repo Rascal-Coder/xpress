@@ -33,7 +33,7 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
       extraAppConfig: true,
       html: true,
       // importmapOptions: defaultImportmapOptions,
-      injectAppLoading: true,
+      // injectAppLoading: true,
       injectMetadata: true,
       isBuild,
       mode,
@@ -112,7 +112,7 @@ function createCssOptions(injectGlobalScss = true) {
               }
               return content;
             },
-            api: 'modern',
+            api: 'modern' as const,
             importers: [new NodePackageImporter()],
           },
         }

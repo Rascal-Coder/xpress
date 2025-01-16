@@ -14,20 +14,19 @@
     "#/*": "./app/*"
   },
   "dependencies": {
-    "@react-router/node": "^7.1.1",
+    "@react-router/node": "catalog:",
     "@xpress-core/design": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
-    "isbot": "^5.1.17",
+    "isbot": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router": "^7.1.1"
+    "react-router": "catalog:"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.1.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",
@@ -36,7 +35,6 @@
     "@xpress/vite-config": "workspace:*",
     "autoprefixer": "catalog:",
     "postcss": "catalog:",
-    "tailwindcss": "catalog:",
-    "vite-tsconfig-paths": "^5.1.4"
+    "tailwindcss": "catalog:"
   }
 }

@@ -7,6 +7,8 @@ import type {
   LibraryPluginOptions,
 } from '../typing';
 
+import { reactRouter } from '@react-router/dev/vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 // import viteReact from '@vitejs/plugin-react';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
@@ -17,7 +19,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import { viteArchiverPlugin } from './archiver';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteImportMapPlugin } from './importmap';
-import { viteInjectAppLoadingPlugin } from './inject-app-loading';
+// import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteNitroMockPlugin } from './nitro-mock';
 import { vitePrintPlugin } from './print';
@@ -50,6 +52,10 @@ async function loadCommonPlugins(
     //   plugins: () => [viteReact({})],
     // },
     {
+      condition: true,
+      plugins: () => [reactRouter(), tsconfigPaths()],
+    },
+    {
       condition: injectMetadata,
       plugins: async () => [await viteMetadataPlugin()],
     },
@@ -72,7 +78,7 @@ async function loadApplicationPlugins(
 ): Promise<PluginOption[]> {
   // 单独取，否则commonOptions拿不到
   const isBuild = options.isBuild;
-  const env = options.env;
+  // const env = options.env;
 
   const {
     archiver,
@@ -83,8 +89,8 @@ async function loadApplicationPlugins(
     html,
     importmap,
     importmapOptions,
-    injectAppLoading,
-    loadingTemplate,
+    // injectAppLoading,
+    // loadingTemplate,
     nitroMock,
     nitroMockOptions,
     print,
@@ -104,12 +110,12 @@ async function loadApplicationPlugins(
       },
     },
 
-    {
-      condition: injectAppLoading,
-      plugins: async () => [
-        await viteInjectAppLoadingPlugin(!!isBuild, env, loadingTemplate),
-      ],
-    },
+    // {
+    //   condition: injectAppLoading,
+    //   plugins: async () => [
+    //     await viteInjectAppLoadingPlugin(!!isBuild, env, loadingTemplate),
+    //   ],
+    // },
     {
       condition: print,
       plugins: async () => [await vitePrintPlugin(printInfoMap)],

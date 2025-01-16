@@ -514,9 +514,6 @@ importers:
         specifier: ^7.1.1
         version: 7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
-      '@react-router/dev':
-        specifier: ^7.1.1
-        version: 7.1.1(@types/node@22.10.7)(jiti@2.4.2)(react-router@7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(sass@1.83.4)(terser@5.37.0)(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))(yaml@2.7.0)
       '@types/react':
         specifier: 'catalog:'
         version: 18.3.18
@@ -544,9 +541,6 @@ importers:
       tailwindcss:
         specifier: 'catalog:'
         version: 3.4.17
-      vite-tsconfig-paths:
-        specifier: ^5.1.4
-        version: 5.1.4(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))
 
   docs:
     devDependencies:
@@ -809,6 +803,9 @@ importers:
       '@pnpm/workspace.read-manifest':
         specifier: 'catalog:'
         version: 2.2.2
+      '@react-router/dev':
+        specifier: ^7.1.1
+        version: 7.1.1(@types/node@22.10.7)(jiti@2.4.2)(react-router@7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(sass@1.83.4)(terser@5.37.0)(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))(yaml@2.7.0)
       '@types/archiver':
         specifier: 'catalog:'
         version: 6.0.3
@@ -845,6 +842,9 @@ importers:
       vite-plugin-html:
         specifier: 'catalog:'
         version: 3.2.2(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))
+      vite-tsconfig-paths:
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))
 
   packages/@core/base/design: {}
 
@@ -9350,7 +9350,7 @@ snapshots:
       '@babel/types': 7.26.5
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
-      jsesc: 3.0.2
+      jsesc: 3.1.0
 
   '@babel/helper-annotate-as-pure@7.25.9':
     dependencies:

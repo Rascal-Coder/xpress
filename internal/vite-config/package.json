@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@pnpm/workspace.read-manifest": "catalog:",
+    "@react-router/dev": "catalog:",
     "@types/archiver": "catalog:",
     "@types/html-minifier-terser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
@@ -44,6 +45,7 @@
     "vite": "catalog:",
     "vite-plugin-compression": "catalog:",
     "vite-plugin-dts": "catalog:",
-    "vite-plugin-html": "catalog:"
+    "vite-plugin-html": "catalog:",
+    "vite-tsconfig-paths": "catalog:"
   }
 }

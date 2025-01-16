@@ -30,6 +30,8 @@ catalog:
   "@radix-ui/react-scroll-area": ^1.2.1
   "@radix-ui/react-slot": ^1.1.0
   "@radix-ui/react-tooltip": ^1.1.4
+  "@react-router/dev": ^7.1.1
+  "@react-router/node": ^7.1.1
   "@stylistic/stylelint-plugin": ^3.1.1
   "@tailwindcss/nesting": 0.0.0-insiders.565cd3e
   "@tailwindcss/typography": ^0.5.15
@@ -87,6 +89,7 @@ catalog:
   eslint-plugin-vitest: ^0.5.4
   execa: ^9.5.1
   find-up: ^7.0.0
+  framer-motion: ^11.17.0
   get-port: ^7.1.0
   globals: ^15.12.0
   h3: ^1.13.0
@@ -94,6 +97,7 @@ catalog:
   husky: ^9.1.7
   immer: ^10.1.1
   is-ci: ^3.0.1
+  isbot: ^5.1.17
   jsdom: ^25.0.1
   jsonc-eslint-parser: ^2.4.0
   jsonwebtoken: ^9.0.2
@@ -115,7 +119,7 @@ catalog:
   publint: ^0.2.12
   react: ^18.3.1
   react-dom: ^18.3.1
-  react-router-dom: ^7.0.1
+  react-router: ^7.1.1
   react-transition-group: ^4.4.5
   rimraf: ^6.0.1
   rollup-plugin-visualizer: ^5.12.0
@@ -142,5 +146,6 @@ catalog:
   vite-plugin-dts: 4.2.1
   vite-plugin-html: ^3.2.2
   vite-plugin-pwa: ^0.21.0
+  vite-tsconfig-paths: ^5.1.4
   vitepress: ^1.5.0
   vitest: ^2.1.6

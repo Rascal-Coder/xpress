@@ -1,13 +1,13 @@
 import { defineConfig } from '@xpress/vite-config';
 
-import { reactRouter } from '@react-router/dev/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
+// import { reactRouter } from '@react-router/dev/vite';
+// import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig(async () => {
   return {
     application: {},
     vite: {
-      plugins: [tsconfigPaths(), reactRouter()],
+      // plugins: [tsconfigPaths(), reactRouter()],
       server: {
         proxy: {
           '/api': {

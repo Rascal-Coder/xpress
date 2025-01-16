@@ -77,13 +77,12 @@ async function loadAndConvertEnv(
     VITE_ARCHIVER,
     VITE_BASE,
     VITE_COMPRESS,
-    VITE_INJECT_APP_LOADING,
+    // VITE_INJECT_APP_LOADING,
     VITE_NITRO_MOCK,
     VITE_PORT,
     VITE_PWA,
     VITE_VISUALIZER,
   } = envConfig;
-
   const compressTypes = (VITE_COMPRESS ?? '')
     .split(',')
     .filter((item) => item === 'brotli' || item === 'gzip');
@@ -94,7 +93,7 @@ async function loadAndConvertEnv(
     base: getString(VITE_BASE, '/'),
     compress: compressTypes.length > 0,
     compressTypes,
-    injectAppLoading: getBoolean(VITE_INJECT_APP_LOADING),
+    // injectAppLoading: getBoolean(VITE_INJECT_APP_LOADING),
     nitroMock: getBoolean(VITE_NITRO_MOCK),
     port: getNumber(VITE_PORT, 5173),
     pwa: getBoolean(VITE_PWA),
