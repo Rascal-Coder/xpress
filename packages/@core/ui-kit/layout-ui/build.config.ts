@@ -4,5 +4,18 @@ export default defineBuildConfig({
   clean: true,
   declaration: true,
   entries: ['src/index'],
+  externals: ['react', 'react-dom', 'react/jsx-runtime'],
   failOnWarn: false,
+  rollup: {
+    emitCJS: true,
+    esbuild: {
+      jsx: 'automatic',
+      jsxImportSource: 'react',
+      tsconfigRaw: {
+        compilerOptions: {
+          jsx: 'react-jsx',
+        },
+      },
+    },
+  },
 });

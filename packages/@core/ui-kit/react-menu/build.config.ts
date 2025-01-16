@@ -3,18 +3,19 @@ import { defineBuildConfig } from 'unbuild';
 export default defineBuildConfig({
   clean: true,
   declaration: true,
-  entries: [
-    {
-      builder: 'mkdist',
-      input: './src',
-      pattern: ['**/*'],
+  entries: ['src/index'],
+  externals: ['react', 'react-dom', 'react/jsx-runtime'],
+  failOnWarn: false,
+  rollup: {
+    emitCJS: true,
+    esbuild: {
+      jsx: 'automatic',
+      jsxImportSource: 'react',
+      tsconfigRaw: {
+        compilerOptions: {
+          jsx: 'react-jsx',
+        },
+      },
     },
-    {
-      builder: 'mkdist',
-      format: 'esm',
-      input: './src',
-      loaders: ['js'],
-      pattern: ['**/*.ts'],
-    },
-  ],
+  },
 });

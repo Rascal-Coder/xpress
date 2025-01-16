@@ -13,7 +13,7 @@ function Layout({ menus }: { menus: MenuRecordRaw[] }) {
     <PreferencesProvider
       options={{ namespace, overrides: overridesPreferences }}
     >
-      <BasicLayout sidebarMenus={menus} />;
+      <BasicLayout sidebarMenus={menus} />
     </PreferencesProvider>
   );
 }

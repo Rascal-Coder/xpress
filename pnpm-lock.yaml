@@ -1085,7 +1085,7 @@ importers:
         specifier: workspace:*
         version: link:../../@core/base/typings
       react:
-        specifier: '>=18.0.0'
+        specifier: 'catalog:'
         version: 18.3.1
       react-router:
         specifier: ^7.1.1
