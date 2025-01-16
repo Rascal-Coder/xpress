@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@pnpm/workspace.read-manifest": "catalog:",
-    "@react-router/dev": "catalog:",
     "@types/archiver": "catalog:",
     "@types/html-minifier-terser": "catalog:",
     "@vitejs/plugin-react": "catalog:",

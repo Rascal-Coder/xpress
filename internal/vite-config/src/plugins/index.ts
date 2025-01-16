@@ -7,18 +7,17 @@ import type {
   LibraryPluginOptions,
 } from '../typing';
 
-import { reactRouter } from '@react-router/dev/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
-// import viteReact from '@vitejs/plugin-react';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
 import { createHtmlPlugin as viteHtmlPlugin } from 'vite-plugin-html';
 import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { viteArchiverPlugin } from './archiver';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteImportMapPlugin } from './importmap';
+
 // import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteNitroMockPlugin } from './nitro-mock';
@@ -47,14 +46,6 @@ async function loadCommonPlugins(
 ): Promise<ConditionPlugin[]> {
   const { injectMetadata, isBuild, visualizer } = options;
   return [
-    // {
-    //   condition: true,
-    //   plugins: () => [viteReact({})],
-    // },
-    {
-      condition: true,
-      plugins: () => [reactRouter(), tsconfigPaths()],
-    },
     {
       condition: injectMetadata,
       plugins: async () => [await viteMetadataPlugin()],
@@ -103,6 +94,10 @@ async function loadApplicationPlugins(
   const commonPlugins = await loadCommonPlugins(commonOptions);
   return await loadConditionPlugins([
     ...commonPlugins,
+    {
+      condition: true,
+      plugins: () => [tsconfigPaths()],
+    },
     {
       condition: nitroMock,
       plugins: async () => {

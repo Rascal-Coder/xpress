@@ -57,6 +57,12 @@ catalogs:
     '@radix-ui/react-tooltip':
       specifier: ^1.1.4
       version: 1.1.6
+    '@react-router/dev':
+      specifier: ^7.1.1
+      version: 7.1.1
+    '@react-router/node':
+      specifier: ^7.1.1
+      version: 7.1.1
     '@stylistic/stylelint-plugin':
       specifier: ^3.1.1
       version: 3.1.1
@@ -219,6 +225,9 @@ catalogs:
     find-up:
       specifier: ^7.0.0
       version: 7.0.0
+    framer-motion:
+      specifier: ^11.17.0
+      version: 11.18.0
     get-port:
       specifier: ^7.1.0
       version: 7.1.0
@@ -240,6 +249,9 @@ catalogs:
     is-ci:
       specifier: ^3.0.1
       version: 3.0.1
+    isbot:
+      specifier: ^5.1.17
+      version: 5.1.21
     jsdom:
       specifier: ^25.0.1
       version: 25.0.1
@@ -303,6 +315,9 @@ catalogs:
     react-dom:
       specifier: ^18.3.1
       version: 18.3.1
+    react-router:
+      specifier: ^7.1.1
+      version: 7.1.1
     rimraf:
       specifier: ^6.0.1
       version: 6.0.1
@@ -378,6 +393,9 @@ catalogs:
     vite-plugin-pwa:
       specifier: ^0.21.0
       version: 0.21.1
+    vite-tsconfig-paths:
+      specifier: ^5.1.4
+      version: 5.1.4
     vitepress:
       specifier: ^1.5.0
       version: 1.5.0
@@ -480,8 +498,11 @@ importers:
 
   apps/web-antd:
     dependencies:
+      '@react-router/dev':
+        specifier: 'catalog:'
+        version: 7.1.1(@types/node@22.10.7)(jiti@2.4.2)(react-router@7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(sass@1.83.4)(terser@5.37.0)(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))(yaml@2.7.0)
       '@react-router/node':
-        specifier: ^7.1.1
+        specifier: 'catalog:'
         version: 7.1.1(react-router@7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(typescript@5.7.3)
       '@xpress-core/design':
         specifier: workspace:*
@@ -502,7 +523,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/styles
       isbot:
-        specifier: ^5.1.17
+        specifier: 'catalog:'
         version: 5.1.21
       react:
         specifier: 'catalog:'
@@ -511,7 +532,7 @@ importers:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
       react-router:
-        specifier: ^7.1.1
+        specifier: 'catalog:'
         version: 7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
@@ -803,9 +824,6 @@ importers:
       '@pnpm/workspace.read-manifest':
         specifier: 'catalog:'
         version: 2.2.2
-      '@react-router/dev':
-        specifier: ^7.1.1
-        version: 7.1.1(@types/node@22.10.7)(jiti@2.4.2)(react-router@7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(sass@1.83.4)(terser@5.37.0)(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))(yaml@2.7.0)
       '@types/archiver':
         specifier: 'catalog:'
         version: 6.0.3
@@ -843,7 +861,7 @@ importers:
         specifier: 'catalog:'
         version: 3.2.2(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))
       vite-tsconfig-paths:
-        specifier: ^5.1.4
+        specifier: 'catalog:'
         version: 5.1.4(typescript@5.7.3)(vite@6.0.7(@types/node@22.10.7)(jiti@2.4.2)(sass@1.83.4)(terser@5.37.0)(yaml@2.7.0))
 
   packages/@core/base/design: {}
@@ -984,7 +1002,7 @@ importers:
         specifier: 'catalog:'
         version: 3.8.4(react@18.3.1)
       framer-motion:
-        specifier: ^11.17.0
+        specifier: 'catalog:'
         version: 11.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       immer:
         specifier: 'catalog:'
@@ -1088,7 +1106,7 @@ importers:
         specifier: 'catalog:'
         version: 18.3.1
       react-router:
-        specifier: ^7.1.1
+        specifier: 'catalog:'
         version: 7.1.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
