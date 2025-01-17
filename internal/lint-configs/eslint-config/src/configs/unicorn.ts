@@ -45,7 +45,6 @@ export async function unicorn(): Promise<Linter.Config[]> {
       files: [
         'scripts/**/*.?([cm])[jt]s?(x)',
         'internal/**/*.?([cm])[jt]s?(x)',
-        'packages/@core/file-router/**/*.?([cm])[jt]s?(x)',
       ],
       rules: {
         'unicorn/no-process-exit': 'off', // 允许使用 process.exit()

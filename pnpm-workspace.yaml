@@ -11,6 +11,7 @@ packages:
   - docs
   - playground
 catalog:
+  "@react-spring/web": "^9.7.5"
   "@changesets/git": ^3.0.1
   "@clack/prompts": ^0.8.1
   "@commitlint/cli": ^19.5.0

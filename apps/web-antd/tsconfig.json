@@ -5,13 +5,13 @@
     "baseUrl": ".",
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "#/*": ["app/*"]
+      "#/*": ["src/*"]
     }
   },
   "references": [{ "path": "./tsconfig.node.json" }],
   "include": [
-    "app/**/*.ts",
-    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "**/.server/**/*",
     "**/.client/**/*",
     ".react-router/types/**/*"

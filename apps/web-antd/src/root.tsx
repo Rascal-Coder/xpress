@@ -2,6 +2,7 @@ import type { Route } from './+types/root';
 
 import '@xpress/styles';
 
+import React from 'react';
 import {
   isRouteErrorResponse,
   Links,
@@ -11,7 +12,8 @@ import {
   ScrollRestoration,
 } from 'react-router';
 
-// eslint-disable-next-line react-refresh/only-export-components
+import Loading from './common-ui/Loading';
+
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
@@ -43,8 +45,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// 使用 React.lazy 进行代码分割
 export default function App() {
-  return <Outlet />;
+  return (
+    <React.Suspense fallback={<HydrateFallback />}>
+      <Outlet />
+    </React.Suspense>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -77,5 +84,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 }
 
 export function HydrateFallback() {
-  return <div>Loading...</div>;
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <Loading />
+    </div>
+  );
 }

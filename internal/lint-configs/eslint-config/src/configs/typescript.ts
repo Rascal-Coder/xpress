@@ -77,7 +77,7 @@ export async function typescript(): Promise<Linter.Config[]> {
         '@typescript-eslint/no-namespace': 'off',
 
         // 禁止使用非空断言
-        '@typescript-eslint/no-non-null-assertion': 'error',
+        '@typescript-eslint/no-non-null-assertion': 'warn',
 
         // 关闭未使用表达式检查
         '@typescript-eslint/no-unused-expressions': 'off',

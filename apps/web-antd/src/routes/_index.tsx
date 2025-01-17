@@ -1,6 +1,5 @@
 import { redirect } from 'react-router';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export async function clientLoader() {
   return redirect('/analytics');
 }

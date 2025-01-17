@@ -57,6 +57,10 @@
       "path": "packages/@core/base/typings",
     },
     {
+      "name": "@xpress-core/fs-routes",
+      "path": "packages/@core/fs-routes",
+    },
+    {
       "name": "@xpress-core/hooks",
       "path": "packages/@core/hooks",
     },

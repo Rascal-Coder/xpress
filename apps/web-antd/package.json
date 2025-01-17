@@ -11,17 +11,20 @@
     "typecheck": "tsc --noEmit --skipLibCheck"
   },
   "imports": {
-    "#/*": "./app/*"
+    "#/*": "./src/*"
   },
   "dependencies": {
     "@react-router/dev": "catalog:",
     "@react-router/node": "catalog:",
+    "@react-spring/web": "catalog:",
     "@xpress-core/design": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
+    "framer-motion": "catalog:",
     "isbot": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -30,6 +33,7 @@
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@xpress-core/fs-routes": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "@xpress/tailwind-config": "workspace:*",
     "@xpress/utils": "workspace:*",

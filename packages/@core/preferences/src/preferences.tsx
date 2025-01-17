@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import type { DeepPartial } from '@xpress-core/typings';
 
 import type { InitialOptions, Preferences } from './types';

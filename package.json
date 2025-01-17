@@ -29,6 +29,9 @@
     "test:e2e": "turbo run test:e2e",
     "preview": "turbo-run preview"
   },
+  "dependencies": {
+    "@react-spring/web": "catalog:"
+  },
   "devDependencies": {
     "@testing-library/react": "catalog:",
     "@types/node": "catalog:",

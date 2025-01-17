@@ -11,11 +11,14 @@ export default defineBuildConfig({
     esbuild: {
       jsx: 'automatic',
       jsxImportSource: 'react',
+      minify: true,
+      treeShaking: true,
       tsconfigRaw: {
         compilerOptions: {
           jsx: 'react-jsx',
         },
       },
     },
+    inlineDependencies: true,
   },
 });
