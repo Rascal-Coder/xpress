@@ -64,16 +64,18 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "catalog:",
-    "@types/lodash.get": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "defu": "catalog:",
     "lodash.clonedeep": "catalog:",
     "lodash.get": "catalog:",
+    "lodash.uniqueid": "^4.0.1",
     "tailwind-merge": "catalog:",
     "theme-colors": "catalog:"
   },
   "devDependencies": {
-    "@types/lodash.clonedeep": "catalog:"
+    "@types/lodash.clonedeep": "catalog:",
+    "@types/lodash.get": "catalog:",
+    "@types/lodash.uniqueid": "^4.0.9"
   }
 }

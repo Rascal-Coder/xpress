@@ -38,6 +38,10 @@ interface MenuRecordRaw extends MenuRecordBadgeRaw {
    */
   icon?: Icon;
   /**
+   * 菜单唯一标识
+   */
+  key: string;
+  /**
    * 菜单名
    */
   name: string;

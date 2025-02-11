@@ -8,7 +8,7 @@ import SubMenuView from '../../SubMenuView';
 
 export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
   const {
-    // accordion,
+    accordion,
     defaultActive,
     defaultOpeneds,
     dispatch,
@@ -119,11 +119,20 @@ export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
 
     // 初始化展开状态
     if (defaultOpeneds?.length) {
-      dispatch({ menus: defaultOpeneds, type: 'SET_MENUS' });
+      defaultOpeneds.forEach((path) => {
+        dispatch({
+          accordion,
+          parentPaths: defaultOpeneds,
+          path,
+          type: 'OPEN_MENU',
+        });
+      });
     } else {
       const parentPaths = getActivePaths();
       if (parentPaths.length > 0) {
-        dispatch({ menus: parentPaths, type: 'SET_MENUS' });
+        parentPaths.forEach((path) => {
+          dispatch({ accordion, parentPaths, path, type: 'OPEN_MENU' });
+        });
       }
     }
 
@@ -135,5 +144,7 @@ export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
     defaultActive,
     handleSubMenuClick,
     handleMenuItemClick,
+    dispatch,
+    accordion,
   ]);
 }

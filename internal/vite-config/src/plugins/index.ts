@@ -7,17 +7,18 @@ import type {
   LibraryPluginOptions,
 } from '../typing';
 
-import viteReact from '@vitejs/plugin-react';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
 import { createHtmlPlugin as viteHtmlPlugin } from 'vite-plugin-html';
 import { VitePWA } from 'vite-plugin-pwa';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { viteArchiverPlugin } from './archiver';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteImportMapPlugin } from './importmap';
-import { viteInjectAppLoadingPlugin } from './inject-app-loading';
+
+// import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteNitroMockPlugin } from './nitro-mock';
 import { vitePrintPlugin } from './print';
@@ -46,10 +47,6 @@ async function loadCommonPlugins(
   const { injectMetadata, isBuild, visualizer } = options;
   return [
     {
-      condition: true,
-      plugins: () => [viteReact({})],
-    },
-    {
       condition: injectMetadata,
       plugins: async () => [await viteMetadataPlugin()],
     },
@@ -72,7 +69,7 @@ async function loadApplicationPlugins(
 ): Promise<PluginOption[]> {
   // 单独取，否则commonOptions拿不到
   const isBuild = options.isBuild;
-  const env = options.env;
+  // const env = options.env;
 
   const {
     archiver,
@@ -83,8 +80,6 @@ async function loadApplicationPlugins(
     html,
     importmap,
     importmapOptions,
-    injectAppLoading,
-    loadingTemplate,
     nitroMock,
     nitroMockOptions,
     print,
@@ -98,17 +93,14 @@ async function loadApplicationPlugins(
   return await loadConditionPlugins([
     ...commonPlugins,
     {
+      condition: true,
+      plugins: () => [tsconfigPaths()],
+    },
+    {
       condition: nitroMock,
       plugins: async () => {
         return [await viteNitroMockPlugin(nitroMockOptions)];
       },
-    },
-
-    {
-      condition: injectAppLoading,
-      plugins: async () => [
-        await viteInjectAppLoadingPlugin(!!isBuild, env, loadingTemplate),
-      ],
     },
     {
       condition: print,

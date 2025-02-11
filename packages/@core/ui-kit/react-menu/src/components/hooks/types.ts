@@ -26,7 +26,7 @@ export interface MenuStructure {
 }
 
 export interface UseMenuStructureProps {
-  // accordion: boolean;
+  accordion?: boolean;
   children: React.ReactNode;
   defaultActive: string;
   defaultOpeneds?: string[];

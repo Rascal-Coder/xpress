@@ -14,21 +14,23 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@koa/cors": "^5.0.0",
+    "@loadable/component": "^5.16.4",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
+    "eventemitter3": "^5.0.1",
+    "framer-motion": "^12.4.2",
+    "history": "^5.3.0",
+    "immer": "^10.1.1",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-router-dom": "6"
+    "react-helmet-async": "^2.0.5",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
-    "@types/koa-bodyparser": "^4.3.12",
-    "@types/koa-json": "^2.0.23",
-    "@types/koa-logger": "^3.1.5",
-    "@types/koa-router": "^7.4.8",
+    "@types/loadable__component": "^5.13.9",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/typings": "workspace:*",

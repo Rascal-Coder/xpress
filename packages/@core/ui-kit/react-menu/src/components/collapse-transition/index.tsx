@@ -1,89 +1,38 @@
-import type { CSSProperties, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 
-import { useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface Props extends PropsWithChildren {
-  onAfterEnter?: () => void;
-  onAfterLeave?: () => void;
-  onBeforeEnter?: () => void;
-  onBeforeLeave?: () => void;
-  onEnter?: () => void;
-  onLeave?: () => void;
+  show?: boolean;
 }
 
-function CollapseTransition({
-  onAfterEnter,
-  onAfterLeave,
-  onBeforeEnter,
-  onBeforeLeave,
-  onEnter,
-  onLeave,
-  children,
-}: Props) {
-  const elementRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!elementRef.current) return;
-
-    const element = elementRef.current;
-    const { borderBottomWidth, borderTopWidth, paddingBottom, paddingTop } =
-      getComputedStyle(element);
-
-    const enterStyles: CSSProperties = {
-      borderBottomWidth,
-      borderTopWidth,
-      height: 'auto',
-      overflow: 'hidden',
-      paddingBottom,
-      paddingTop,
-    };
-
-    const leaveStyles: CSSProperties = {
-      borderBottomWidth: '0',
-      borderTopWidth: '0',
-      height: '0',
-      overflow: 'hidden',
-      paddingBottom: '0',
-      paddingTop: '0',
-    };
-
-    // 进入动画
-    onBeforeEnter?.();
-    Object.assign(element.style, enterStyles);
-    onEnter?.();
-    requestAnimationFrame(() => {
-      element.style.transition = 'all 0.3s ease-out';
-      onAfterEnter?.();
-    });
-
-    // 离开动画
-    return () => {
-      onBeforeLeave?.();
-      Object.assign(element.style, leaveStyles);
-      onLeave?.();
-      requestAnimationFrame(() => {
-        element.style.transition = 'all 0.3s ease-in';
-        onAfterLeave?.();
-      });
-    };
-  }, [
-    onAfterEnter,
-    onAfterLeave,
-    onBeforeEnter,
-    onBeforeLeave,
-    onEnter,
-    onLeave,
-  ]);
-
+function CollapseTransition({ show = true, children }: Props) {
   return (
-    <div
-      ref={elementRef}
-      style={{
-        overflow: 'hidden',
-      }}
-    >
-      {children}
-    </div>
+    <AnimatePresence initial={false} mode="wait">
+      {show && (
+        <motion.div
+          animate={{
+            height: 'auto',
+            opacity: 1,
+          }}
+          exit={{
+            height: 0,
+            opacity: 0,
+          }}
+          initial={{
+            height: 0,
+            opacity: 0,
+          }}
+          style={{ overflow: 'hidden' }}
+          transition={{
+            duration: 0.3,
+            ease: [0.4, 0, 0.2, 1], // 使用 Material Design 的缓动函数
+          }}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

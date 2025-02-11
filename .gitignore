@@ -7,6 +7,7 @@ dist.tar
 dist.war
 .nitro
 .output
+build
 *-dist.zip
 *-dist.tar
 *-dist.war
@@ -18,6 +19,7 @@ coverage
 .temp
 dev-dist
 .stylelintcache
+.react-router
 yarn.lock
 package-lock.json
 .VSCodeCounter

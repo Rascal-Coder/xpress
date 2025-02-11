@@ -96,11 +96,11 @@ interface ApplicationPluginOptions extends CommonPluginOptions {
   /** importmap 插件配置 */
   importmapOptions?: ImportmapPluginOptions;
   /** 是否注入app loading */
-  injectAppLoading?: boolean;
+  // injectAppLoading?: boolean;
   /** 是否注入全局scss */
   injectGlobalScss?: boolean;
   /** loading模板  */
-  loadingTemplate?: string;
+  // loadingTemplate?: string;
   /** 是否开启nitro mock */
   nitroMock?: boolean;
   /** nitro mock 插件配置 */

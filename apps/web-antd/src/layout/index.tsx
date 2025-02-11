@@ -1,21 +1,22 @@
-import type { MenuRecordRaw } from '@xpress-core/typings';
-
 import { BasicLayout } from '@xpress/layouts';
-import { PreferencesProvider } from '@xpress-core/preferences';
+import { usePreferencesContext } from '@xpress-core/preferences';
+
+// import { useMemo } from 'react';
+
+import { useEffect } from 'react';
 
 import { overridesPreferences } from '#/preferences';
+import router, { useRouter } from '#/router';
 
-function Layout({ menus }: { menus: MenuRecordRaw[] }) {
-  const env = import.meta.env.PROD ? 'prod' : 'dev';
-  const appVersion = import.meta.env.VITE_APP_VERSION;
-  const namespace = `${import.meta.env.VITE_APP_NAMESPACE}-${appVersion}-${env}`;
-  return (
-    <PreferencesProvider
-      options={{ namespace, overrides: overridesPreferences }}
-    >
-      <BasicLayout sidebarMenus={menus} />;
-    </PreferencesProvider>
-  );
+import { generateMenuItems } from './utils';
+
+function Layout() {
+  const { routes } = useRouter(router);
+  const { menuItems } = generateMenuItems(routes);
+  const { updatePreferences } = usePreferencesContext();
+  useEffect(() => {
+    updatePreferences(overridesPreferences);
+  });
+  return <BasicLayout sidebarMenus={menuItems} />;
 }
-
 export default Layout;

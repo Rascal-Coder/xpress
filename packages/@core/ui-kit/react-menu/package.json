@@ -12,9 +12,7 @@
   "files": [
     "dist"
   ],
-  "sideEffects": [
-    "**/*.css"
-  ],
+  "sideEffects": false,
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -38,10 +36,10 @@
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "ahooks": "catalog:",
+    "framer-motion": "catalog:",
     "immer": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "react-transition-group": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

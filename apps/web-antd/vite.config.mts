@@ -2,11 +2,7 @@ import { defineConfig } from '@xpress/vite-config';
 
 export default defineConfig(async () => {
   return {
-    application: {
-      // 通过loadingTemplate配置自定义的loading页面，替换默认的全局加载动画
-      injectAppLoading: false,
-      // loadingTemplate: 'default-loading-antd.html',
-    },
+    application: {},
     vite: {
       server: {
         proxy: {

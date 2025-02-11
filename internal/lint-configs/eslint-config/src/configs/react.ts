@@ -32,10 +32,7 @@ export async function react(): Promise<Linter.Config[]> {
         'react-hooks/rules-of-hooks': 'error',
 
         // react refresh
-        'react-refresh/only-export-components': [
-          'warn',
-          { allowConstantExport: true },
-        ],
+        'react-refresh/only-export-components': 'off',
 
         ...pluginReact.configs.recommended.rules,
         'react/jsx-uses-react': 'off',

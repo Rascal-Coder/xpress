@@ -1,20 +1,21 @@
 import type { BaseXpressLayoutProps } from '@xpress-core/typings';
+import type { ReactNode } from 'react';
 
 interface LayoutComponents {
-  logo?: React.ReactNode;
-  menu?: React.ReactNode;
-  mixedMenu?: React.ReactNode;
-  sideExtra?: React.ReactNode;
-  sideExtraTitle?: React.ReactNode;
+  logo?: ReactNode;
+  menu?: ReactNode;
+  mixedMenu?: ReactNode;
+  sideExtra?: ReactNode;
+  sideExtraTitle?: ReactNode;
 }
 
 interface LayoutSlots {
-  content?: React.ReactNode;
-  'content-overlay'?: React.ReactNode;
-  extra?: React.ReactNode;
-  footer?: React.ReactNode;
-  header?: React.ReactNode;
-  tabbar?: React.ReactNode;
+  content?: ReactNode;
+  'content-overlay'?: ReactNode;
+  extra?: ReactNode;
+  footer?: ReactNode;
+  header?: ReactNode;
+  tabbar?: ReactNode;
 }
 
 interface XpressLayoutProps extends BaseXpressLayoutProps, LayoutComponents {

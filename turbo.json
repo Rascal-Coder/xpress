@@ -13,11 +13,11 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "build/client/**"]
     },
     "preview": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "build/client/**"]
     },
     "build:analyze": {
       "dependsOn": ["^build"],

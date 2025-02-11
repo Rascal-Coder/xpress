@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import type { DeepPartial } from '@xpress-core/typings';
 
 import type { InitialOptions, Preferences } from './types';
@@ -150,7 +149,7 @@ export function PreferencesProvider({
   const getInitialState = () => {
     const initialPreferences =
       preferenceManager.current.initPreferences(options);
-
+    updateCSSVariables(initialPreferences);
     return initialPreferences;
   };
 

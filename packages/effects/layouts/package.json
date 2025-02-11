@@ -20,7 +20,8 @@
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "react": "catalog:",
-    "react-router-dom": "^6.28.1"
+    "react-router": "catalog:",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@types/react": "catalog:"

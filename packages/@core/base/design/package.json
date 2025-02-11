@@ -21,7 +21,7 @@
     ".": {
       "types": "./src/index.ts",
       "development": "./src/index.ts",
-      "default": "./dist/style.css"
+      "default": "./dist/design.css"
     }
   },
   "publishConfig": {
