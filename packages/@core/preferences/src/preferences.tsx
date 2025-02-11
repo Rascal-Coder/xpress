@@ -149,7 +149,7 @@ export function PreferencesProvider({
   const getInitialState = () => {
     const initialPreferences =
       preferenceManager.current.initPreferences(options);
-
+    updateCSSVariables(initialPreferences);
     return initialPreferences;
   };
 

@@ -1,3 +1,3 @@
 export * from './constants';
-export * from './Preferences';
+export * from './preferences';
 export type * from './types';
