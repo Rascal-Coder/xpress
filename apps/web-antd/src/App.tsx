@@ -11,7 +11,7 @@ function App() {
   return (
     <HelmetProvider>
       <Helmet>
-        <title>{curRoute?.name}</title>
+        <title>{curRoute?.meta?.title}</title>
         <link data-rh="true" href={logo} rel="icon" type="image/x-icon"></link>
       </Helmet>
       <AnimatePresence mode="wait">{element}</AnimatePresence>

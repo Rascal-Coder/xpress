@@ -12,7 +12,7 @@ import { Navigate, useParams } from 'react-router-dom';
 export function generateReactRoutes(configs?: RouteConfig[]) {
   const ret = (configs ?? [])
     .filter((configItem) => {
-      return !configItem.external;
+      return !configItem.meta?.link;
     })
     .map((configItem) => {
       const { redirect, component, /* progress = true,  */ children } =

@@ -102,7 +102,7 @@ export class Router extends EventEmitter {
     const _pathname =
       typeof pathname === 'string' ? pathname : location.pathname;
     const routePath = this.getRoutePath(_pathname);
-    const parentRoute = this.flattenRoutes.get(routePath)?.parent;
+    const parentRoute = this.flattenRoutes.get(routePath)?.parentRouteConfig;
     if (parentRoute?.pathname) {
       this.setItem(parentRoute?.pathname, (routesConfig) => {
         if (routesConfig.children) {
