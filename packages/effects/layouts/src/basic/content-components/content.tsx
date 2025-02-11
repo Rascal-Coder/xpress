@@ -1,5 +1,5 @@
 import { memo, Suspense } from 'react';
-import { Outlet } from 'react-router';
+import { Outlet } from 'react-router-dom';
 
 function Content() {
   return (

@@ -1,12 +1,9 @@
 import { defineConfig } from '@xpress/vite-config';
 
-import { reactRouter } from '@react-router/dev/vite';
-
 export default defineConfig(async () => {
   return {
     application: {},
     vite: {
-      plugins: [reactRouter()],
       server: {
         proxy: {
           '/api': {
@@ -20,4 +17,4 @@ export default defineConfig(async () => {
       },
     },
   };
-}, 'application');
+});

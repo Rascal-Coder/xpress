@@ -10,7 +10,7 @@ export default {
   ...baseConfig,
   content: [
     ...baseConfig.content,
-    // resolve(__dirname, './index.html'),
+    resolve(__dirname, './index.html'),
     resolve(__dirname, './src/**/*.{js,ts,jsx,tsx}'),
   ],
 };

@@ -3,17 +3,10 @@
   "extends": "@xpress/tsconfig/web-app.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "#/*": ["src/*"]
+      "#/*": ["./src/*"]
     }
   },
   "references": [{ "path": "./tsconfig.node.json" }],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "**/.server/**/*",
-    "**/.client/**/*",
-    ".react-router/types/**/*"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

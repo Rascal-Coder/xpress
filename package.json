@@ -30,7 +30,8 @@
     "preview": "turbo-run preview"
   },
   "dependencies": {
-    "@react-spring/web": "catalog:"
+    "@react-spring/web": "catalog:",
+    "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
     "@testing-library/react": "catalog:",

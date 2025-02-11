@@ -80,8 +80,6 @@ async function loadApplicationPlugins(
     html,
     importmap,
     importmapOptions,
-    // injectAppLoading,
-    // loadingTemplate,
     nitroMock,
     nitroMockOptions,
     print,
@@ -104,13 +102,6 @@ async function loadApplicationPlugins(
         return [await viteNitroMockPlugin(nitroMockOptions)];
       },
     },
-
-    // {
-    //   condition: injectAppLoading,
-    //   plugins: async () => [
-    //     await viteInjectAppLoadingPlugin(!!isBuild, env, loadingTemplate),
-    //   ],
-    // },
     {
       condition: print,
       plugins: async () => [await vitePrintPlugin(printInfoMap)],

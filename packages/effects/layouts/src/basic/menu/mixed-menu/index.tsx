@@ -3,7 +3,7 @@ import type { MenuRecordRaw } from '@xpress-core/typings';
 import { NormalMenu, type NormalMenuProps } from '@xpress-core/react-menu';
 
 import { useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 interface MixedMenuProps extends NormalMenuProps {
   onDefaultSelect?: (menu: MenuRecordRaw, rootMenu?: MenuRecordRaw) => void;
