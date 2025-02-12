@@ -111,7 +111,6 @@ class PreferenceManager {
 
     this.initPlatform();
     this.isInitialized = true;
-
     return mergedPreference;
   }
 

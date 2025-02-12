@@ -11,7 +11,8 @@ export type RouteConfig = {
   collecttedPathname?: string[];
   /** 组件的文件地址 */
   component?: () => Promise<any>;
-
+  /** 默认子路由路径，当有children时生效，会自动添加空路径重定向到该路径 */
+  defaultPath?: string;
   /** 将子路由的菜单层级提升到本级 */
   flatten?: boolean;
   meta?: {

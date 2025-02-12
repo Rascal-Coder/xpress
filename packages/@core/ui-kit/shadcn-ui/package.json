@@ -28,6 +28,8 @@
     "@radix-ui/react-popover": "catalog:",
     "@radix-ui/react-scroll-area": "catalog:",
     "@radix-ui/react-slot": "catalog:",
+    "@radix-ui/react-toggle": "^1.1.2",
+    "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "catalog:",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
