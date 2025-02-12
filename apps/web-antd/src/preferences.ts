@@ -10,9 +10,9 @@ export const overridesPreferences: DeepPartial<Preferences> = {
   app: {
     name: '测试213',
   },
-  theme: {
-    builtinType: 'pink',
-    colorPrimary: 'hsl(347 77% 60%)',
-    mode: 'light',
-  },
+  // theme: {
+  //   builtinType: 'pink',
+  //   colorPrimary: 'hsl(347 77% 60%)',
+  //   mode: 'light',
+  // },
 };

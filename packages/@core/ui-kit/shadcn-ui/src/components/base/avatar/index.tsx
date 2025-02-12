@@ -2,8 +2,6 @@ import type { AvatarProps } from '@radix-ui/react-avatar';
 
 import { cn } from '@xpress-core/shared/utils';
 
-import { useMemo } from 'react';
-
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui';
 
 interface Props extends AvatarProps {
@@ -22,15 +20,16 @@ const XpressAvatar = ({
   src,
   ...props
 }: Props) => {
-  const text = useMemo(() => {
-    return alt.slice(-2).toUpperCase();
-  }, [alt]);
-
   return (
-    <div className={cn('relative flex flex-shrink-0 items-center', rootClass)}>
+    <div
+      className={cn(
+        'relative flex w-8 flex-shrink-0 items-center rounded-none bg-transparent',
+        rootClass,
+      )}
+    >
       <Avatar {...props} className="size-full">
         <AvatarImage alt={alt} src={src} />
-        <AvatarFallback>{text}</AvatarFallback>
+        <AvatarFallback>X</AvatarFallback>
       </Avatar>
       {dot && (
         <span

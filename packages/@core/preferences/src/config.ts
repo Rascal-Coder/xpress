@@ -49,7 +49,7 @@ const defaultPreferences: Preferences = {
   },
   logo: {
     enable: true,
-    source: '',
+    source: '/images/logo.png',
   },
   navigation: {
     accordion: true,
