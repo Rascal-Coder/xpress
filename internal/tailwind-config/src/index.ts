@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss';
 
-import fs from 'node:fs';
 import path from 'node:path';
 
 import { addDynamicIconSelectors } from '@iconify/tailwind';
@@ -10,21 +9,12 @@ import animate from 'tailwindcss-animate';
 
 import { enterAnimationPlugin } from './plugins/entry';
 
-// import defaultTheme from 'tailwindcss/defaultTheme';
-
 const { packages } = getPackagesSync(process.cwd());
 
 const tailwindPackages: string[] = [];
 
 packages.forEach((pkg) => {
-  // 同时支持 .js 和 .mjs 配置文件
-  if (
-    fs.existsSync(path.join(pkg.dir, 'tailwind.config.mjs')) ||
-    fs.existsSync(path.join(pkg.dir, 'tailwind.config.js'))
-  ) {
-    tailwindPackages.push(pkg.dir);
-  }
-  // console.log(tailwindPackages);
+  tailwindPackages.push(pkg.dir);
 });
 
 const shadcnUiColors = {
@@ -124,7 +114,7 @@ export default {
   content: [
     './index.html',
     ...tailwindPackages.map((item) =>
-      path.join(item, 'src/**/*.{js,ts,jsx,tsx}'),
+      path.join(item, 'src/**/*.{vue,js,ts,jsx,tsx,svelte,astro,html}'),
     ),
   ],
   darkMode: 'selector',
@@ -142,8 +132,6 @@ export default {
       padding: '2rem',
       screens: {
         '2xl': '1400px',
-        '3xl': '1600px',
-        '4xl': '1920px',
       },
     },
     extend: {
@@ -203,28 +191,9 @@ export default {
           '100%': { transform: 'translateY(0)' },
         },
       },
-      maxWidth: {
-        '8xl': '88rem',
-        '9xl': '96rem',
-      },
-      screens: {
-        '3xl': '1600px',
-        '4xl': '1920px',
-      },
-      spacing: {
-        18: '4.5rem',
-        22: '5.5rem',
-        26: '6.5rem',
-        30: '7.5rem',
-      },
       zIndex: {
         '100': '100',
         '1000': '1000',
-        dropdown: '800',
-        footer: '600',
-        header: '700',
-        modal: '1000',
-        overlay: '900',
       },
     },
   },

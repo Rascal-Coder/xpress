@@ -45,11 +45,12 @@ const defaultPreferences: Preferences = {
   header: {
     enable: true,
     hidden: false,
+    menuAlign: 'start',
     mode: 'fixed',
   },
   logo: {
     enable: true,
-    source: '/images/logo.png',
+    source: '/images/logo.svg',
   },
   navigation: {
     accordion: true,

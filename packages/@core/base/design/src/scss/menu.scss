@@ -65,6 +65,10 @@ $namespace: xpress;
   opacity: 1;
 }
 
+.is-menu-align {
+  justify-content: var(--menu-align, start);
+}
+
 .#{$namespace}-menu__popup-container,
 .#{$namespace}-menu {
   --menu-title-width: 140px;
@@ -469,4 +473,16 @@ $namespace: xpress;
     //   fill: var(--menu-submenu-hover-color);
     // }
   }
+}
+
+.menu-align-start {
+  --menu-align: start;
+}
+
+.menu-align-center {
+  --menu-align: center;
+}
+
+.menu-align-end {
+  --menu-align: end;
 }

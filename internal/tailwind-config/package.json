@@ -49,6 +49,7 @@
     "postcss": "catalog:",
     "postcss-import": "catalog:",
     "postcss-preset-env": "catalog:",
+    "tailwindcss": "catalog:",
     "tailwindcss-animate": "catalog:"
   },
   "devDependencies": {

@@ -139,10 +139,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
 
   // Logo渲染
   const logoNode = useShow(showLogo && !!logo, () => (
-    <div
-      className="flex h-[50px] items-center justify-center"
-      style={headerStyle}
-    >
+    <div className="flex h-[50px] items-center" style={headerStyle}>
       {logo}
     </div>
   ));
