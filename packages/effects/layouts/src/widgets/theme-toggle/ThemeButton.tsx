@@ -17,7 +17,7 @@ const ThemeButtonComponent = forwardRef<HTMLButtonElement, ThemeButtonProps>(
       return isDark ? 'dark' : 'light';
     }, [isDark]);
 
-    const [isAnimatingToDark, setIsAnimatingToDark] = useState(false);
+    const [isAnimatingToDark, setIsAnimatingToDark] = useState(isDark);
 
     const variant = useMemo(() => {
       return type === 'normal'
