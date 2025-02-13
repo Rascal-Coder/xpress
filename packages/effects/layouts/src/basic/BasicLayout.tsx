@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
 import LayoutFooter from './footer';
+import Header from './header';
 import { Menu, MixedMenu } from './menu';
 
 interface Props {
@@ -125,7 +126,7 @@ function BasicLayout({ sidebarMenus }: Props) {
     <XpressLayout
       components={{
         // 头部
-        // header: ,
+        header: <Header></Header>,
         // 页脚
         footer: preferences.footer.enable && (
           <LayoutFooter>

@@ -15,11 +15,8 @@ export const routesConfig: RouteConfig[] = [
         meta: {
           title: '概览',
         },
+        defaultPath: 'analysis',
         children: [
-          {
-            path: '',
-            redirect: 'analysis',
-          },
           {
             path: 'analysis',
             component: () => import('#/pages/dashboard/analysis'),
@@ -50,11 +47,8 @@ export const routesConfig: RouteConfig[] = [
         meta: {
           title: '嵌套路由',
         },
+        defaultPath: 'nest1',
         children: [
-          {
-            path: '', // 或'/layout'，也会生效
-            redirect: 'nest1',
-          },
           {
             path: 'nest1',
             component: () => import('#/pages/nest/nest1'),
@@ -68,11 +62,8 @@ export const routesConfig: RouteConfig[] = [
             meta: {
               title: '菜单2',
             },
+            defaultPath: 'nest2-1',
             children: [
-              {
-                path: '',
-                redirect: 'nest2-1',
-              },
               {
                 path: 'nest2-1',
                 component: () => import('#/pages/nest/nest2-1'),
@@ -86,11 +77,8 @@ export const routesConfig: RouteConfig[] = [
                 meta: {
                   title: '菜单2-2',
                 },
+                defaultPath: 'nest2-2-1',
                 children: [
-                  {
-                    path: '',
-                    redirect: 'nest2-2-1',
-                  },
                   {
                     path: 'nest2-2-1',
                     component: () => import('#/pages/nest/nest2-2-1'),
@@ -116,11 +104,8 @@ export const routesConfig: RouteConfig[] = [
         meta: {
           title: '错误页',
         },
+        defaultPath: '403',
         children: [
-          {
-            path: '',
-            redirect: '403',
-          },
           {
             path: '403',
             component: () => import('#/pages/noAccess'),

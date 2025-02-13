@@ -20,6 +20,10 @@ interface Props {
    */
   logoSize?: number;
   /**
+   * @zh_CN Logo 点击事件
+   */
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /**
    * @zh_CN Logo 图标
    */
   src?: string;
@@ -36,11 +40,17 @@ interface Props {
 export function XpressLogo({
   className,
   collapsed = false,
-  href = '#',
+  href = '',
+  onClick,
   src = '',
   text,
   theme = 'light',
 }: Props) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    onClick?.(e);
+  };
+
   return (
     <div className={cn('flex h-full items-center text-lg', theme)}>
       <a
@@ -49,6 +59,7 @@ export function XpressLogo({
           className,
         )}
         href={href}
+        onClick={handleClick}
       >
         {src && (
           <XpressAvatar

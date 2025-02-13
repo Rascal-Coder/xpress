@@ -1,7 +1,9 @@
-function Header({ children }: { children: React.ReactNode }) {
+import { ThemeToggle } from '../../widgets/theme-toggle/ThemeToggle';
+
+function Header() {
   return (
     <div className="flex-center text-muted-foreground relative h-full w-full text-xs">
-      {children}
+      <ThemeToggle className="mr-1" />
     </div>
   );
 }

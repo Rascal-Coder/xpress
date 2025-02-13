@@ -19,6 +19,7 @@
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
+    "@xpress/icons": "workspace:*",
     "react": "catalog:",
     "react-router": "catalog:",
     "react-router-dom": "^7.1.5"
