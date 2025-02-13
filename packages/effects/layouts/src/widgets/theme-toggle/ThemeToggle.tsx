@@ -8,7 +8,6 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const { isDark, updatePreferences } = usePreferencesContext();
-  // const isDark = preferences.theme.mode === 'dark';
 
   const handleChange = (isDark: boolean) => {
     updatePreferences({

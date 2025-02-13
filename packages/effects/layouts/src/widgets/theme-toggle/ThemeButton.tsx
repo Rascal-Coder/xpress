@@ -1,7 +1,7 @@
 import { XpressButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { forwardRef, useMemo } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
 
 import './ThemeButton.css';
 
@@ -16,6 +16,8 @@ const ThemeButtonComponent = forwardRef<HTMLButtonElement, ThemeButtonProps>(
     const theme = useMemo(() => {
       return isDark ? 'dark' : 'light';
     }, [isDark]);
+
+    const [isAnimatingToDark, setIsAnimatingToDark] = useState(false);
 
     const variant = useMemo(() => {
       return type === 'normal'
@@ -40,48 +42,39 @@ const ThemeButtonComponent = forwardRef<HTMLButtonElement, ThemeButtonProps>(
         return;
       }
 
+      const { clientX, clientY } = event;
+      const radius = Math.hypot(
+        Math.max(clientX, innerWidth - clientX),
+        Math.max(clientY, innerHeight - clientY),
+      );
+      const clipPath = [
+        `circle(0% at ${clientX}px ${clientY}px)`,
+        `circle(${radius}px at ${clientX}px ${clientY}px)`,
+      ];
+
+      // 解决context更新延迟问题
+      const nextIsDark = !isDark;
+      setIsAnimatingToDark(nextIsDark);
+
       // @ts-ignore startViewTransition
       const transition = document.startViewTransition(() => {
-        handleChange(!isDark);
+        handleChange(nextIsDark);
       });
 
       transition.ready.then(() => {
-        const { clientX, clientY } = event;
-
-        // 计算半径，以鼠标点击的位置为圆心，到四个角的距离中最大的那个作为半径
-        const radius = Math.hypot(
-          Math.max(clientX, innerWidth - clientX),
-          Math.max(clientY, innerHeight - clientY),
-        );
-        const clipPath = [
-          `circle(0% at ${clientX}px ${clientY}px)`,
-          `circle(${radius}px at ${clientX}px ${clientY}px)`,
-        ];
-        const animation = document.documentElement.animate(
+        document.documentElement.animate(
           {
-            clipPath: isDark ? [...clipPath].reverse() : clipPath,
+            clipPath: isAnimatingToDark ? clipPath : clipPath.reverse(),
           },
           {
             duration: 450,
             easing: 'ease-in',
-            pseudoElement: isDark
-              ? '::view-transition-old(root)'
-              : '::view-transition-new(root)',
+            pseudoElement: isAnimatingToDark
+              ? '::view-transition-new(root)'
+              : '::view-transition-old(root)',
           },
         );
-        animation.play();
-        // animation.finished
-        //   .then(() => {
-        //     // eslint-disable-next-line no-console
-        //     console.log('主题切换动画完成');
-        //   })
-        //   .catch((error: unknown) => {
-        //     console.error('动画执行失败:', error);
-        //   });
       });
-      // .catch((error: unknown) => {
-      //   console.error('主题切换动画失败:', error);
-      // });
     }
 
     return (
