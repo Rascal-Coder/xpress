@@ -16,7 +16,7 @@ import type {
 } from '@xpress-core/typings';
 
 type SupportedLanguagesType = 'en-US' | 'zh-CN';
-
+type LayoutHeaderMenuAlignType = 'center' | 'end' | 'start';
 interface AppPreferences {
   /** 权限模式 */
   accessMode: AccessModeType;
@@ -104,6 +104,8 @@ interface HeaderPreferences {
   enable: boolean;
   /** 顶栏是否隐藏,css-隐藏 */
   hidden: boolean;
+  /** 顶栏菜单位置 */
+  menuAlign: LayoutHeaderMenuAlignType;
   /** header显示模式 */
   mode: LayoutHeaderModeType;
 }

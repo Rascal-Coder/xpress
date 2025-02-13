@@ -301,6 +301,7 @@ export default function Menu(props: Props) {
           is(theme, true),
           is('rounded', rounded),
           is('collapse', collapse),
+          is('menu-align', mode === 'horizontal'),
         )}
         ref={menuRef}
         role="menu"

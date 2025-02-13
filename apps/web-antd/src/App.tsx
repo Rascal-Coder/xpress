@@ -8,7 +8,7 @@ import router, { useRouter } from '#/router';
 function App() {
   const { curRoute, reactRoutes } = useRouter(router);
   const element = useRoutes(reactRoutes);
-  const logo = '/images/logo.png';
+  const logo = '/images/logo.svg';
 
   return (
     <HelmetProvider>

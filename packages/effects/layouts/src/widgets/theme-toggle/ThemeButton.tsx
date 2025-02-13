@@ -1,9 +1,7 @@
 import { XpressButton } from '@xpress-core/shadcn-ui';
-import { cn } from '@xpress-core/shared/utils';
 
+import { motion } from 'framer-motion';
 import { forwardRef, useMemo, useState } from 'react';
-
-import './ThemeButton.css';
 
 interface ThemeButtonProps {
   type?: 'icon' | 'normal';
@@ -81,34 +79,61 @@ const ThemeButtonComponent = forwardRef<HTMLButtonElement, ThemeButtonProps>(
       <XpressButton
         aria-label={theme}
         aria-live="polite"
-        className={cn(
-          'theme-toggle cursor-pointer border-none bg-none',
-          `is-${theme}`,
-        )}
         onClick={toggleTheme}
         size={variant.size}
         style={variant.style}
         variant={variant.variant}
       >
-        <svg aria-hidden="true" height="24" viewBox="0 0 24 24" width="24">
+        <motion.svg
+          aria-hidden="true"
+          height="24"
+          initial={false}
+          viewBox="0 0 24 24"
+          width="24"
+        >
           <mask
-            className="theme-toggle__moon"
             fill="hsl(var(--foreground)/80%)"
             id="theme-toggle-moon"
             stroke="none"
           >
             <rect fill="white" height="100%" width="100%" x="0" y="0" />
-            <circle cx="40" cy="8" fill="black" r="11" />
+            <motion.circle
+              animate={{ x: isDark ? 0 : -20 }}
+              cx="40"
+              cy="8"
+              fill="black"
+              initial={{ x: isDark ? 0 : -20 }}
+              r="11"
+              transition={{ duration: 0.5, ease: [0, 0, 0.3, 1] }}
+            />
           </mask>
-          <circle
-            className="theme-toggle__sun"
+          <motion.circle
+            animate={{ scale: isDark ? 0.5 : 1 }}
             cx="12"
             cy="12"
+            fill="hsl(var(--foreground)/90)"
             id="sun"
+            initial={{ scale: isDark ? 0.5 : 1 }}
             mask="url(#theme-toggle-moon)"
             r="11"
+            transition={{ duration: 1.6, ease: [0.25, 0, 0.2, 1] }}
           />
-          <g className="theme-toggle__sun-beams">
+          <motion.g
+            animate={{
+              opacity: isDark ? 1 : 0,
+              rotate: isDark ? 90 : 0,
+            }}
+            initial={{
+              opacity: isDark ? 1 : 0,
+              rotate: isDark ? 90 : 0,
+            }}
+            stroke="hsl(var(--foreground)/90)"
+            strokeWidth="2"
+            transition={{
+              opacity: { duration: 0.6, ease: [0.25, 0, 0.3, 1] },
+              rotate: { duration: 1.6, ease: [0.5, 1.5, 0.75, 1.25] },
+            }}
+          >
             <line x1="12" x2="12" y1="1" y2="3" />
             <line x1="12" x2="12" y1="21" y2="23" />
             <line x1="4.22" x2="5.64" y1="4.22" y2="5.64" />
@@ -117,8 +142,8 @@ const ThemeButtonComponent = forwardRef<HTMLButtonElement, ThemeButtonProps>(
             <line x1="21" x2="23" y1="12" y2="12" />
             <line x1="4.22" x2="5.64" y1="19.78" y2="18.36" />
             <line x1="18.36" x2="19.78" y1="5.64" y2="4.22" />
-          </g>
-        </svg>
+          </motion.g>
+        </motion.svg>
       </XpressButton>
     );
   },

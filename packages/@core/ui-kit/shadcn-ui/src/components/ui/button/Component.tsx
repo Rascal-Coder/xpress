@@ -1,3 +1,5 @@
+import { cn } from '@xpress-core/shared/utils';
+
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
@@ -15,7 +17,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={buttonVariants({ className, size, variant })}
+        className={cn(buttonVariants({ size, variant }), className)}
         ref={ref}
         {...props}
       />
