@@ -2,6 +2,11 @@ import type { DeepPartial } from '@xpress-core/typings';
 
 import type { InitialOptions, Preferences } from './types';
 
+import {
+  breakpointsTailwind,
+  useBreakpoints,
+  useMediaQuery,
+} from '@xpress-core/hooks';
 import { StorageManager } from '@xpress-core/shared/cache';
 import { diff, isMacOs, merge } from '@xpress-core/shared/utils';
 
@@ -16,8 +21,6 @@ import {
 } from 'react';
 
 import { defaultPreferences } from './config';
-import { breakpointsTailwind, useBreakpoints } from './hooks/useBreakpoints';
-import { useMediaQuery } from './hooks/useMediaQuery';
 import { isDarkTheme, updateCSSVariables } from './update-css-variables';
 
 const STORAGE_KEY = 'preferences';

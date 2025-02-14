@@ -99,7 +99,7 @@ const Header = ({ menu }: HeaderProps) => {
 
   return (
     <>
-      <Reload />
+      {preferences.widget.refresh && <Reload />}
       <Breadcrumb />
       <div
         className={cn(
