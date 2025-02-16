@@ -34,6 +34,7 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "catalog:",
     "@radix-ui/react-visually-hidden": "^1.1.2",
+    "@xpress-core/hooks": "workspace:*",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "class-variance-authority": "catalog:",

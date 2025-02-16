@@ -1,8 +1,8 @@
+import { useScrollLock } from '@xpress-core/hooks';
 import { cn } from '@xpress-core/shared/utils';
 
 import * as SheetPrimitive from '@radix-ui/react-dialog';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { AnimatePresence, motion } from 'framer-motion';
 import * as React from 'react';
 
 const Sheet = SheetPrimitive.Root;
@@ -13,18 +13,21 @@ const SheetClose = SheetPrimitive.Close;
 
 const SheetPortal = SheetPrimitive.Portal;
 
-const MotionOverlay = motion.create(SheetPrimitive.Overlay);
-
+const DrawerContext = React.createContext<{ id: string }>({ id: '' });
 const SheetOverlay = React.forwardRef<
   React.ElementRef<typeof SheetPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <SheetPrimitive.Overlay
-    className={cn('bg-overlay z-popup inset-0', className)}
-    {...props}
-    ref={ref}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { id } = React.useContext(DrawerContext);
+  return (
+    <div
+      className={cn('bg-overlay z-popup fixed inset-0', className)}
+      ref={ref}
+      {...props}
+      data-dismissable-drawer={id}
+    ></div>
+  );
+});
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
@@ -83,6 +86,7 @@ const SheetContent = React.forwardRef<
     },
     ref,
   ) => {
+    useScrollLock();
     const position = container ? ('absolute' as const) : ('fixed' as const);
 
     const overlayStyle = {
@@ -109,18 +113,12 @@ const SheetContent = React.forwardRef<
 
     return (
       <SheetPortal container={container}>
-        <AnimatePresence mode="wait">
-          {open && modal && (
-            <MotionOverlay
-              animate={{ opacity: 1 }}
-              className={cn('bg-overlay z-popup inset-0')}
-              exit={{ opacity: 0 }}
-              initial={{ opacity: 0 }}
-              style={overlayStyle}
-              transition={{ duration: 0.3 }}
-            />
-          )}
-        </AnimatePresence>
+        {open && modal && (
+          <SheetOverlay
+            className="xpress-overlay"
+            style={overlayStyle}
+          ></SheetOverlay>
+        )}
         <SheetPrimitive.Content
           className={cn('z-popup', sheetVariants({ side }), className)}
           onAnimationEnd={onAnimationEnd}
@@ -197,6 +195,7 @@ const SheetDescription = React.forwardRef<
 SheetDescription.displayName = SheetPrimitive.Description.displayName;
 
 export {
+  DrawerContext,
   Sheet,
   SheetClose,
   SheetContent,

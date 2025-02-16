@@ -1109,6 +1109,9 @@ importers:
       '@radix-ui/react-visually-hidden':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@xpress-core/hooks':
+        specifier: workspace:*
+        version: link:../../hooks
       '@xpress-core/icons':
         specifier: workspace:*
         version: link:../../base/icons
