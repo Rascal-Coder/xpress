@@ -1,9 +1,10 @@
 import type { Props } from './types';
 
-import { X } from '@xpress/icons';
 import { useIsMobile } from '@xpress-core/hooks';
+import { X } from '@xpress-core/icons';
 import {
   DrawerContext,
+  Separator,
   Sheet,
   SheetClose,
   SheetContent,
@@ -13,6 +14,7 @@ import {
   SheetTitle,
   VisuallyHidden,
   XpressButton,
+  XpressHelpTooltip,
   XpressLoading,
 } from '@xpress-core/shadcn-ui';
 import { ELEMENT_ID_MAIN_CONTENT } from '@xpress-core/shared/constants';
@@ -23,47 +25,48 @@ import { forwardRef, useEffect, useId, useMemo, useRef } from 'react';
 export const Drawer = forwardRef<HTMLDivElement, Props>(
   (
     {
-      onDrawerBeforeClose,
-      isOpen,
-      setIsOpen,
-      placement = 'right',
-      className,
-      modal = true,
-      zIndex = 2000,
-      overlayBlur = 1,
-      onDrawerClosed,
-      onDrawerOpened,
-      closeOnPressEscape = true,
-      closeOnClickModal = true,
+      appendFooter,
       appendToMain = true,
-      showHeader = true,
-      headerClass,
+      cancelText,
+      className,
       closable = true,
-      closeIconPlacement = 'right',
       closeIcon,
-      title,
+      closeIconPlacement = 'right',
+      closeOnClickModal = true,
+      closeOnPressEscape = true,
+      confirmLoading,
+      confirmText,
+      contentClass,
+      customTitle,
       description,
       extra,
-      contentClass,
-      showLoading,
-      children,
-      showFooter = true,
-      footerClass,
-      prependFooter,
-      appendFooter,
       footer,
+      footerClass,
+      headerClass,
+      isOpen,
+      modal = true,
+      onDrawerBeforeClose,
+      onDrawerCancel,
+      onDrawerClosed,
+      onDrawerConfirm,
+      onDrawerOpened,
+      overlayBlur = 1,
+      placement = 'right',
+      prependFooter,
+      setIsOpen,
       showCancelButton = true,
       showConfirmButton = true,
-      cancelText,
-      confirmText,
-      confirmLoading,
-      onDrawerCancel,
-      onDrawerConfirm,
+      showFooter = true,
+      showHeader = true,
+      showLoading,
+      title,
+      titleTooltip,
+      zIndex = 2000,
+      children,
     },
     ref,
   ) => {
     const { isMobile } = useIsMobile();
-
     const id = useId();
     const wrapperRef = useRef<HTMLDivElement>(null);
     const onOpenChange = async (open: boolean) => {
@@ -162,13 +165,56 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
                   '!flex flex-row items-center justify-between border-b px-6 py-5',
                   headerClass,
                   {
-                    'px-4 py-3': closable,
                     'pl-2': closable && closeIconPlacement === 'left',
+                    'px-4 py-3': closable,
                   },
                 )}
               >
                 <div className="flex items-center">
                   {closable && closeIconPlacement === 'left' && (
+                    <>
+                      <SheetClose
+                        asChild
+                        className="data-[state=open]:bg-secondary ml-[2px] cursor-pointer rounded-full opacity-80 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
+                      >
+                        {closeIcon || (
+                          <XpressButton size="icon" variant="icon">
+                            <X className="size-4" />
+                          </XpressButton>
+                        )}
+                      </SheetClose>
+                      <Separator
+                        className="ml-1 mr-2 h-8"
+                        decorative
+                        orientation="vertical"
+                      ></Separator>
+                    </>
+                  )}
+                  {title && (
+                    <SheetTitle className="text-left">
+                      {customTitle || (
+                        <>
+                          {title}
+                          {titleTooltip && (
+                            <XpressHelpTooltip trigger-class="pb-1">
+                              {titleTooltip}
+                            </XpressHelpTooltip>
+                          )}
+                        </>
+                      )}
+                    </SheetTitle>
+                  )}
+
+                  {(!title || !description) && (
+                    <VisuallyHidden>
+                      {!title && <SheetTitle />}
+                      {!description && <SheetDescription />}
+                    </VisuallyHidden>
+                  )}
+                </div>
+                <div className="flex-center">
+                  {extra}
+                  {closable && closeIconPlacement === 'right' && (
                     <SheetClose
                       asChild
                       className="data-[state=open]:bg-secondary ml-[2px] cursor-pointer rounded-full opacity-80 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
@@ -180,27 +226,6 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
                       )}
                     </SheetClose>
                   )}
-                  {(!title || !description) && (
-                    <VisuallyHidden>
-                      {!title && <SheetTitle />}
-                      {!description && <SheetDescription />}
-                    </VisuallyHidden>
-                  )}
-                  <div className="flex-center">
-                    {extra}
-                    {closable && closeIconPlacement === 'right' && (
-                      <SheetClose
-                        asChild
-                        className="data-[state=open]:bg-secondary ml-[2px] cursor-pointer rounded-full opacity-80 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none"
-                      >
-                        {closeIcon || (
-                          <XpressButton size="icon" variant="icon">
-                            <X className="size-4" />
-                          </XpressButton>
-                        )}
-                      </SheetClose>
-                    )}
-                  </div>
                 </div>
               </SheetHeader>
             ) : (

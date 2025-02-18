@@ -7,3 +7,4 @@ export * from './useMediaQuery';
 export * from './useNamespace';
 export * from './useScrollLock';
 export * from './useShow';
+export * from 'ahooks';

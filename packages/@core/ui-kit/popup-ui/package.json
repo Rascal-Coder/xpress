@@ -35,9 +35,10 @@
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
-    "react": "catalog:"
+    "react": "catalog:",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
-    "@types/react": "^19.0.8"
+    "@types/react": "catalog:"
   }
 }
