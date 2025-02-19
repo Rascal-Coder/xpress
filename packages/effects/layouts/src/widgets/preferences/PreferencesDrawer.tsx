@@ -8,7 +8,8 @@ import {
 
 import { useState } from 'react';
 
-import { Appearance } from './modules/appearance';
+import { PreferencesAppearance } from './modules/appearance';
+import { PreferencesLayout } from './modules/layout';
 
 const CopyButton = () => {
   return (
@@ -68,7 +69,7 @@ export const PreferencesDrawer = (props: Props) => {
   const renderContent = () => {
     switch (activeTab) {
       case 'appearance': {
-        return <Appearance />;
+        return <PreferencesAppearance />;
       }
       case 'general': {
         return (
@@ -79,12 +80,7 @@ export const PreferencesDrawer = (props: Props) => {
         );
       }
       case 'layout': {
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium">布局设置</h3>
-            <p>在这里配置界面布局、窗口排列等设置</p>
-          </div>
-        );
+        return <PreferencesLayout></PreferencesLayout>;
       }
       case 'shortcutkey': {
         return (

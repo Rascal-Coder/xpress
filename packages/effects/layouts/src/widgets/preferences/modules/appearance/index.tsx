@@ -1,12 +1,9 @@
 import { Block } from '../../blocks';
-import { BuiltinTheme } from '../../blocks/theme/BuiltinTheme';
-import { Other } from '../../blocks/theme/Other';
-import { Radius } from '../../blocks/theme/Radius';
-import { Theme } from '../../blocks/theme/Theme';
+import { BuiltinTheme, Other, Radius, Theme } from '../../blocks/theme';
 
-export const Appearance = () => {
+export const PreferencesAppearance = () => {
   return (
-    <div>
+    <>
       <Block title="主题">
         <Theme />
       </Block>
@@ -19,6 +16,6 @@ export const Appearance = () => {
       <Block title="其他">
         <Other />
       </Block>
-    </div>
+    </>
   );
 };
