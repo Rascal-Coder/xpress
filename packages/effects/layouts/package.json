@@ -25,6 +25,7 @@
     "@xpress/icons": "workspace:*",
     "framer-motion": "^12.4.2",
     "react": "catalog:",
+    "react-colorful": "^5.6.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-router": "catalog:",
     "react-router-dom": "^7.1.5"

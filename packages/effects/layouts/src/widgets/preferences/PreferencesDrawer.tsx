@@ -1,49 +1,119 @@
-import type { DrawerApi } from '@xpress-core/popup-ui';
+import { Copy, RotateCw } from '@xpress/icons';
+import { Drawer, type Props } from '@xpress-core/popup-ui';
+import {
+  Segmented,
+  XpressButton,
+  XpressIconButton,
+} from '@xpress-core/shadcn-ui';
 
-import { Button } from '@xpress-core/shadcn-ui';
+import { useState } from 'react';
 
-interface PreferencesDrawerProps {
-  drawerApi: DrawerApi;
-  onTitleChange: (title: string) => void;
-}
+import { Appearance } from './modules/appearance';
 
-export function PreferencesDrawer({
-  drawerApi,
-  onTitleChange,
-}: PreferencesDrawerProps) {
-  // 更新抽屉标题
-  const handleUpdateTitle = () => {
-    const newTitle = '偏好设置 - 已更新';
-    onTitleChange(newTitle);
-    drawerApi.update({ title: newTitle });
+const CopyButton = () => {
+  return (
+    <XpressButton className="mx-4 w-full" size="sm" variant="default">
+      <Copy className="mr-2 size-3" /> 复制偏好设置
+    </XpressButton>
+  );
+};
+const LogoutButton = () => {
+  return (
+    <XpressButton className="mx-4 w-full" size="sm" variant="ghost">
+      清空缓存 & 退出登录
+    </XpressButton>
+  );
+};
+const Footer = () => {
+  return (
+    <>
+      <CopyButton />
+      <LogoutButton />
+    </>
+  );
+};
+const Extra = () => {
+  return (
+    <div className="flex items-center">
+      <XpressIconButton
+        className="relative"
+        tooltip="数据有变化，点击可进行重置"
+      >
+        <span className="bg-primary absolute right-0.5 top-0.5 h-2 w-2 rounded"></span>
+        <RotateCw className="size-4" />
+      </XpressIconButton>
+    </div>
+  );
+};
+const tabs = [
+  {
+    label: '外观',
+    value: 'appearance',
+  },
+  {
+    label: '布局',
+    value: 'layout',
+  },
+  {
+    label: '快捷键',
+    value: 'shortcutkey',
+  },
+  {
+    label: '通用',
+    value: 'general',
+  },
+];
+export const PreferencesDrawer = (props: Props) => {
+  const [activeTab, setActiveTab] = useState(tabs[0]?.value);
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'appearance': {
+        return <Appearance />;
+      }
+      case 'general': {
+        return (
+          <div className="p-4">
+            <h3 className="text-lg font-medium">通用设置</h3>
+            <p>在这里配置语言、自动更新等通用设置</p>
+          </div>
+        );
+      }
+      case 'layout': {
+        return (
+          <div className="p-4">
+            <h3 className="text-lg font-medium">布局设置</h3>
+            <p>在这里配置界面布局、窗口排列等设置</p>
+          </div>
+        );
+      }
+      case 'shortcutkey': {
+        return (
+          <div className="p-4">
+            <h3 className="text-lg font-medium">快捷键设置</h3>
+            <p>在这里配置键盘快捷键</p>
+          </div>
+        );
+      }
+    }
   };
 
   return (
-    <div className="space-y-4 p-4">
-      <h2 className="text-lg font-semibold">偏好设置</h2>
-
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span>深色模式</span>
-          <Button size="sm" variant="outline">
-            切换
-          </Button>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <span>自动更新</span>
-          <Button size="sm" variant="outline">
-            开启
-          </Button>
-        </div>
+    <Drawer
+      className="sm:max-w-sm"
+      description="自定义偏好设置 & 实时预览"
+      title="偏好设置"
+      {...props}
+      extra={<Extra />}
+      footer={<Footer />}
+    >
+      <div className="p-1">
+        <Segmented
+          onChange={(value) => setActiveTab(value)}
+          tabs={tabs}
+          value={activeTab}
+        />
+        {renderContent()}
       </div>
-
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button onClick={() => drawerApi.close()} variant="outline">
-          取消
-        </Button>
-        <Button onClick={handleUpdateTitle}>更新标题</Button>
-      </div>
-    </div>
+    </Drawer>
   );
-}
+};

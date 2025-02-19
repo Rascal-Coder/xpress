@@ -113,12 +113,7 @@ const SheetContent = React.forwardRef<
 
     return (
       <SheetPortal container={container}>
-        {open && modal && (
-          <SheetOverlay
-            className="xpress-overlay"
-            style={overlayStyle}
-          ></SheetOverlay>
-        )}
+        {open && modal && <SheetOverlay style={overlayStyle}></SheetOverlay>}
         <SheetPrimitive.Content
           className={cn('z-popup', sheetVariants({ side }), className)}
           onAnimationEnd={onAnimationEnd}

@@ -120,7 +120,23 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
     const getAppendTo = useMemo(() => {
       return appendToMain ? `#${ELEMENT_ID_MAIN_CONTENT}` : undefined;
     }, [appendToMain]);
-
+    const DefaultFooter = () => {
+      return (
+        <>
+          {showCancelButton && (
+            <XpressButton onClick={onDrawerCancel} variant="ghost">
+              {cancelText || '取消'}
+            </XpressButton>
+          )}
+          {showConfirmButton && (
+            <XpressButton loading={confirmLoading} onClick={onDrawerConfirm}>
+              {confirmText || '确定'}
+            </XpressButton>
+          )}
+          {appendFooter}
+        </>
+      );
+    };
     useEffect(() => {
       if (showLoading && wrapperRef.current) {
         wrapperRef.current.scrollTo({
@@ -204,7 +220,11 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
                       )}
                     </SheetTitle>
                   )}
-
+                  {description && (
+                    <SheetDescription className="ml-1 mt-1 text-xs">
+                      {customTitle || <>{description}</>}
+                    </SheetDescription>
+                  )}
                   {(!title || !description) && (
                     <VisuallyHidden>
                       {!title && <SheetTitle />}
@@ -255,21 +275,7 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
                 )}
               >
                 {prependFooter}
-                {footer ||
-                  (showCancelButton && (
-                    <XpressButton onClick={onDrawerCancel} variant="ghost">
-                      {cancelText || '取消'}
-                    </XpressButton>
-                  ))}
-                {showConfirmButton && (
-                  <XpressButton
-                    loading={confirmLoading}
-                    onClick={onDrawerConfirm}
-                  >
-                    {confirmText || '确定'}
-                  </XpressButton>
-                )}
-                {appendFooter}
+                {footer || <DefaultFooter />}
               </SheetFooter>
             )}
           </SheetContent>
