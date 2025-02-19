@@ -69,6 +69,10 @@
       "path": "packages/@core/ui-kit/layout-ui",
     },
     {
+      "name": "@xpress-core/popup-ui",
+      "path": "packages/@core/ui-kit/popup-ui",
+    },
+    {
       "name": "@xpress-core/react-menu",
       "path": "packages/@core/ui-kit/react-menu",
     },

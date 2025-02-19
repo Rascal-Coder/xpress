@@ -4,7 +4,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@xpress-core/shadcn-ui/*": ["./src/*"]
+      "@xpress-core/shadcn-ui/*": ["./src/*"],
+      "@xpress-core/shared/utils": ["../../../@core/base/shared/src/utils"],
+      "@xpress-core/shared/utils/*": ["../../../@core/base/shared/src/utils/*"]
     }
   },
   "include": ["src"],

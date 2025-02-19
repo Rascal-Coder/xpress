@@ -41,6 +41,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   headerHeight = 50,
   headerHidden = false,
   headerMode = 'fixed',
+  headerTheme,
   headerToggleSidebarButton = true,
   headerVisible = true,
   isMobile = false,
@@ -575,7 +576,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         logo={showHeaderLogo ? logo : undefined}
         show={true}
         sidebarWidth={getSidebarWidth}
-        theme={sidebarTheme}
+        theme={headerTheme}
         toggleButton={
           showHeaderToggleButton && (
             <XpressIconButton

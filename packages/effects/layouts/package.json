@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@loadable/component": "^5.16.4",
+    "@xpress-core/hooks": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
+    "@xpress-core/popup-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
@@ -23,6 +25,8 @@
     "@xpress/icons": "workspace:*",
     "framer-motion": "^12.4.2",
     "react": "catalog:",
+    "react-colorful": "^5.6.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-router": "catalog:",
     "react-router-dom": "^7.1.5"
   },

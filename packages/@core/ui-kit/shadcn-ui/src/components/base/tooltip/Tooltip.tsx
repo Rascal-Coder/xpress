@@ -25,7 +25,7 @@ export function XpressTooltip({
         </TooltipTrigger>
         <TooltipContent
           className={cn(
-            'side-content text-popover-foreground bg-accent rounded-md',
+            'side-content z-popup text-popover-foreground bg-accent rounded-md',
             contentClass,
           )}
           side={side}

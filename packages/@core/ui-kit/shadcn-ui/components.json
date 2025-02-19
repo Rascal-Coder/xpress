@@ -11,6 +11,8 @@
   },
   "aliases": {
     "components": "@xpress-core/shadcn-ui/components",
-    "utils": "@xpress-core/shared/utils"
+    "utils": "@xpress-core/shared/utils",
+    "lib": "@xpress-core/shared/utils",
+    "ui": "@xpress-core/shadcn-ui/components/ui"
   }
 }
