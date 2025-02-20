@@ -1260,14 +1260,7 @@ importers:
         specifier: workspace:*
         version: link:../@core/base/design
 
-  packages/utils:
-    dependencies:
-      '@xpress-core/router':
-        specifier: workspace:*
-        version: link:../@core/react-router-toolset
-      '@xpress-core/shared':
-        specifier: workspace:*
-        version: link:../@core/base/shared
+  packages/utils: {}
 
   scripts/cli:
     dependencies:
