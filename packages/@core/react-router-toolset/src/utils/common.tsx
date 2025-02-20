@@ -1,8 +1,7 @@
-import type { MenuRecordRaw } from '@xpress-core/typings';
 import type { ReactNode } from 'react';
 import type { RouteObject } from 'react-router-dom';
 
-import type { RouteConfig } from './types';
+import type { RouteConfig } from '../types';
 
 import loadable from '@loadable/component';
 import { Navigate, useParams } from 'react-router-dom';
@@ -189,78 +188,4 @@ export function findroutesConfigItem(
   }
 
   return findInTree(routesConfig, routePath);
-}
-
-/**
- * 根据RouteConfig, 生成antd Menu组件的item属性所需的数据
- */
-export function generateMenuItems(routes: RouteConfig[]): {
-  allFlattenMenuItems: Map<React.Key, RouteConfig>;
-  flattenMenuItems: Map<React.Key, RouteConfig>;
-  menuItems: MenuRecordRaw[];
-} {
-  const allFlattenMenuItems: Map<React.Key, RouteConfig> = new Map();
-  const flattenMenuItems: Map<React.Key, RouteConfig> = new Map();
-  function _generateMenuItems(
-    _routes: RouteConfig[],
-    _parentRouteConfig?: RouteConfig,
-  ): MenuRecordRaw[] {
-    const ret: MenuRecordRaw[] = [];
-    for (const _route of _routes) {
-      const { collecttedPathname = [], flatten, redirect, children } = _route;
-      const { hideInMenu, icon, title } = _route.meta ?? {};
-
-      // 如果是重定向路由，跳过
-      if (redirect) {
-        continue;
-      }
-
-      // 如果是扁平化路由，直接将子路由添加到当前层级
-      if (flatten) {
-        const menuChildren = _generateMenuItems(children ?? [], _route);
-        ret.push(...menuChildren);
-        menuChildren.forEach((item) =>
-          allFlattenMenuItems.set(item.key, _route as RouteConfig),
-        );
-        continue;
-      }
-
-      const currentPath =
-        collecttedPathname[collecttedPathname.length - 1] ?? '';
-
-      const itemRet: MenuRecordRaw = {
-        icon,
-        key: currentPath,
-        name: title ?? '',
-        path: currentPath,
-      };
-
-      const extendedRoute = {
-        ..._route,
-      };
-
-      if (children) {
-        const menuChildren = _generateMenuItems(children, itemRet);
-        if (menuChildren.length > 0) {
-          itemRet.children = menuChildren;
-        }
-      }
-
-      if (!hideInMenu) {
-        ret.push(itemRet);
-      }
-
-      allFlattenMenuItems.set(itemRet.key, extendedRoute);
-      if (!hideInMenu) {
-        flattenMenuItems.set(itemRet.key, extendedRoute);
-      }
-    }
-    return ret;
-  }
-  const menuItems = _generateMenuItems(routes);
-  return {
-    allFlattenMenuItems,
-    flattenMenuItems,
-    menuItems,
-  };
 }

@@ -1002,6 +1002,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 18.3.5(@types/react@18.3.18)
+      '@xpress-core/shared':
+        specifier: workspace:*
+        version: link:../base/shared
       '@xpress-core/typings':
         specifier: workspace:*
         version: link:../base/typings
@@ -1257,7 +1260,14 @@ importers:
         specifier: workspace:*
         version: link:../@core/base/design
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@xpress-core/router':
+        specifier: workspace:*
+        version: link:../@core/react-router-toolset
+      '@xpress-core/shared':
+        specifier: workspace:*
+        version: link:../@core/base/shared
 
   scripts/cli:
     dependencies:

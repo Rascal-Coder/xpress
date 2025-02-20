@@ -96,6 +96,8 @@ export type RouteConfig = {
      * @default -1
      */
     maxNumOfOpenTab?: number;
+    /** 菜单是否显示禁止访问的页面 */
+    menuVisibleWithForbidden?: boolean;
     /**
      * 在新窗口打开
      */
@@ -106,9 +108,9 @@ export type RouteConfig = {
     order?: number;
     /** 菜单权限 */
     permission?: string[];
+
     /** 进度条 */
     progress?: boolean;
-
     /**
      * 标题名称
      */

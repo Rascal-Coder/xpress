@@ -48,7 +48,6 @@ function SubMenuView({ menu }: Props) {
       badgeVariants={menu.badgeVariants}
       icon={menu.icon}
       key={menu.path}
-      // menuItemClick={menuItemClick}
       path={menu.path}
       title={menu.name}
     ></MenuItem>

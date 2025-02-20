@@ -14,6 +14,7 @@ export const routesConfig: RouteConfig[] = [
         path: 'home',
         meta: {
           title: '概览',
+          badgeType: 'dot',
         },
         defaultPath: 'analysis',
         children: [
