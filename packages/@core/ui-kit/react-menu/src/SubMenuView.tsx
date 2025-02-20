@@ -22,14 +22,12 @@ function SubMenuView({ menu }: Props) {
     <SubMenu
       activeIcon={menu.activeIcon}
       content={
-        <div>
-          <MenuBadge
-            badge={menu.badge}
-            badgeType={menu.badgeType}
-            badgeVariants={menu.badgeVariants}
-            className="right-6"
-          ></MenuBadge>
-        </div>
+        <MenuBadge
+          badge={menu.badge}
+          badgeType={menu.badgeType}
+          badgeVariants={menu.badgeVariants}
+          className="right-6"
+        ></MenuBadge>
       }
       icon={menu.icon}
       key={`${menu.path}_sub`}

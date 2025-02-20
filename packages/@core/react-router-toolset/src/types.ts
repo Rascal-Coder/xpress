@@ -15,6 +15,8 @@ export type RouteConfig = {
   defaultPath?: string;
   /** 将子路由的菜单层级提升到本级 */
   flatten?: boolean;
+  /** 是否是根路由 */
+  isRoot?: boolean;
   meta?: {
     /**
      * 激活图标（菜单/tab）
