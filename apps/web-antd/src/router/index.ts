@@ -1,4 +1,4 @@
-import { Router } from '#/react-router-toolset';
+import { Router } from '@xpress-core/router';
 
 import { routesConfig } from './config';
 
@@ -6,4 +6,4 @@ const router = new Router(routesConfig);
 
 export default router;
 
-export * from '#/react-router-toolset';
+export * from '@xpress-core/router';

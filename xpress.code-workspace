@@ -65,6 +65,10 @@
       "path": "packages/@core/preferences",
     },
     {
+      "name": "@xpress-core/router",
+      "path": "packages/@core/react-router-toolset",
+    },
+    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
     },

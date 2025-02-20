@@ -18,11 +18,10 @@
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
+    "@xpress-core/router": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
-    "eventemitter3": "^5.0.1",
     "framer-motion": "^12.4.2",
-    "history": "^5.3.0",
     "immer": "^10.1.1",
     "nprogress": "^0.2.0",
     "react": "catalog:",
@@ -31,7 +30,6 @@
     "react-router-dom": "^7.1.5"
   },
   "devDependencies": {
-    "@types/loadable__component": "^5.13.9",
     "@types/nprogress": "^0.2.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",

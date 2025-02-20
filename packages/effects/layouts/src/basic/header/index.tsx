@@ -12,7 +12,6 @@ import {
   Preferences,
   Reload,
   ThemeToggle,
-  UserDropdown,
 } from '../../widgets';
 
 interface HeaderProps {
@@ -20,9 +19,13 @@ interface HeaderProps {
    * 菜单
    */
   menu?: React.ReactNode;
+  /**
+   * 显示头部导航
+   */
+  showHeaderNav?: boolean;
 }
 const REFERENCE_VALUE = 50;
-const Header = ({ menu }: HeaderProps) => {
+const Header = ({ menu, showHeaderNav }: HeaderProps) => {
   const { preferences, preferencesButtonPosition } = usePreferencesContext();
 
   const rightSlots = useMemo(() => {
@@ -67,7 +70,6 @@ const Header = ({ menu }: HeaderProps) => {
 
     return list.sort((a, b) => a.index - b.index);
   }, [preferences.widget, preferencesButtonPosition]);
-
   const rightComponents = rightSlots.map(({ name }) => {
     switch (name) {
       case 'fullscreen': {
@@ -88,9 +90,6 @@ const Header = ({ menu }: HeaderProps) => {
       case 'theme-toggle': {
         return <ThemeToggle className="mr-1" key={name} />;
       }
-      case 'user-dropdown': {
-        return <UserDropdown key={name} />;
-      }
       default: {
         return null;
       }
@@ -99,15 +98,15 @@ const Header = ({ menu }: HeaderProps) => {
 
   return (
     <>
-      {preferences.widget.refresh && <Reload />}
-      <Breadcrumb />
+      {!showHeaderNav && preferences.widget.refresh && <Reload />}
+      {preferences.breadcrumb.enable && <Breadcrumb />}
       <div
         className={cn(
           `menu-align-${preferences.header.menuAlign}`,
           'flex h-full min-w-0 flex-1 items-center',
         )}
       >
-        {menu}
+        {showHeaderNav && menu}
       </div>
       <div className="flex h-full min-w-0 flex-shrink-0 items-center">
         {rightComponents}

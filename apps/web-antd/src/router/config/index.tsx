@@ -1,4 +1,4 @@
-import type { RouteConfig } from '#/router';
+import type { RouteConfig } from '@xpress-core/router';
 
 export const routesConfig: RouteConfig[] = [
   {

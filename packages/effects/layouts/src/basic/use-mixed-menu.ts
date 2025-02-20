@@ -1,18 +1,23 @@
-// import { useMemo } from 'react';
+import type { MenuRecordRaw } from '@xpress-core/typings';
+
+import { usePreferencesContext } from '@xpress-core/preferences';
+
+import { useMemo, useState } from 'react';
 
 export function useMixedMenu() {
-  return false;
-  // const { isMixedNav, isHeaderMixedNav } = usePreferences();
-  // const needSplit = useMemo(
-  //   () =>
-  //     (preferences.navigation.split && isMixedNav.value) ||
-  //     isHeaderMixedNav.value,
-  // ,[]);
-  // const sidebarVisible = computed(() => {
-  //   const enableSidebar = preferences.sidebar.enable;
-  //   if (needSplit.value) {
-  //     return enableSidebar && splitSideMenus.value.length > 0;
-  //   }
-  //   return enableSidebar;
-  // });
+  const { preferences, isMixedNav, isHeaderMixedNav } = usePreferencesContext();
+  const [splitSideMenus] = useState<MenuRecordRaw[]>([]);
+  const needSplit = useMemo(() => {
+    return (preferences.navigation.split && isMixedNav) || isHeaderMixedNav;
+  }, [isHeaderMixedNav, isMixedNav, preferences.navigation.split]);
+  const sidebarMenus = useMemo(() => {
+    const enableSidebar = preferences.sidebar.enable;
+    if (needSplit) {
+      return enableSidebar && splitSideMenus.length > 0;
+    }
+    return enableSidebar;
+  }, [needSplit, preferences.sidebar.enable, splitSideMenus.length]);
+  return {
+    sidebarMenus,
+  };
 }

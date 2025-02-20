@@ -109,7 +109,6 @@ function BasicLayout({ sidebarMenus }: Props) {
         hidden: !preferences.sidebar.hidden,
       },
     });
-    // console.log('handleToggleSidebar');
   };
 
   const handleOpen = () => {
@@ -126,7 +125,12 @@ function BasicLayout({ sidebarMenus }: Props) {
     <XpressLayout
       components={{
         // 头部
-        header: <Header></Header>,
+        header: (
+          <Header
+            // menu={<Menu menus={}></Menu>}
+            showHeaderNav={showHeaderNav}
+          ></Header>
+        ),
         // 页脚
         footer: preferences.footer.enable && (
           <LayoutFooter>
@@ -155,7 +159,7 @@ function BasicLayout({ sidebarMenus }: Props) {
       isMobile={preferences.app.isMobile}
       layout={layout}
       logo={
-        preferences.logo.enable ? (
+        preferences.logo.enable && (
           <XpressLogo
             className={logoClass}
             collapsed={logoCollapsed}
@@ -163,7 +167,7 @@ function BasicLayout({ sidebarMenus }: Props) {
             text={preferences.app.name}
             theme={showHeaderNav ? headerTheme : theme}
           />
-        ) : null
+        )
       }
       // 侧边菜单区域
       menu={
@@ -172,12 +176,13 @@ function BasicLayout({ sidebarMenus }: Props) {
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
           defaultActive={defaultActive}
+          // TODO: 默认展开的菜单
+          // defaultOpenKeys={sidebarActive}
           menus={sidebarMenus}
           mode="vertical"
           onOpen={handleOpen}
           onSelect={handleSelect}
           rounded={isMenuRounded}
-          // defaultOpenKeys={sidebarActive}
           theme={theme}
         />
       }

@@ -1,8 +1,6 @@
 import { BasicLayout } from '@xpress/layouts';
 
-import router, { useRouter } from '#/router';
-
-import { generateMenuItems } from './utils';
+import router, { generateMenuItems, useRouter } from '#/router';
 
 function Layout() {
   const { routes } = useRouter(router);

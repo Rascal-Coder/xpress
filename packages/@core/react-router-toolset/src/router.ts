@@ -27,7 +27,7 @@ export class Router extends EventEmitter {
   private _onChangeRoutesConfig = () => {
     const handler = (routesConfig: RouteConfig[]) => {
       const reactRoutes = generateReactRoutes(routesConfig);
-      const { routes, flattenRoutes } = formatRoutes(routesConfig);
+      const { flattenRoutes, routes } = formatRoutes(routesConfig);
       this.reactRoutes = reactRoutes;
       this.routes = routes;
       this.flattenRoutes = flattenRoutes;
@@ -117,7 +117,7 @@ export class Router extends EventEmitter {
     super();
     this.routesConfig = routesConfig;
     this.reactRoutes = generateReactRoutes(routesConfig);
-    const { routes, flattenRoutes } = formatRoutes(routesConfig);
+    const { flattenRoutes, routes } = formatRoutes(routesConfig);
     this.routes = routes;
     this.flattenRoutes = flattenRoutes;
 
@@ -160,7 +160,7 @@ export function useRouter(router: Router) {
   useEffect(() => {
     const handler = (newRoutesConfigs: RouteConfig[]) => {
       const reactRoutes = generateReactRoutes(newRoutesConfigs);
-      const { routes, flattenRoutes } = formatRoutes(newRoutesConfigs);
+      const { flattenRoutes, routes } = formatRoutes(newRoutesConfigs);
       setReactRoutes(reactRoutes);
       setRoutes(routes);
       setFlattenRoutes(flattenRoutes);
@@ -173,9 +173,9 @@ export function useRouter(router: Router) {
   }, [router]);
 
   return {
+    curRoute,
+    flattenRoutes,
     reactRoutes,
     routes,
-    flattenRoutes,
-    curRoute,
   };
 }

@@ -4,15 +4,15 @@ import { useLayoutEffect, useState } from 'react';
 import { Router } from 'react-router-dom';
 
 export interface HistoryRouterProps {
-  history: BrowserHistory;
   basename?: string;
   children?: React.ReactNode;
+  history: BrowserHistory;
 }
 
 export default function HistoryRouter({
   basename,
-  children,
   history,
+  children,
 }: HistoryRouterProps) {
   const [state, setState] = useState({
     action: history.action,
