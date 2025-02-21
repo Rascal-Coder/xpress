@@ -1,6 +1,16 @@
 import type { Icon } from '@xpress-core/typings';
+import type { ComponentType } from 'react';
 
-export type RouteConfig = {
+import type { Router } from './router';
+
+/**
+ * 权限模式
+ * backend 后端权限模式
+ * frontend 前端权限模式
+ */
+type AccessModeType = 'backend' | 'frontend';
+
+type RouteConfig = {
   /** 同react-router */
   caseSensitive?: boolean;
   /** 子路由，同react-router */
@@ -126,4 +136,29 @@ export type RouteConfig = {
   pathname?: string;
   /** 重定向path */
   redirect?: string;
+};
+type ComponentRecordType = Record<
+  string,
+  () => Promise<{ default: ComponentType }>
+>;
+type RouteRecordStringComponent<T = string> = {
+  children?: RouteRecordStringComponent<T>[];
+  component?: T;
+} & Omit<RouteConfig, 'children' | 'component'>;
+interface GenerateMenuAndRoutesOptions {
+  fetchMenuListAsync?: () => Promise<RouteRecordStringComponent[]>;
+  forbiddenComponent?: RouteConfig['component'];
+  layoutMap?: ComponentRecordType;
+  pageMap?: ComponentRecordType;
+  roles?: string[];
+  router: Router;
+  routes: RouteConfig[];
+}
+
+export type {
+  AccessModeType,
+  ComponentRecordType,
+  GenerateMenuAndRoutesOptions,
+  RouteConfig,
+  RouteRecordStringComponent,
 };

@@ -1,10 +1,11 @@
 import { Router } from '@xpress-core/router';
 
-import { testBackendRoutes } from './helper';
+import { generateAccessRoutes } from './access';
 
 // const router = new Router(routesConfig);
 // const router = new Router(testFrontendRoutes);
-const router = new Router(testBackendRoutes);
+const { accessibleRoutes } = await generateAccessRoutes('backend');
+const router = new Router(accessibleRoutes);
 
 export default router;
 

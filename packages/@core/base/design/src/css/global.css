@@ -28,7 +28,7 @@
     -moz-osx-font-smoothing: grayscale; */
   }
 
-  /* #app, */
+  #root,
   body,
   html {
     @apply size-full;

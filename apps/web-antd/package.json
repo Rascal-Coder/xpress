@@ -19,6 +19,7 @@
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress-core/router": "workspace:*",
+    "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/styles": "workspace:*",
     "framer-motion": "^12.4.2",
@@ -27,7 +28,9 @@
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "^7.1.5",
+    "react-toastify": "^11.0.3",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.3",
