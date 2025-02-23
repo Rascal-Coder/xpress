@@ -7,6 +7,8 @@ import type {
 
 import { mapTree } from '@xpress-core/shared/utils';
 
+import { menuHasVisibleWithForbidden } from './common';
+
 function normalizeViewPath(path: string): string {
   // 去除相对路径前缀
   const normalizedPath = path.replace(/^(\.\/|\.\.\/)+/, '');
@@ -22,6 +24,7 @@ function convertRoutes(
   routes: RouteRecordStringComponent[],
   layoutMap: ComponentRecordType,
   pageMap: ComponentRecordType,
+  forbiddenComponent: RouteConfig['component'],
 ): RouteConfig[] {
   return mapTree(routes, (node) => {
     const route = node as unknown as RouteConfig;
@@ -40,6 +43,9 @@ function convertRoutes(
             ? normalizePath
             : `${normalizePath}.tsx`
         ];
+      if (menuHasVisibleWithForbidden(route)) {
+        route.component = forbiddenComponent;
+      }
     }
 
     return route;
@@ -49,7 +55,12 @@ function convertRoutes(
 async function generateRoutesByBackend(
   options: GenerateMenuAndRoutesOptions,
 ): Promise<RouteConfig[]> {
-  const { fetchMenuListAsync, layoutMap = {}, pageMap = {} } = options;
+  const {
+    fetchMenuListAsync,
+    forbiddenComponent,
+    layoutMap = {},
+    pageMap = {},
+  } = options;
 
   try {
     const menuRoutes = await fetchMenuListAsync?.();
@@ -63,7 +74,12 @@ async function generateRoutesByBackend(
       normalizePageMap[normalizeViewPath(key)] = value;
     }
 
-    const routes = convertRoutes(menuRoutes, layoutMap, normalizePageMap);
+    const routes = convertRoutes(
+      menuRoutes,
+      layoutMap,
+      normalizePageMap,
+      forbiddenComponent,
+    );
 
     return routes;
   } catch (error) {

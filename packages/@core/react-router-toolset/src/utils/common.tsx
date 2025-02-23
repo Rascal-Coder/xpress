@@ -189,3 +189,30 @@ export function findroutesConfigItem(
 
   return findInTree(routesConfig, routePath);
 }
+
+/**
+ * 判断路由是否有权限访问
+ * @param route
+ * @param access
+ */
+export function hasPermission(route: RouteConfig, access: string[]) {
+  const permission = route.meta?.permission;
+  if (!permission) {
+    return true;
+  }
+  const canAccess = access.some((value) => permission.includes(value));
+
+  return canAccess || (!canAccess && menuHasVisibleWithForbidden(route));
+}
+
+/**
+ * 判断路由是否在菜单中显示，但是访问会被重定向到403
+ * @param route
+ */
+export function menuHasVisibleWithForbidden(route: RouteConfig) {
+  return (
+    !!route.meta?.permission &&
+    Reflect.has(route.meta || {}, 'menuVisibleWithForbidden') &&
+    !!route.meta?.menuVisibleWithForbidden
+  );
+}

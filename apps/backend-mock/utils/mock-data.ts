@@ -72,6 +72,7 @@ const dashboardMenus = [
             meta: {
               menuVisibleWithForbidden: true,
               title: '分析页',
+              permission: ['homeIndex'],
             },
           },
           {

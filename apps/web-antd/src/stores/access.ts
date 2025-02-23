@@ -2,7 +2,7 @@ import type { RouteConfig } from '@xpress-core/router';
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 type AccessToken = null | string;
 interface AccessStoreActions {
@@ -55,14 +55,29 @@ const initialState: AccessState = {
 };
 type AccessStore = AccessState & AccessStoreActions;
 export const useAccessStore = create<AccessStore>()(
-  devtools((set) => ({
-    ...initialState,
-    setAccessCodes: (codes: string[]) => set({ accessCodes: codes }),
-    setAccessMenus: (menus: MenuRecordRaw[]) => set({ accessMenus: menus }),
-    setAccessRoutes: (routes: RouteConfig[]) => set({ accessRoutes: routes }),
-    setAccessToken: (token: AccessToken) => set({ accessToken: token }),
-    setIsAccessChecked: (isAccessChecked: boolean) => set({ isAccessChecked }),
-    setLoginExpired: (loginExpired: boolean) => set({ loginExpired }),
-    setRefreshToken: (token: AccessToken) => set({ refreshToken: token }),
-  })),
+  devtools(
+    persist(
+      (set) => ({
+        ...initialState,
+        setAccessCodes: (codes: string[]) => set({ accessCodes: codes }),
+        setAccessMenus: (menus: MenuRecordRaw[]) => set({ accessMenus: menus }),
+        setAccessRoutes: (routes: RouteConfig[]) =>
+          set({ accessRoutes: routes }),
+        setAccessToken: (token: AccessToken) => set({ accessToken: token }),
+        setIsAccessChecked: (isAccessChecked: boolean) =>
+          set({ isAccessChecked }),
+        setLoginExpired: (loginExpired: boolean) => set({ loginExpired }),
+        setRefreshToken: (token: AccessToken) => set({ refreshToken: token }),
+      }),
+      {
+        name: 'xpress-access',
+        partialize: (state) => ({
+          accessToken: state.accessToken,
+          refreshToken: state.refreshToken,
+          accessCodes: state.accessCodes,
+          isAccessChecked: state.isAccessChecked,
+        }),
+      },
+    ),
+  ),
 );

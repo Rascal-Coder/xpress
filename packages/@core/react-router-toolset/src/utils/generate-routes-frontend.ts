@@ -1,6 +1,8 @@
-import type { RouteConfig } from '@xpress-core/router';
+import type { RouteConfig } from '../types';
 
 import { filterTree, mapTree } from '@xpress-core/shared/utils';
+
+import { hasPermission, menuHasVisibleWithForbidden } from './common';
 
 /**
  * 动态生成路由 - 前端方式
@@ -28,31 +30,4 @@ async function generateRoutesByFrontend(
   });
 }
 
-/**
- * 判断路由是否有权限访问
- * @param route
- * @param access
- */
-function hasPermission(route: RouteConfig, access: string[]) {
-  const permission = route.meta?.permission;
-  if (!permission) {
-    return true;
-  }
-  const canAccess = access.some((value) => permission.includes(value));
-
-  return canAccess || (!canAccess && menuHasVisibleWithForbidden(route));
-}
-
-/**
- * 判断路由是否在菜单中显示，但是访问会被重定向到403
- * @param route
- */
-function menuHasVisibleWithForbidden(route: RouteConfig) {
-  return (
-    !!route.meta?.permission &&
-    Reflect.has(route.meta || {}, 'menuVisibleWithForbidden') &&
-    !!route.meta?.menuVisibleWithForbidden
-  );
-}
-
-export { generateRoutesByFrontend, hasPermission };
+export { generateRoutesByFrontend };
