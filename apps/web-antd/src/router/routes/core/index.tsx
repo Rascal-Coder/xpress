@@ -1,17 +1,7 @@
 import type { RouteConfig } from '@xpress-core/router';
 
 const DEFAULT_HOME_PATH = '/home';
-export const coreRoutes: RouteConfig[] = [
-  {
-    path: '/',
-    redirect: DEFAULT_HOME_PATH,
-  },
-  {
-    path: '/',
-    component: () => import('#/layout'),
-    flatten: true,
-    isRoot: true,
-  },
+export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',
     component: () => import('#/pages/login'),
@@ -34,6 +24,18 @@ export const coreRoutes: RouteConfig[] = [
   },
 ];
 
+export const rootRoutes: RouteConfig[] = [
+  {
+    path: '/',
+    redirect: DEFAULT_HOME_PATH,
+  },
+  {
+    path: '/',
+    component: () => import('#/layout'),
+    flatten: true,
+    isRoot: true,
+  },
+];
 export const fallBackRoutes: RouteConfig[] = [
   {
     path: '/no-access',

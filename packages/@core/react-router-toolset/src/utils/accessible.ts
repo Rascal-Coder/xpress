@@ -28,7 +28,8 @@ async function generateRoutes(
   let resultRoutes: RouteConfig[] = routes;
   switch (mode) {
     case 'backend': {
-      resultRoutes = await generateRoutesByBackend(options);
+      const dynamicRoutes = await generateRoutesByBackend(options);
+      resultRoutes = [...resultRoutes, ...dynamicRoutes];
       break;
     }
     case 'frontend': {

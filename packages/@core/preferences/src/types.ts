@@ -1,5 +1,4 @@
 import type {
-  AccessModeType,
   AuthPageLayoutType,
   BreadcrumbStyleType,
   BuiltinThemeType,
@@ -19,7 +18,7 @@ type SupportedLanguagesType = 'en-US' | 'zh-CN';
 type LayoutHeaderMenuAlignType = 'center' | 'end' | 'start';
 interface AppPreferences {
   /** 权限模式 */
-  accessMode: AccessModeType;
+  // accessMode: AccessModeType;
   /** 登录注册页面布局 */
   authPageLayout: AuthPageLayoutType;
   /** 检查更新轮询时间 */

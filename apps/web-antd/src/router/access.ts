@@ -7,9 +7,7 @@ import {
   Router,
 } from '@xpress-core/router';
 
-import { Slide, toast } from 'react-toastify';
-
-import { routes } from './routes';
+import { basicRoutes, routes } from './routes';
 
 const forbiddenComponent = () => import('#/pages/noAccess');
 
@@ -20,24 +18,23 @@ const pageMap: ComponentRecordType = import.meta.glob<{
 const layoutMap: ComponentRecordType = {
   BasicLayout: () => import('#/layout'),
 };
-const router = new Router(routes);
 
 const generateAccessRoutes = async (mode: AccessModeType) => {
+  let _routes = [];
+  _routes = mode === 'backend' ? basicRoutes : routes;
+
+  const router = new Router(routes);
   return await generateAccessible(mode, {
     fetchMenuListAsync: async () => {
       const res = await fetch('http://localhost:5320/api/menu/all');
       const { data } = await res.json();
-      toast.info('菜单加载中...', {
-        position: 'top-center',
-        transition: Slide,
-      });
       return data;
     },
     forbiddenComponent,
     layoutMap,
     pageMap,
     router,
-    routes,
+    routes: _routes,
   });
 };
 
