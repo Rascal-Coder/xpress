@@ -85,6 +85,10 @@
       "path": "packages/@core/ui-kit/shadcn-ui",
     },
     {
+      "name": "@xpress/components",
+      "path": "packages/components",
+    },
+    {
       "name": "@xpress/constants",
       "path": "packages/constants",
     },
@@ -95,6 +99,10 @@
     {
       "name": "@xpress/icons",
       "path": "packages/icons",
+    },
+    {
+      "name": "@xpress/stores",
+      "path": "packages/stores",
     },
     {
       "name": "@xpress/styles",

@@ -6,13 +6,13 @@ import { devtools, persist } from 'zustand/middleware';
 
 type AccessToken = null | string;
 interface AccessStoreActions {
-  setAccessToken: (token: AccessToken) => void;
-  setRefreshToken: (token: AccessToken) => void;
   setAccessCodes: (codes: string[]) => void;
   setAccessMenus: (menus: MenuRecordRaw[]) => void;
   setAccessRoutes: (routes: RouteConfig[]) => void;
+  setAccessToken: (token: AccessToken) => void;
   setIsAccessChecked: (isAccessChecked: boolean) => void;
   setLoginExpired: (loginExpired: boolean) => void;
+  setRefreshToken: (token: AccessToken) => void;
 }
 interface AccessState {
   /**
@@ -72,10 +72,10 @@ export const useAccessStore = create<AccessStore>()(
       {
         name: 'xpress-access',
         partialize: (state) => ({
-          accessToken: state.accessToken,
-          refreshToken: state.refreshToken,
           accessCodes: state.accessCodes,
+          accessToken: state.accessToken,
           isAccessChecked: state.isAccessChecked,
+          refreshToken: state.refreshToken,
         }),
       },
     ),

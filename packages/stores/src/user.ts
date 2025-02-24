@@ -40,8 +40,6 @@ interface UserStoreActions {
 }
 export const useUserStore = create<AccessState & UserStoreActions>()(
   devtools((set) => ({
-    userInfo: null,
-    userRoles: [],
     setUserInfo: (userInfo: BasicUserInfo | null) => {
       // 设置用户信息
       set({ userInfo });
@@ -49,5 +47,7 @@ export const useUserStore = create<AccessState & UserStoreActions>()(
       const roles = userInfo?.roles ?? [];
       set({ userRoles: roles });
     },
+    userInfo: null,
+    userRoles: [],
   })),
 );

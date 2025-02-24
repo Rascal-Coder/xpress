@@ -1,8 +1,7 @@
+import { useAccessStore } from '@xpress/stores';
 import { Button } from '@xpress-core/shadcn-ui';
 
 import { useState } from 'react';
-
-import { useAccessStore } from '#/stores';
 
 export default function Login() {
   const setAccessToken = useAccessStore((state) => state.setAccessToken);

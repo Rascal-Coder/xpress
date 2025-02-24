@@ -1,4 +1,3 @@
-// TODO: 进度条抽离到packages/effects/common-ui
 import NProgress from 'nprogress';
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -28,12 +27,11 @@ function act() {
 /**
  * 进度条
  */
-const Progress = () => {
+export const Progress = () => {
   const { pathname } = useLocation();
   const mountedRef = useRef(false);
 
   // 主题色变化时更新NProgress颜色
-  // #e14775
   useEffect(() => {
     setNProgressColor('hsl(var(--primary))', { force: mountedRef.current });
   }, []);
@@ -49,7 +47,5 @@ const Progress = () => {
     }
   }, [pathname]);
 
-  return null;
+  return <div id="fallback"></div>;
 };
-
-export default Progress;

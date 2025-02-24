@@ -1,9 +1,8 @@
+import { useAccessStore, useUserStore } from '@xpress/stores';
 import { type Router, useRouter } from '@xpress-core/router';
 
 import { type ReactNode, useEffect } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-
-import { useAccessStore, useUserStore } from '#/stores';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -14,7 +13,7 @@ const DEFAULT_HOME_PATH = '/home';
 const LOGIN_PATH = '/login';
 const CORE_ROUTE_NAMES = new Set(['/login', '/register']);
 
-function AuthGuard({ router, children }: AuthGuardProps) {
+export function AuthGuard({ router, children }: AuthGuardProps) {
   const { curRoute } = useRouter(router);
   const token = useAccessStore((state) => state.accessToken);
   const userInfo = useUserStore((state) => state.userInfo);
@@ -66,5 +65,3 @@ function AuthGuard({ router, children }: AuthGuardProps) {
 
   return <>{children}</>;
 }
-
-export default AuthGuard;

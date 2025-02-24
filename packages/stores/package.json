@@ -1,0 +1,21 @@
+{
+  "name": "@xpress/stores",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@xpress-core/router": "workspace:*",
+    "@xpress-core/typings": "workspace:*",
+    "zustand": "^5.0.3"
+  }
+}

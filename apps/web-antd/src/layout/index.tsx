@@ -1,6 +1,5 @@
 import { BasicLayout } from '@xpress/layouts';
-
-import { useAccessStore } from '#/stores';
+import { useAccessStore } from '@xpress/stores';
 
 function Layout() {
   const menuItems = useAccessStore((state) => state.accessMenus);
