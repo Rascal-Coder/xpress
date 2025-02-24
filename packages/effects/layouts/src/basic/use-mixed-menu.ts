@@ -7,7 +7,7 @@ import { type Router, useRouter } from '@xpress-core/router';
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export function useMixedMenu(router: Router) {
+export function useMixedMenu(router: Router, mode?: 'horizontal' | 'vertical') {
   const navigate = useNavigate();
   const rootMenuPath = useRef<string>('');
   // const mixedRootMenuPath = useRef<string>('');
@@ -75,20 +75,20 @@ export function useMixedMenu(router: Router) {
 
   /**
    * 菜单点击事件处理
-   * @param key 菜单路径
+   * @param path 菜单路径
    * @param mode 菜单模式
    */
-  const handleMenuSelect = (key: string, mode?: string) => {
+  const handleMenuSelect = (path: string) => {
     if (!needSplit || mode === 'vertical') {
-      navigate(key);
+      navigate(path);
       return;
     }
 
-    const rootMenu = menus.find((item) => item.path === key);
+    const rootMenu = menus.find((item) => item.path === path);
     rootMenuPath.current = rootMenu?.path ?? '';
     setSplitSideMenus(rootMenu?.children ?? []);
     if (splitSideMenus.length === 0) {
-      navigate(key);
+      navigate(path);
     } else if (rootMenu && preferences.sidebar.autoActivateChild) {
       navigate(
         defaultSubMap.has(rootMenu.path)

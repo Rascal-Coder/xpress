@@ -103,10 +103,10 @@ const Header = ({ menu, showHeaderNav }: HeaderProps) => {
       <div
         className={cn(
           `menu-align-${preferences.header.menuAlign}`,
-          'flex h-full min-w-0 flex-1 items-center',
+          'flex h-full w-full min-w-0 flex-1 items-center',
         )}
       >
-        {showHeaderNav && menu}
+        {showHeaderNav && <div className="w-full">{menu}</div>}
       </div>
       <div className="flex h-full min-w-0 flex-shrink-0 items-center">
         {rightComponents}

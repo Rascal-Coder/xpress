@@ -14,15 +14,7 @@ interface Props extends MenuItemProps {
 }
 
 function MenuItem(props: Props) {
-  const {
-    activeIcon,
-    className,
-    disabled = false,
-    icon,
-    // menuItemClick,
-    path,
-    title,
-  } = props;
+  const { activeIcon, className, disabled = false, icon, path, title } = props;
   const { b, e, is } = useNamespace('menu-item');
   const nsMenu = useNamespace('menu');
   const rootMenu = useMenuContext();
@@ -103,7 +95,6 @@ function MenuItem(props: Props) {
                 fallback
                 icon={menuIcon}
               ></XpressIcon>
-              {/* {children} */}
               {collapseShowTitle && (
                 <span className={cn(nsMenu.e('name'))}>{title}</span>
               )}
@@ -122,7 +113,6 @@ function MenuItem(props: Props) {
             fallback
             icon={menuIcon}
           ></XpressIcon>
-          {/* {children} */}
           {title}
         </div>
       )}

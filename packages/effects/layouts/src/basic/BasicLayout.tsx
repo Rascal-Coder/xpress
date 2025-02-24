@@ -1,13 +1,11 @@
 import type { Router } from '@xpress-core/router';
 
-import { useAccessStore } from '@xpress/stores';
 import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
-import { isHttpUrl } from '@xpress-core/shared/utils';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
@@ -17,16 +15,6 @@ import { Menu, MixedMenu } from './menu';
 import { useMixedMenu } from './use-mixed-menu';
 
 function BasicLayout({ router }: { router: Router }) {
-  const _res = useMixedMenu(router);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const menuItems = useAccessStore((state) => state.accessMenus);
-  const [defaultActive, setDefaultActive] = useState(location.pathname);
-
-  useEffect(() => {
-    setDefaultActive(location.pathname);
-  }, [location.pathname]);
-
   const {
     preferences,
     updatePreferences,
@@ -92,6 +80,19 @@ function BasicLayout({ router }: { router: Router }) {
     return !isMobile && (isHeaderNav || isMixedNav || isHeaderMixedNav);
   }, [isHeaderMixedNav, isHeaderNav, isMixedNav, isMobile]);
 
+  const mode = useMemo(() => {
+    return showHeaderNav ? 'horizontal' : 'vertical';
+  }, [showHeaderNav]);
+
+  const { sidebarMenus, handleMenuSelect, headerMenus, sidebarVisible } =
+    useMixedMenu(router, mode);
+  const location = useLocation();
+
+  const [defaultActive, setDefaultActive] = useState(location.pathname);
+  useEffect(() => {
+    setDefaultActive(location.pathname);
+  }, [location.pathname]);
+
   const handleSideMouseLeave = () => {
     // console.log('handleSideMouseLeave');
   };
@@ -108,19 +109,22 @@ function BasicLayout({ router }: { router: Router }) {
     // console.log('handleOpen');
   };
 
-  const handleSelect = (path: string) => {
-    navigate(path);
-    if (!isHttpUrl(path)) {
-      setDefaultActive(path);
-    }
-  };
   return (
     <XpressLayout
       components={{
         // 头部
         header: (
           <Header
-            // menu={<Menu menus={}></Menu>}
+            menu={
+              <Menu
+                defaultActive={defaultActive}
+                menus={headerMenus}
+                mode={mode}
+                onSelect={handleMenuSelect}
+                rounded={isMenuRounded}
+                theme={theme}
+              ></Menu>
+            }
             showHeaderNav={showHeaderNav}
           ></Header>
         ),
@@ -169,12 +173,10 @@ function BasicLayout({ router }: { router: Router }) {
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
           defaultActive={defaultActive}
-          // TODO: 默认展开的菜单
-          // defaultOpenKeys={sidebarActive}
-          menus={menuItems}
-          mode="vertical"
+          menus={sidebarMenus}
+          mode={mode}
           onOpen={handleOpen}
-          onSelect={handleSelect}
+          onSelect={handleMenuSelect}
           rounded={isMenuRounded}
           theme={theme}
         />
@@ -199,7 +201,7 @@ function BasicLayout({ router }: { router: Router }) {
       onToggleSidebar={handleToggleSidebar}
       sidebarCollapse={preferences.sidebar.collapsed}
       sidebarCollapseShowTitle={preferences.sidebar.collapsedShowTitle}
-      // sidebarEnable={sidebarVisible}
+      sidebarEnable={sidebarVisible}
       sidebarExpandOnHover={preferences.sidebar.expandOnHover}
       sidebarExtraCollapse={preferences.sidebar.extraCollapse}
       sidebarHidden={preferences.sidebar.hidden}
