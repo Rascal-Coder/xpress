@@ -1,8 +1,8 @@
 import { BasicLayout } from '@xpress/layouts';
-import { useAccessStore } from '@xpress/stores';
+
+import router from '#/router';
 
 function Layout() {
-  const menuItems = useAccessStore((state) => state.accessMenus);
-  return <BasicLayout sidebarMenus={menuItems} />;
+  return <BasicLayout router={router} />;
 }
 export default Layout;

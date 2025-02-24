@@ -1259,6 +1259,9 @@ importers:
       '@xpress-core/react-menu':
         specifier: workspace:*
         version: link:../../@core/ui-kit/react-menu
+      '@xpress-core/router':
+        specifier: workspace:*
+        version: link:../../@core/react-router-toolset
       '@xpress-core/shadcn-ui':
         specifier: workspace:*
         version: link:../../@core/ui-kit/shadcn-ui
@@ -1271,6 +1274,9 @@ importers:
       '@xpress/icons':
         specifier: workspace:*
         version: link:../../icons
+      '@xpress/stores':
+        specifier: workspace:*
+        version: link:../../stores
       framer-motion:
         specifier: ^12.4.2
         version: 12.4.7(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

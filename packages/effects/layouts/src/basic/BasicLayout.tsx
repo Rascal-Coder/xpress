@@ -1,5 +1,6 @@
-import type { MenuRecordRaw } from '@xpress-core/typings';
+import type { Router } from '@xpress-core/router';
 
+import { useAccessStore } from '@xpress/stores';
 import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
@@ -13,21 +14,13 @@ import Copyright from './copyright';
 import LayoutFooter from './footer';
 import Header from './header';
 import { Menu, MixedMenu } from './menu';
+import { useMixedMenu } from './use-mixed-menu';
 
-interface Props {
-  /**
-   * 侧边菜单
-   */
-  sidebarMenus: MenuRecordRaw[];
-  /**
-   * 内容
-   */
-  // content: React.ReactNode;
-  // namespace: string;
-}
-function BasicLayout({ sidebarMenus }: Props) {
+function BasicLayout({ router }: { router: Router }) {
+  const _res = useMixedMenu(router);
   const navigate = useNavigate();
   const location = useLocation();
+  const menuItems = useAccessStore((state) => state.accessMenus);
   const [defaultActive, setDefaultActive] = useState(location.pathname);
 
   useEffect(() => {
@@ -178,7 +171,7 @@ function BasicLayout({ sidebarMenus }: Props) {
           defaultActive={defaultActive}
           // TODO: 默认展开的菜单
           // defaultOpenKeys={sidebarActive}
-          menus={sidebarMenus}
+          menus={menuItems}
           mode="vertical"
           onOpen={handleOpen}
           onSelect={handleSelect}
