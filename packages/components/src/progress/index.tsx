@@ -47,5 +47,5 @@ export const Progress = () => {
     }
   }, [pathname]);
 
-  return <div id="fallback"></div>;
+  return null;
 };

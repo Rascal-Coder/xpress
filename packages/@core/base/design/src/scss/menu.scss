@@ -14,7 +14,7 @@ $namespace: xpress;
   height: var(--menu-item-height);
   padding: var(--menu-item-padding-y) var(--menu-item-padding-x);
   margin: 0 var(--menu-item-margin-x) var(--menu-item-margin-y)
-    var(--menu-item-margin-x);
+    var(--menu-item-margin-x) !important;
   font-size: var(--menu-font-size);
   color: var(--menu-item-color);
   text-decoration: none;
@@ -213,7 +213,7 @@ $namespace: xpress;
     border-right: none;
 
     .#{$namespace}-menu-item {
-      display: inline-flex;
+      // display: inline-flex;
       align-items: center;
       justify-content: center;
       height: var(--menu-item-height);
@@ -234,9 +234,7 @@ $namespace: xpress;
       }
 
       & .#{$namespace}-sub-menu-content {
-        height: 100%;
         padding-right: 40px;
-        // border-bottom: 2px solid transparent;
         border-radius: var(--menu-item-radius);
       }
     }
@@ -398,9 +396,9 @@ $namespace: xpress;
   user-select: none;
   background: var(--menu-submenu-background-color);
   fill: var(--menu-item-color);
-
+  //  div[data-state='open'] >
   &.is-active {
-    div[data-state='open'] > .#{$namespace}-sub-menu-content,
+    .#{$namespace}-sub-menu-content,
     > .#{$namespace}-sub-menu-content {
       // font-weight: 500;
       color: var(--menu-submenu-active-color);

@@ -152,6 +152,10 @@ export default function Menu(props: Props) {
     },
     [mode, collapse, onSelect],
   );
+  const childrenArray = React.Children.toArray(children);
+  const defaultChildren =
+    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
+  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
 
   const { subMenus, items } = useMenuStructure({
     accordion,
@@ -164,11 +168,6 @@ export default function Menu(props: Props) {
     setMouseInChild,
     children,
   });
-
-  const childrenArray = React.Children.toArray(children);
-  const defaultChildren =
-    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
-  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
 
   /**
    * 计算菜单项的实际宽度，包括外边距
@@ -246,14 +245,18 @@ export default function Menu(props: Props) {
   });
 
   /**
-   * 监听折叠状态变化
+   * 监听折叠状态变化和水平模式
    * 当菜单被折叠时，重置所有已展开的菜单
+   * 当菜单处于水平模式时，重置所有已展开的菜单
    */
   useEffect(() => {
     if (collapse) {
       dispatch({ type: 'RESET_MENUS' });
     }
-  }, [collapse]);
+    if (mode === 'horizontal') {
+      dispatch({ type: 'RESET_MENUS' });
+    }
+  }, [collapse, mode]);
 
   /**
    * 监听水平模式下的尺寸变化
@@ -311,6 +314,7 @@ export default function Menu(props: Props) {
           <>
             {defaultChildren}
             <SubMenu
+              isSubMenuMore
               path="sub-menu-more"
               title={<Ellipsis className={'size-4'} />}
             >
