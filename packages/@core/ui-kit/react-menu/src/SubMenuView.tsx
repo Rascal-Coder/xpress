@@ -1,8 +1,11 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
+import { Ellipsis } from '@xpress-core/icons';
+
 import { useMemo } from 'react';
 
 import { MenuBadge, MenuItem, SubMenu } from './components';
+import { SUB_MENU_MORE_NAME } from './constants';
 
 interface Props {
   /**
@@ -30,9 +33,16 @@ function SubMenuView({ menu }: Props) {
         ></MenuBadge>
       }
       icon={menu.icon}
+      isSubMenuMore={menu.name === SUB_MENU_MORE_NAME}
       key={`${menu.path}_sub`}
       path={menu.path}
-      title={menu.name}
+      title={
+        menu.name === SUB_MENU_MORE_NAME ? (
+          <Ellipsis className={'size-4'} />
+        ) : (
+          menu.name
+        )
+      }
     >
       {menu.children?.map((child) => (
         <SubMenuView key={child.path} menu={child}></SubMenuView>

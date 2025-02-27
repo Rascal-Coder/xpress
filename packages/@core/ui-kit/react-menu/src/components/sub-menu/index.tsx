@@ -107,7 +107,6 @@ function SubMenu({
 
   const handleMouseEnter = useCallback(
     (event: React.FocusEvent | React.MouseEvent, showTimeout = 100) => {
-      console.warn('Mouse entered:', { event });
       // 忽略 focus 事件
       if (event.type === 'focus') {
         return;
@@ -142,7 +141,6 @@ function SubMenu({
   );
 
   function handleMouseleave() {
-    console.warn('Mouse left');
     if (
       !rootMenu?.props.collapse &&
       rootMenu?.props.mode === 'vertical' &&

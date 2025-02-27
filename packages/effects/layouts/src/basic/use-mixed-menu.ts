@@ -10,8 +10,6 @@ import { useNavigate } from 'react-router-dom';
 export function useMixedMenu(router: Router, mode?: 'horizontal' | 'vertical') {
   const navigate = useNavigate();
   const rootMenuPath = useRef<string>('');
-  // const mixedRootMenuPath = useRef<string>('');
-  // const mixExtraMenus = useRef<MenuRecordRaw[]>([]);
   /** 记录当前顶级菜单下哪个子菜单最后激活 */
   const defaultSubMap = new Map<string, string>();
   const { curRoute } = useRouter(router);

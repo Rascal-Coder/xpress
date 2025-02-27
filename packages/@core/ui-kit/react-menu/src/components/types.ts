@@ -55,6 +55,9 @@ interface MenuProps {
    * @default true
    */
   rounded?: boolean;
+  setSliceIndex?: React.Dispatch<React.SetStateAction<number>>;
+
+  sliceIndex?: number;
   /**
    * @zh_CN 菜单主题
    * @default dark

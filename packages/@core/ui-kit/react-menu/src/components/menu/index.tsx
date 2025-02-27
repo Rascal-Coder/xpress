@@ -1,7 +1,6 @@
 import type { MenuItemClicked, MenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
-import { Ellipsis } from '@xpress-core/icons';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useDebounceFn, useSize } from 'ahooks';
@@ -17,10 +16,12 @@ import React, {
 import { MenuContext, type MenuContextType } from '../contexts';
 import { useMenuStyle } from '../hooks';
 import { useMenuStructure } from '../hooks/useMenuStructure';
-import SubMenu from '../sub-menu';
 import { menuReducer } from './menuReducer';
 
-interface Props extends MenuProps {}
+interface Props extends MenuProps {
+  setSliceIndex: React.Dispatch<React.SetStateAction<number>>;
+  sliceIndex: number;
+}
 
 /**
  * Menu 组件 - 一个功能丰富的菜单组件，支持垂直和水平布局、折叠展开、手风琴模式等特性
@@ -38,6 +39,8 @@ interface Props extends MenuProps {}
  * @param props.rounded - 是否使用圆角样式，默认为 true
  * @param props.theme - 菜单主题，可选 'dark' | 'light'，默认为 'dark'
  * @param props.children - 菜单内容
+ * @param props.sliceIndex - 当前切片索引
+ * @param props.setSliceIndex - 设置切片索引的函数
  *
  * @returns React 组件
  */
@@ -52,6 +55,8 @@ export default function Menu(props: Props) {
     onOpen,
     onSelect,
     rounded = true,
+    setSliceIndex,
+    sliceIndex,
     theme = 'dark',
     children,
   } = props;
@@ -59,7 +64,6 @@ export default function Menu(props: Props) {
   const { b, is } = useNamespace('menu');
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
-  const [sliceIndex, setSliceIndex] = useState(-1);
 
   const [mouseInChild, setMouseInChild] = useState(false);
   /**
@@ -152,10 +156,6 @@ export default function Menu(props: Props) {
     },
     [mode, collapse, onSelect],
   );
-  const childrenArray = React.Children.toArray(children);
-  const defaultChildren =
-    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
-  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
 
   const { subMenus, items } = useMenuStructure({
     accordion,
@@ -220,7 +220,7 @@ export default function Menu(props: Props) {
     requestAnimationFrame(() => {
       setSliceIndex(calcSliceIndex());
     });
-  }, [calcSliceIndex]);
+  }, [calcSliceIndex, setSliceIndex]);
 
   /**
    * 处理窗口大小变化，更新菜单布局
@@ -238,7 +238,7 @@ export default function Menu(props: Props) {
         setSliceIndex(calcSliceIndex());
       });
     }
-  }, [sliceIndex, calcSliceIndex, updateSliceIndex]);
+  }, [sliceIndex, calcSliceIndex, updateSliceIndex, setSliceIndex]);
 
   const { run: debouncedHandleResize } = useDebounceFn(handleResize, {
     wait: 200,
@@ -256,7 +256,7 @@ export default function Menu(props: Props) {
     if (mode === 'horizontal') {
       dispatch({ type: 'RESET_MENUS' });
     }
-  }, [collapse, mode]);
+  }, [collapse, mode, sliceIndex]);
 
   /**
    * 监听水平模式下的尺寸变化
@@ -310,20 +310,7 @@ export default function Menu(props: Props) {
         role="menu"
         style={menuStyle}
       >
-        {mode === 'horizontal' && moreChildren.length > 0 ? (
-          <>
-            {defaultChildren}
-            <SubMenu
-              isSubMenuMore
-              path="sub-menu-more"
-              title={<Ellipsis className={'size-4'} />}
-            >
-              {moreChildren}
-            </SubMenu>
-          </>
-        ) : (
-          children
-        )}
+        {children}
       </ul>
     </MenuContext.Provider>
   );
