@@ -4,8 +4,7 @@ import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useMemo } from 'react';
 
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
@@ -80,9 +79,9 @@ function BasicLayout({ router }: { router: Router }) {
     return !isMobile && (isHeaderNav || isMixedNav || isHeaderMixedNav);
   }, [isHeaderMixedNav, isHeaderNav, isMixedNav, isMobile]);
 
-  const mode = useMemo(() => {
-    return showHeaderNav ? 'horizontal' : 'vertical';
-  }, [showHeaderNav]);
+  // const mode = useMemo(() => {
+  //   return showHeaderNav ? 'horizontal' : 'vertical';
+  // }, [showHeaderNav]);
 
   const {
     sidebarMenus,
@@ -90,13 +89,10 @@ function BasicLayout({ router }: { router: Router }) {
     headerMenus,
     sidebarVisible,
     mixHeaderMenus,
-  } = useMixedMenu(router, mode);
-  const location = useLocation();
-
-  const [defaultActive, setDefaultActive] = useState(location.pathname);
-  useEffect(() => {
-    setDefaultActive(location.pathname);
-  }, [location.pathname]);
+    handleMenuOpen,
+    sidebarActive,
+    headerActive,
+  } = useMixedMenu(router);
 
   const handleToggleSidebar = () => {
     updatePreferences({
@@ -109,9 +105,6 @@ function BasicLayout({ router }: { router: Router }) {
   const handleSideMouseLeave = () => {
     // console.log('handleSideMouseLeave');
   };
-  const handleOpen = () => {
-    // console.log('handleOpen');
-  };
   // TODO暂时没有处理的函数\\\\\\\\\\\\\\\\
 
   return (
@@ -122,10 +115,10 @@ function BasicLayout({ router }: { router: Router }) {
           <Header
             menu={
               <Menu
-                defaultActive={defaultActive}
+                defaultActive={headerActive}
                 menus={headerMenus}
                 mode="horizontal"
-                onSelect={handleMenuSelect}
+                onSelect={(path) => handleMenuSelect(path, 'horizontal')}
                 rounded={isMenuRounded}
                 theme={theme}
               ></Menu>
@@ -177,11 +170,11 @@ function BasicLayout({ router }: { router: Router }) {
           accordion={preferences.navigation.accordion}
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
-          defaultActive={defaultActive}
+          defaultActive={sidebarActive}
           menus={sidebarMenus}
           mode="vertical"
-          onOpen={handleOpen}
-          onSelect={handleMenuSelect}
+          onOpen={handleMenuOpen}
+          onSelect={(path) => handleMenuSelect(path, 'vertical')}
           rounded={isMenuRounded}
           theme={theme}
         />
