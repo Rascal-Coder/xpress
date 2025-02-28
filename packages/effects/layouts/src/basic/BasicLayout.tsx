@@ -84,18 +84,19 @@ function BasicLayout({ router }: { router: Router }) {
     return showHeaderNav ? 'horizontal' : 'vertical';
   }, [showHeaderNav]);
 
-  const { sidebarMenus, handleMenuSelect, headerMenus, sidebarVisible } =
-    useMixedMenu(router, mode);
+  const {
+    sidebarMenus,
+    handleMenuSelect,
+    headerMenus,
+    sidebarVisible,
+    mixHeaderMenus,
+  } = useMixedMenu(router, mode);
   const location = useLocation();
 
   const [defaultActive, setDefaultActive] = useState(location.pathname);
   useEffect(() => {
     setDefaultActive(location.pathname);
   }, [location.pathname]);
-
-  const handleSideMouseLeave = () => {
-    // console.log('handleSideMouseLeave');
-  };
 
   const handleToggleSidebar = () => {
     updatePreferences({
@@ -104,10 +105,14 @@ function BasicLayout({ router }: { router: Router }) {
       },
     });
   };
-
+  // TODO暂时没有处理的函数\\\\\\\\\\\\\\\\
+  const handleSideMouseLeave = () => {
+    // console.log('handleSideMouseLeave');
+  };
   const handleOpen = () => {
     // console.log('handleOpen');
   };
+  // TODO暂时没有处理的函数\\\\\\\\\\\\\\\\
 
   return (
     <XpressLayout
@@ -119,7 +124,7 @@ function BasicLayout({ router }: { router: Router }) {
               <Menu
                 defaultActive={defaultActive}
                 menus={headerMenus}
-                mode={mode}
+                mode="horizontal"
                 onSelect={handleMenuSelect}
                 rounded={isMenuRounded}
                 theme={theme}
@@ -174,14 +179,14 @@ function BasicLayout({ router }: { router: Router }) {
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
           defaultActive={defaultActive}
           menus={sidebarMenus}
-          mode={mode}
+          mode="vertical"
           onOpen={handleOpen}
           onSelect={handleMenuSelect}
           rounded={isMenuRounded}
           theme={theme}
         />
       }
-      mixedMenu={<MixedMenu />}
+      mixedMenu={<MixedMenu menus={mixHeaderMenus} />}
       onSidebarCollapseChange={(value: boolean) => {
         updatePreferences({ sidebar: { collapsed: value } });
       }}

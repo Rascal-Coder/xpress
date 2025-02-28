@@ -93,6 +93,7 @@ type AuthPageLayoutType = 'panel-center' | 'panel-left' | 'panel-right';
 interface UseLayoutResult {
   currentLayout: LayoutType;
   isFullContent: boolean;
+  isHeaderMixedNav: boolean;
   isHeaderNav: boolean;
   isMixedNav: boolean;
   isSidebarMixedNav: boolean;

@@ -83,10 +83,12 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   const {
     currentLayout,
     isFullContent,
+    isHeaderMixedNav,
     isHeaderNav,
     isMixedNav,
     isSidebarMixedNav,
   } = useLayout({ isMobile, layout });
+
   const { clientY: mouseY } = useMouse(contentRef.current);
 
   /**
@@ -561,7 +563,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       width={getSidebarWidth}
       zIndex={sidebarZIndex}
     >
-      {isSidebarMixedNav ? mixedMenu : menu}
+      {isSidebarMixedNav || isHeaderMixedNav ? mixedMenu : menu}
     </LayoutSidebar>
   ));
 

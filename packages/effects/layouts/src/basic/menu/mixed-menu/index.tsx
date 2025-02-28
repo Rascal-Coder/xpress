@@ -20,6 +20,7 @@ function MixedMenu({
   onDefaultSelect,
 }: MixedMenuProps) {
   const location = useLocation();
+  // TODO 抽离到hook
   const findMenuByPath = useCallback(
     (list: MenuRecordRaw[], path?: string): MenuRecordRaw | null => {
       for (const menu of list) {
@@ -37,6 +38,7 @@ function MixedMenu({
   );
   useEffect(() => {
     const menu = findMenuByPath(menus, location.pathname);
+
     if (menu) {
       const rootMenu = menus.find((item) => item.path === menu.parents?.[0]);
       onDefaultSelect?.(menu, rootMenu);
