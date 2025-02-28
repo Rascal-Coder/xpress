@@ -10,7 +10,6 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
   isMobile = false,
   logo,
   show = true,
-  sidebarWidth = 0,
   theme,
   toggleButton,
   children,
@@ -27,9 +26,9 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
 
   const logoStyle = useMemo((): CSSProperties => {
     return {
-      minWidth: `${isMobile ? 40 : sidebarWidth}px`,
+      minWidth: `${isMobile ? 40 : 224}px`,
     };
-  }, [isMobile, sidebarWidth]);
+  }, [isMobile]);
 
   const logoNode = useShow(!!logo, () => <div style={logoStyle}>{logo}</div>);
 
