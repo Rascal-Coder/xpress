@@ -12,6 +12,7 @@ import {
   Preferences,
   Reload,
   ThemeToggle,
+  UserDropdown,
 } from '../../widgets';
 
 interface HeaderProps {
@@ -67,28 +68,30 @@ const Header = ({ menu, showHeaderNav }: HeaderProps) => {
         name: 'notification',
       });
     }
-
     return list.sort((a, b) => a.index - b.index);
   }, [preferences.widget, preferencesButtonPosition]);
   const rightComponents = rightSlots.map(({ name }) => {
     switch (name) {
       case 'fullscreen': {
-        return <Fullscreen key={name} />;
+        return <Fullscreen className="mr-1" key={name} />;
       }
       case 'global-search': {
-        return <GlobalSearch key={name} />;
+        return <GlobalSearch className="mr-1 sm:mr-4" key={name} />;
       }
       case 'language-toggle': {
-        return <LanguageToggle key={name} />;
+        return <LanguageToggle className="mr-1" key={name} />;
       }
       case 'notification': {
         return <Notification key={name} />;
       }
       case 'preferences': {
-        return <Preferences key={name} />;
+        return <Preferences className="mr-1" key={name} />;
       }
       case 'theme-toggle': {
         return <ThemeToggle className="mr-1" key={name} />;
+      }
+      case 'user-dropdown': {
+        return <UserDropdown key={name} />;
       }
       default: {
         return null;
@@ -98,8 +101,8 @@ const Header = ({ menu, showHeaderNav }: HeaderProps) => {
 
   return (
     <>
-      {!showHeaderNav && preferences.widget.refresh && <Reload />}
-      {preferences.breadcrumb.enable && <Breadcrumb />}
+      {preferences.widget.refresh && <Reload />}
+      {!showHeaderNav && preferences.breadcrumb.enable && <Breadcrumb />}
       <div
         className={cn(
           `menu-align-${preferences.header.menuAlign}`,

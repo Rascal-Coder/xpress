@@ -1,6 +1,6 @@
 import { cn } from '@xpress-core/shared/utils';
 
-import XpressAvatar from '../avatar';
+import { XpressAvatar } from '../avatar';
 
 interface Props {
   /**

@@ -1,0 +1,35 @@
+$namespace: xpress;
+.#{$namespace}-bell-button {
+  &:hover {
+    svg {
+      animation: bell-ring 1s both;
+    }
+  }
+}
+
+@keyframes bell-ring {
+  0%,
+  100% {
+    transform-origin: top;
+  }
+
+  15% {
+    transform: rotateZ(10deg);
+  }
+
+  30% {
+    transform: rotateZ(-10deg);
+  }
+
+  45% {
+    transform: rotateZ(5deg);
+  }
+
+  60% {
+    transform: rotateZ(-5deg);
+  }
+
+  75% {
+    transform: rotateZ(2deg);
+  }
+}
