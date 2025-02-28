@@ -1,8 +1,9 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
+import { useFindMenu } from '@xpress-core/hooks';
 import { NormalMenu, type NormalMenuProps } from '@xpress-core/react-menu';
 
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface MixedMenuProps extends NormalMenuProps {
@@ -20,22 +21,7 @@ function MixedMenu({
   onDefaultSelect,
 }: MixedMenuProps) {
   const location = useLocation();
-  // TODO 抽离到hook
-  const findMenuByPath = useCallback(
-    (list: MenuRecordRaw[], path?: string): MenuRecordRaw | null => {
-      for (const menu of list) {
-        if (menu.path === path) {
-          return menu;
-        }
-        const findMenu = menu.children && findMenuByPath(menu.children, path);
-        if (findMenu) {
-          return findMenu;
-        }
-      }
-      return null;
-    },
-    [],
-  );
+  const { findMenuByPath } = useFindMenu();
   useEffect(() => {
     const menu = findMenuByPath(menus, location.pathname);
 

@@ -954,6 +954,9 @@ importers:
       '@xpress-core/shared':
         specifier: workspace:*
         version: link:../base/shared
+      '@xpress-core/typings':
+        specifier: workspace:*
+        version: link:../base/typings
       ahooks:
         specifier: 'catalog:'
         version: 3.8.4(react@18.3.1)

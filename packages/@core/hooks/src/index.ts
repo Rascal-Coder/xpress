@@ -1,6 +1,7 @@
 export * from './useBreakpoints';
 export * from './useCssVar';
 export * from './useEnhancedScroll';
+export * from './useFindMenu';
 export * from './useIsMobile';
 export * from './useLayoutStyle';
 export * from './useMediaQuery';

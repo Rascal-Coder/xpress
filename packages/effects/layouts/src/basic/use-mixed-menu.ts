@@ -1,6 +1,7 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { useAccessStore } from '@xpress/stores';
+import { useFindMenu } from '@xpress-core/hooks';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { type Router, useRouter } from '@xpress-core/router';
 
@@ -10,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export function useMixedMenu(router: Router) {
   const navigate = useNavigate();
   const menus = useAccessStore((state) => state.accessMenus);
+  const { findRootMenuByPath } = useFindMenu();
   const { curRoute } = useRouter(router);
   const [splitSideMenus, setSplitSideMenus] = useState<MenuRecordRaw[]>([]);
   const mixedRootMenuPath = useRef<string>('');
@@ -109,48 +111,6 @@ export function useMixedMenu(router: Router) {
       );
     }
   };
-  // /////////////////////////\\\\\\\\\\\\\\\\\\\
-  // TODO 抽离到hook
-  const findMenuByPath = useCallback(
-    (list: MenuRecordRaw[], path?: string): MenuRecordRaw | null => {
-      for (const menu of list) {
-        if (menu.path === path) {
-          return menu;
-        }
-        const findMenu = menu.children && findMenuByPath(menu.children, path);
-        if (findMenu) {
-          const pathArray: string[] = [];
-          const segments = findMenu.path.split('/').filter(Boolean);
-          let currentPath = '';
-          for (const segment of segments) {
-            currentPath += `/${segment}`;
-            pathArray.push(currentPath);
-          }
-          findMenu.parents = pathArray;
-          return findMenu;
-        }
-      }
-      return null;
-    },
-    [],
-  );
-  // TODO 抽离到hook
-  const findRootMenuByPath = useCallback(
-    (menus: MenuRecordRaw[], path: string, level = 0) => {
-      const findMenu = findMenuByPath(menus, path);
-      const rootMenuPath = findMenu?.parents?.[level];
-      const rootMenu = rootMenuPath
-        ? menus.find((item) => item.path === rootMenuPath)
-        : null;
-      return {
-        findMenu,
-        rootMenu,
-        rootMenuPath,
-      };
-    },
-    [findMenuByPath],
-  );
-  // /////////////////////////\\\\\\\\\\\\\\\\\\\
 
   /**
    * 计算侧边菜单

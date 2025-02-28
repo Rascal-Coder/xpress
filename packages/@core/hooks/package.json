@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@xpress-core/shared": "workspace:*",
+    "@xpress-core/typings": "workspace:*",
     "ahooks": "catalog:",
     "react": "catalog:"
   },
