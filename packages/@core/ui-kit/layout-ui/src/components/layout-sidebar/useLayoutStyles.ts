@@ -147,7 +147,6 @@ export function useLayoutStyles({
       isSidebarMixed,
     ],
   );
-
   return {
     hiddenSideStyle,
     style,

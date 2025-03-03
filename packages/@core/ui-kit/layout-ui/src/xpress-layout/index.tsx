@@ -188,7 +188,9 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     return (
       currentLayout === 'mixed-nav' ||
       currentLayout === 'sidebar-mixed-nav' ||
-      currentLayout === 'sidebar-nav'
+      currentLayout === 'sidebar-nav' ||
+      currentLayout === 'header-mixed-nav' ||
+      currentLayout === 'header-sidebar-nav'
     );
   }, [currentLayout]);
 
@@ -205,8 +207,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   }, [isMixedNav, headerMode]);
 
   const showSidebar = useMemo(() => {
-    return isSideMode && sidebarEnable;
-  }, [isSideMode, sidebarEnable]);
+    return isSideMode && sidebarEnable && !sidebarHidden;
+  }, [isSideMode, sidebarEnable, sidebarHidden]);
 
   /**
    * 遮罩可见性
@@ -226,6 +228,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       headerFixed &&
       currentLayout !== 'header-nav' &&
       currentLayout !== 'mixed-nav' &&
+      currentLayout !== 'header-mixed-nav' &&
       showSidebar &&
       !isMobile
     ) {
@@ -249,10 +252,13 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
           sidebarExpandOnHovering && !sidebarExpandOnHover
             ? `${getSideCollapseWidth}px`
             : `${getSidebarWidth}px`;
+
         width = `calc(100% - ${sidebarAndExtraWidth})`;
+        if (currentLayout === 'header-sidebar-nav') {
+          width = `100%`;
+        }
       }
     }
-
     return {
       sidebarAndExtraWidth,
       width,
@@ -577,7 +583,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         isMobile={isMobile}
         logo={showHeaderLogo ? logo : undefined}
         show={true}
-        sidebarWidth={getSidebarWidth}
+        // sidebarWidth={getSidebarWidth}
         theme={headerTheme}
         toggleButton={
           showHeaderToggleButton && (

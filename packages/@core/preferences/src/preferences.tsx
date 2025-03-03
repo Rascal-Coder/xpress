@@ -429,6 +429,11 @@ export function usePreferencesContext() {
       header: !fixed,
     };
   }, [preferences, isFullContent, isMobile, isShowHeaderNav]);
+
+  const isHeaderSidebarNav = useMemo(() => {
+    return appPreferences.layout === 'header-sidebar-nav';
+  }, [appPreferences]);
+
   return {
     authPanelCenter,
     authPanelLeft,
@@ -442,6 +447,7 @@ export function usePreferencesContext() {
     isFullContent,
     isHeaderMixedNav,
     isHeaderNav,
+    isHeaderSidebarNav,
     isMixedNav,
     isMobile,
     isSideMixedNav,

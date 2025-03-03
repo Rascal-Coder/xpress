@@ -25,7 +25,8 @@ export const useLayout = ({
       isFullContent: currentLayout === 'full-content',
       isHeaderMixedNav: currentLayout === 'header-mixed-nav',
       isHeaderNav: currentLayout === 'header-nav',
-      isMixedNav: currentLayout === 'mixed-nav',
+      isMixedNav:
+        currentLayout === 'mixed-nav' || currentLayout === 'header-sidebar-nav',
       isSidebarMixedNav: currentLayout === 'sidebar-mixed-nav',
     }),
     [currentLayout],

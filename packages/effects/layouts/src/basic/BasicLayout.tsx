@@ -27,6 +27,7 @@ function BasicLayout({ router }: { router: Router }) {
     layout,
     sidebarCollapsed,
     theme,
+    isHeaderSidebarNav,
   } = usePreferencesContext();
 
   const sidebarTheme = useMemo(() => {
@@ -63,13 +64,14 @@ function BasicLayout({ router }: { router: Router }) {
     if (isMobile && sidebarCollapsed) {
       return true;
     }
-    if (isHeaderNav || isMixedNav) {
+    if (isHeaderNav || isMixedNav || isHeaderSidebarNav) {
       return false;
     }
     return sidebarCollapsed || isSideMixedNav || isHeaderMixedNav;
   }, [
     isHeaderMixedNav,
     isHeaderNav,
+    isHeaderSidebarNav,
     isMixedNav,
     isMobile,
     isSideMixedNav,

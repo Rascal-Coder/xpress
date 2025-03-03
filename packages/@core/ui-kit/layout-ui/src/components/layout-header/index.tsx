@@ -31,7 +31,6 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
   }, [isMobile]);
 
   const logoNode = useShow(!!logo, () => <div style={logoStyle}>{logo}</div>);
-
   return (
     <header
       className={`border-border bg-header top-0 flex w-full flex-[0_0_auto] items-center border-b pl-2 transition-[margin-top] duration-200 ${
