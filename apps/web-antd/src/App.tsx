@@ -13,7 +13,6 @@ import router, { generateMenuItems, useRouter } from '#/router';
 function App() {
   const { curRoute, reactRoutes, routes } = useRouter(router);
   const element = useRoutes(reactRoutes);
-  const logo = '/images/logo.svg';
   const { isDark, preferences } = usePreferencesContext();
   const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +36,6 @@ function App() {
     <HelmetProvider>
       <Helmet>
         <title>{curRoute?.meta?.title}</title>
-        <link data-rh="true" href={logo} rel="icon" type="image/x-icon"></link>
       </Helmet>
       <Progress />
       <ToastContainer

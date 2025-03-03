@@ -189,6 +189,7 @@ function SubMenu({
             <SubMenuContent
               className={cn(is('active', active))}
               icon={menuIcon}
+              isHovering={isHovering}
               isMenuMore={isSubMenuMore}
               isTopLevelMenuSubMenu={isFirstLevel}
               level={currentLevel}
@@ -217,6 +218,7 @@ function SubMenu({
           <SubMenuContent
             className={cn(is('active', active))}
             icon={menuIcon}
+            isHovering={isHovering}
             isMenuMore={isSubMenuMore}
             isTopLevelMenuSubMenu={isFirstLevel}
             level={currentLevel}

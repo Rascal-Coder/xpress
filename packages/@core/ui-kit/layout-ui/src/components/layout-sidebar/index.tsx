@@ -39,7 +39,9 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   const {
     onSideMouseLeave,
     setSidebarCollapse,
+    setSidebarExpandOnHover,
     setSidebarExpandOnHovering,
+    setSidebarExtraCollapse,
     setSidebarExtraVisible,
     sidebarCollapse,
     sidebarExpandOnHover,
@@ -134,7 +136,10 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
 
   // 固定按钮渲染
   const fixedButtonNode = useShow(!sidebarCollapse && !isSidebarMixed, () => (
-    <SidebarFixedButton />
+    <SidebarFixedButton
+      setSidebarExpandOnHover={setSidebarExpandOnHover}
+      sidebarExpandOnHover={sidebarExpandOnHover}
+    />
   ));
 
   // Logo渲染
@@ -147,19 +152,32 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   // 折叠按钮渲染
   const collapseButtonNode = useShow(
     showCollapseButton && !isSidebarMixed,
-    () => <SidebarCollapseButton />,
+    () => (
+      <SidebarCollapseButton
+        setSidebarCollapse={setSidebarCollapse}
+        sidebarCollapse={sidebarCollapse}
+      />
+    ),
   );
 
   // 混合模式下的折叠按钮
   const mixedCollapseButtonNode = useShow(
     isSidebarMixed && sidebarExpandOnHover,
-    () => <SidebarCollapseButton />,
+    () => (
+      <SidebarCollapseButton
+        setSidebarCollapse={setSidebarExtraCollapse}
+        sidebarCollapse={sidebarExtraCollapse}
+      />
+    ),
   );
 
   // 混合模式下的固定按钮和标题
   const mixedFixedContentNode = useShow(!sidebarExtraCollapse, () => (
     <>
-      <SidebarFixedButton />
+      <SidebarFixedButton
+        setSidebarExpandOnHover={setSidebarExpandOnHover}
+        sidebarExpandOnHover={sidebarExpandOnHover}
+      />
       {extraTitle && (
         <div className="flex items-center pl-2" style={extraTitleStyle}>
           {extraTitle}

@@ -5,20 +5,21 @@ import { MenuView } from '@xpress-core/react-menu';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
-interface ExtraMenuProps extends MenuProps {
+interface ExtraMenuProps extends Omit<MenuProps, 'children'> {
   collapse?: boolean;
   menus: MenuRecordRaw[];
   accordion?: boolean;
   rounded?: boolean;
 }
 
-const ExtraMenu: React.FC<ExtraMenuProps> = ({
+const ExtraMenu = ({
   accordion = true,
   menus = [],
   collapse,
   rounded,
   theme,
-}) => {
+  ...props
+}: ExtraMenuProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
@@ -29,6 +30,7 @@ const ExtraMenu: React.FC<ExtraMenuProps> = ({
 
   return (
     <MenuView
+      {...props}
       accordion={accordion}
       collapse={collapse}
       defaultActive={currentPath}

@@ -266,10 +266,7 @@ export default function Menu(props: Props) {
     if (collapse) {
       dispatch({ type: 'RESET_MENUS' });
     }
-    if (mode === 'horizontal') {
-      dispatch({ type: 'RESET_MENUS' });
-    }
-  }, [collapse, mode, sliceIndex]);
+  }, [collapse]);
 
   /**
    * 监听水平模式下的尺寸变化

@@ -10,7 +10,8 @@ import MemoContent from './content-components/content';
 import Copyright from './copyright';
 import LayoutFooter from './footer';
 import Header from './header';
-import { Menu, MixedMenu } from './menu';
+import { ExtraMenu, Menu, MixedMenu } from './menu';
+import { useExtraMenu } from './use-extra-menu';
 import { useMixedMenu } from './use-mixed-menu';
 
 function BasicLayout({ router }: { router: Router }) {
@@ -94,6 +95,16 @@ function BasicLayout({ router }: { router: Router }) {
     headerActive,
   } = useMixedMenu(router);
 
+  // 侧边多列菜单
+  const {
+    extraActiveMenu,
+    extraMenus,
+    handleDefaultSelect,
+    handleMenuMouseEnter,
+    handleMixedMenuSelect,
+    handleSideMouseLeave,
+    sidebarExtraVisible,
+  } = useExtraMenu(router);
   const handleToggleSidebar = () => {
     updatePreferences({
       sidebar: {
@@ -101,11 +112,6 @@ function BasicLayout({ router }: { router: Router }) {
       },
     });
   };
-  // TODO暂时没有处理的函数\\\\\\\\\\\\\\\\
-  const handleSideMouseLeave = () => {
-    // console.log('handleSideMouseLeave');
-  };
-  // TODO暂时没有处理的函数\\\\\\\\\\\\\\\\
 
   return (
     <XpressLayout
@@ -179,7 +185,17 @@ function BasicLayout({ router }: { router: Router }) {
           theme={theme}
         />
       }
-      mixedMenu={<MixedMenu menus={mixHeaderMenus} />}
+      mixedMenu={
+        <MixedMenu
+          activePath={extraActiveMenu}
+          menus={mixHeaderMenus}
+          onDefaultSelect={handleDefaultSelect}
+          onEnter={handleMenuMouseEnter}
+          onSelect={handleMixedMenuSelect}
+          rounded={isMenuRounded}
+          theme={sidebarTheme}
+        />
+      }
       onSidebarCollapseChange={(value: boolean) => {
         updatePreferences({ sidebar: { collapsed: value } });
       }}
@@ -192,9 +208,6 @@ function BasicLayout({ router }: { router: Router }) {
       onSidebarExtraCollapseChange={(value: boolean) =>
         updatePreferences({ sidebar: { extraCollapse: value } })
       }
-      onSidebarExtraVisibleChange={(_value: boolean) => {
-        // console.log('onSidebarExtraVisibleChange', value);
-      }}
       onSideMouseLeave={handleSideMouseLeave}
       onToggleSidebar={handleToggleSidebar}
       sidebarCollapse={preferences.sidebar.collapsed}
@@ -202,9 +215,19 @@ function BasicLayout({ router }: { router: Router }) {
       sidebarEnable={sidebarVisible}
       sidebarExpandOnHover={preferences.sidebar.expandOnHover}
       sidebarExtraCollapse={preferences.sidebar.extraCollapse}
+      sidebarExtraVisible={sidebarExtraVisible}
       sidebarHidden={preferences.sidebar.hidden}
       sidebarTheme={sidebarTheme}
       sidebarWidth={preferences.sidebar.width}
+      sideExtra={
+        <ExtraMenu
+          accordion={preferences.navigation.accordion}
+          collapse={preferences.sidebar.extraCollapse}
+          menus={extraMenus}
+          rounded={isMenuRounded}
+          theme={sidebarTheme}
+        />
+      }
       tabbarEnable={preferences.tabbar.enable}
       tabbarHeight={preferences.tabbar.height}
     ></XpressLayout>

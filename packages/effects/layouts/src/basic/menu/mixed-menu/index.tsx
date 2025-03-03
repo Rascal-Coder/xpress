@@ -29,7 +29,8 @@ function MixedMenu({
       const rootMenu = menus.find((item) => item.path === menu.parents?.[0]);
       onDefaultSelect?.(menu, rootMenu);
     }
-  }, [findMenuByPath, location.pathname, menus, onDefaultSelect]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   return (
     <NormalMenu

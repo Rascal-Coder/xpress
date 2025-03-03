@@ -8,6 +8,6 @@ import type { DeepPartial } from '@xpress-core/typings';
 export const overridesPreferences: DeepPartial<Preferences> = {
   // overrides
   app: {
-    name: '测试213',
+    // name: '测试213',
   },
 };
