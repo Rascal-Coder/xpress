@@ -3,7 +3,8 @@ import {
   forwardRef,
   type KeyboardEvent,
   useContext,
-  type WheelEvent,
+  useEffect,
+  useState,
 } from 'react';
 
 import { Input } from '../../ui';
@@ -66,22 +67,31 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
     }
   };
 
-  const handleWheel = (e: WheelEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.target !== getActiveElement()) return;
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (e.target !== getActiveElement()) return;
 
-    // 在触控板上，用户可能同时在 X 和 Y 方向滚动
-    // 如果滚动主要在 X 方向，则认为用户不是想要增减数值
-    // 这个判断不是完美的，因为事件会快速触发且增量很小
-    // 特别是当用户在接近 45 度角滚动时
-    if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      // 在触控板上，用户可能同时在 X 和 Y 方向滚动
+      // 如果滚动主要在 X 方向，则认为用户不是想要增减数值
+      // 这个判断不是完美的，因为事件会快速触发且增量很小
+      // 特别是当用户在接近 45 度角滚动时
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
 
-    if (e.deltaY < 0) {
-      handleIncrease();
-    } else {
-      handleDecrease();
-    }
-  };
+      e.stopPropagation();
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        handleIncrease();
+      } else {
+        handleDecrease();
+      }
+    };
+    document.addEventListener('wheel', handleWheel, { passive: false });
+
+    return () => {
+      document.removeEventListener('wheel', handleWheel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleBeforeInput = (e: FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
@@ -94,7 +104,10 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
       e.preventDefault();
     }
   };
-
+  const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    setInputValue(textValue);
+  }, [textValue]);
   return (
     <Input
       aria-roledescription="Number field"
@@ -112,16 +125,20 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
         applyInputValue(e.target.value);
       }}
       onChange={(e) => {
-        applyInputValue(e.target.value);
+        const traget = e.target as HTMLInputElement;
+        setInputValue(traget.value);
+      }}
+      onInput={(e) => {
+        const traget = e.target as HTMLInputElement;
+        setInputValue(traget.value);
       }}
       onKeyDown={handleKeyDown}
-      onWheel={handleWheel}
       ref={ref}
       role="spinbutton"
       spellCheck={false}
       tabIndex={0}
       type="text"
-      value={textValue}
+      value={inputValue}
     />
   );
 });

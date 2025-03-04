@@ -8,6 +8,9 @@ import { SwitchItem } from '../SwitchItem';
 export const Sidebar = () => {
   const { updatePreferences, preferences } = usePreferencesContext();
   const [width, setWidth] = useState(preferences.sidebar.width);
+  // useEffect(() => {
+  //   console.log('width', width);
+  // }, [width]);
   return (
     <>
       <SwitchItem

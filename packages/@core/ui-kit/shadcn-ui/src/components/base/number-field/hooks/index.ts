@@ -1,5 +1,5 @@
 import { NumberFormatter, NumberParser } from '@internationalized/number';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface UsePressedHoldOptions {
   disabled?: boolean;
@@ -121,3 +121,30 @@ export function handleDecimalOperation(
 
   return result;
 }
+
+interface Props {
+  defaultValue?: number;
+  modelValue?: number;
+  onModelValueChange?: (value: number) => void;
+}
+export const useVModel = (props: Props) => {
+  const [value, setValue] = useState<number>(
+    props.modelValue ?? props.defaultValue ?? 0,
+  );
+
+  useEffect(() => {
+    if (props.modelValue !== undefined) {
+      setValue(props.modelValue);
+    }
+  }, [props.modelValue]);
+
+  const handleChange = useCallback(
+    (newValue: number) => {
+      setValue(newValue);
+      props.onModelValueChange?.(newValue);
+    },
+    [props],
+  );
+
+  return [value, handleChange] as const;
+};

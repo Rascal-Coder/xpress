@@ -23,7 +23,6 @@ function BasicLayout({ router }: { router: Router }) {
     isMixedNav,
     isMobile,
     isSideMixedNav,
-    isHeaderMixedNav,
     layout,
     sidebarCollapsed,
     theme,
@@ -67,9 +66,8 @@ function BasicLayout({ router }: { router: Router }) {
     if (isHeaderNav || isMixedNav || isHeaderSidebarNav) {
       return false;
     }
-    return sidebarCollapsed || isSideMixedNav || isHeaderMixedNav;
+    return sidebarCollapsed || isSideMixedNav;
   }, [
-    isHeaderMixedNav,
     isHeaderNav,
     isHeaderSidebarNav,
     isMixedNav,
@@ -79,8 +77,8 @@ function BasicLayout({ router }: { router: Router }) {
   ]);
 
   const showHeaderNav = useMemo(() => {
-    return !isMobile && (isHeaderNav || isMixedNav || isHeaderMixedNav);
-  }, [isHeaderMixedNav, isHeaderNav, isMixedNav, isMobile]);
+    return !isMobile && (isHeaderNav || isMixedNav);
+  }, [isHeaderNav, isMixedNav, isMobile]);
 
   const {
     sidebarMenus,

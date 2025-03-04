@@ -12,6 +12,7 @@ import {
   handleDecimalOperation,
   useNumberFormatter,
   useNumberParser,
+  useVModel,
 } from './hooks';
 import { NumberField } from './NumberField';
 import { NumberFieldContent } from './NumberFieldContent';
@@ -23,6 +24,7 @@ import { clamp, snapValueToStep } from './shared';
 export interface NumberFieldItemProps {
   /** The class name of the element. */
   className?: string;
+  defaultValue?: number;
   /** When `true`, prevents the user from interacting with the Number Field. */
   disabled?: boolean;
   /** Formatting options for the value displayed in the number field. This also affects what characters are allowed to be typed by the user. */
@@ -68,6 +70,7 @@ export const NumberFieldContext = createContext<NumberFieldRootContext>(
 );
 export const NumberFieldItem = ({
   className,
+  defaultValue,
   disabled,
   formatOptions,
   id,
@@ -78,6 +81,11 @@ export const NumberFieldItem = ({
   onChange,
   step = 1,
 }: NumberFieldItemProps) => {
+  const [value, handleChange] = useVModel({
+    defaultValue,
+    modelValue: modelValue ?? 0,
+    onModelValueChange: onChange,
+  });
   // Formatter
   const numberFormatter = useNumberFormatter(locale, formatOptions);
   const numberParser = useNumberParser(locale, formatOptions);
@@ -98,20 +106,20 @@ export const NumberFieldItem = ({
   );
   const isDecreaseDisabled = useMemo(() => {
     return (
-      clampInputValue(modelValue ?? 0) === min ||
+      clampInputValue(value ?? 0) === min ||
       (min && !Number.isNaN(min)
-        ? handleDecimalOperation('-', modelValue ?? 0, step) < min
+        ? handleDecimalOperation('-', value ?? 0, step) < min
         : false)
     );
-  }, [clampInputValue, min, modelValue, step]);
+  }, [clampInputValue, min, step, value]);
   const isIncreaseDisabled = useMemo(() => {
     return (
-      clampInputValue(modelValue ?? 0) === max ||
+      clampInputValue(value ?? 0) === max ||
       (max && !Number.isNaN(max)
-        ? handleDecimalOperation('+', modelValue ?? 0, step) > max
+        ? handleDecimalOperation('+', value ?? 0, step) > max
         : false)
     );
-  }, [clampInputValue, max, modelValue, step]);
+  }, [clampInputValue, max, step, value]);
   function handleChangingValue(type: 'decrease' | 'increase', multiplier = 1) {
     inputEl.current?.focus();
     const currentInputValue = numberParser.parse(inputEl.current?.value ?? '');
@@ -126,7 +134,7 @@ export const NumberFieldItem = ({
           ? clampInputValue(currentInputValue + (step ?? 1) * multiplier)
           : clampInputValue(currentInputValue - (step ?? 1) * multiplier);
     }
-    onChange?.(newValue);
+    handleChange?.(newValue);
   }
 
   function handleIncrease(multiplier = 1) {
@@ -138,9 +146,9 @@ export const NumberFieldItem = ({
 
   function handleMinMaxValue(type: 'max' | 'min') {
     if (type === 'min' && min !== undefined) {
-      onChange?.(clampInputValue(min));
+      handleChange?.(clampInputValue(min));
     } else if (type === 'max' && max !== undefined) {
-      onChange?.(clampInputValue(max));
+      handleChange?.(clampInputValue(max));
     }
   }
 
@@ -155,11 +163,8 @@ export const NumberFieldItem = ({
   // 使用减号替换会计格式的负号，以便更好地朗读
   const textValueFormatter = useNumberFormatter(locale, formatOptions);
   const textValue = useMemo(
-    () =>
-      Number.isNaN(modelValue)
-        ? ''
-        : textValueFormatter.format(modelValue ?? 0),
-    [modelValue, textValueFormatter],
+    () => (Number.isNaN(value) ? '' : textValueFormatter.format(value ?? 0)),
+    [value, textValueFormatter],
   );
 
   function validate(val: string) {
@@ -170,25 +175,26 @@ export const NumberFieldItem = ({
     if (inputEl.current) inputEl.current.value = val;
   }
 
-  function applyInputValue(val: string) {
-    const parsedValue = numberParser.parse(val);
-    const clampedValue = clampInputValue(parsedValue);
+  const applyInputValue = useCallback(
+    (val: string) => {
+      const parsedValue = numberParser.parse(val);
+      const clampedValue = clampInputValue(parsedValue);
+      handleChange(clampedValue);
+      // 如果输入值为空，保持空值状态
+      if (val.length === 0) {
+        setInputValue(val);
+        return;
+      }
 
-    // 如果输入值为空，保持空值状态
-    if (val.length === 0) {
-      setInputValue(val);
-      return;
-    }
-
-    // 如果解析失败，重置为当前格式化后的数值
-    if (Number.isNaN(parsedValue)) {
+      // 如果解析失败，重置为当前格式化后的数值
+      if (Number.isNaN(parsedValue)) {
+        setInputValue(textValue);
+        return;
+      }
       setInputValue(textValue);
-      return;
-    }
-
-    onChange?.(clampedValue);
-    setInputValue(textValue);
-  }
+    },
+    [clampInputValue, handleChange, numberParser, textValue],
+  );
 
   return (
     <NumberFieldContext.Provider
@@ -204,7 +210,7 @@ export const NumberFieldItem = ({
         isIncreaseDisabled,
         max,
         min,
-        modelValue: modelValue ?? 0,
+        modelValue: value,
         textValue,
         validate,
       }}
