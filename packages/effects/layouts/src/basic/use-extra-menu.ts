@@ -20,10 +20,7 @@ export function useExtraMenu(router: Router) {
   const [extraMenus, setExtraMenus] = useState<MenuRecordRaw[]>([]);
   const [sidebarExtraVisible, setSidebarExtraVisible] = useState(false);
   const [extraActiveMenu, setExtraActiveMenu] = useState<string>('');
-  const parentLevel = useMemo(
-    () => (preferences.app.layout === 'header-mixed-nav' ? 1 : 0),
-    [preferences.app.layout],
-  );
+  const parentLevel = 0;
   /**
    * 选择混合菜单事件
    * @param menu

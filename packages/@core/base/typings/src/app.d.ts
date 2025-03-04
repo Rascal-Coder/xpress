@@ -1,6 +1,5 @@
 type LayoutType =
   | 'full-content'
-  | 'header-mixed-nav'
   | 'header-nav'
   | 'header-sidebar-nav'
   | 'mixed-nav'
@@ -94,7 +93,7 @@ type AuthPageLayoutType = 'panel-center' | 'panel-left' | 'panel-right';
 interface UseLayoutResult {
   currentLayout: LayoutType;
   isFullContent: boolean;
-  isHeaderMixedNav: boolean;
+  // isHeaderMixedNav: boolean;
   isHeaderNav: boolean;
   isMixedNav: boolean;
   isSidebarMixedNav: boolean;

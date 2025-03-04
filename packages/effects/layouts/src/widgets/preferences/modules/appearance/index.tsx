@@ -1,5 +1,4 @@
-import { Block } from '../../blocks';
-import { BuiltinTheme, Other, Radius, Theme } from '../../blocks/theme';
+import { Block, BuiltinTheme, Other, Radius, Theme } from '../../blocks';
 
 export const PreferencesAppearance = () => {
   return (

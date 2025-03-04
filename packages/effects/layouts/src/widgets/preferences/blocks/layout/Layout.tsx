@@ -8,7 +8,6 @@ import { useState } from 'react';
 
 import {
   FullContent,
-  HeaderMixedNav,
   HeaderNav,
   HeaderSidebarNav,
   MixedNav,
@@ -21,7 +20,6 @@ export const Layout = () => {
     'full-content': <FullContent></FullContent>,
     'header-nav': <HeaderNav></HeaderNav>,
     'sidebar-nav': <SidebarNav></SidebarNav>,
-    'header-mixed-nav': <HeaderMixedNav></HeaderMixedNav>,
     'header-sidebar-nav': <HeaderSidebarNav></HeaderSidebarNav>,
     'sidebar-mixed-nav': <SidebarMixedNav></SidebarMixedNav>,
     'mixed-nav': <MixedNav></MixedNav>,
@@ -51,11 +49,6 @@ export const Layout = () => {
       name: '混合垂直',
       tip: '垂直水平菜单共存',
       type: 'mixed-nav',
-    },
-    {
-      name: '混合双列',
-      tip: '双列、水平菜单共存模式',
-      type: 'header-mixed-nav',
     },
     {
       name: '内容全屏',

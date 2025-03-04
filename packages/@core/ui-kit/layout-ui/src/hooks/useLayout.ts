@@ -23,7 +23,6 @@ export const useLayout = ({
   const layoutStates = useMemo(
     () => ({
       isFullContent: currentLayout === 'full-content',
-      isHeaderMixedNav: currentLayout === 'header-mixed-nav',
       isHeaderNav: currentLayout === 'header-nav',
       isMixedNav:
         currentLayout === 'mixed-nav' || currentLayout === 'header-sidebar-nav',

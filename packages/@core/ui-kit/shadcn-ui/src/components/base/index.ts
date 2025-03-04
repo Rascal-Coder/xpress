@@ -4,6 +4,7 @@ export * from './hover-card';
 export * from './icon';
 export * from './loading';
 export * from './logo';
+export * from './number-field';
 export * from './scroll-area';
 export * from './segmented';
 export * from './tooltip';

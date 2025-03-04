@@ -82,10 +82,6 @@ function BasicLayout({ router }: { router: Router }) {
     return !isMobile && (isHeaderNav || isMixedNav || isHeaderMixedNav);
   }, [isHeaderMixedNav, isHeaderNav, isMixedNav, isMobile]);
 
-  // const mode = useMemo(() => {
-  //   return showHeaderNav ? 'horizontal' : 'vertical';
-  // }, [showHeaderNav]);
-
   const {
     sidebarMenus,
     handleMenuSelect,

@@ -23,6 +23,7 @@
   "main": "./src/index.ts",
   "module": "./src/index.ts",
   "dependencies": {
+    "@internationalized/number": "^3.6.0",
     "@radix-ui/react-avatar": "catalog:",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-hover-card": "catalog:",
@@ -39,6 +40,7 @@
     "@xpress-core/hooks": "workspace:*",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
+    "ahooks": "catalog:",
     "class-variance-authority": "catalog:",
     "framer-motion": "^12.4.2",
     "lucide-react": "catalog:",

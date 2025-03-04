@@ -144,6 +144,9 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
         });
       }
     }, [showLoading]);
+    useEffect(() => {
+      document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+    }, [isOpen]);
     return (
       <DrawerContext.Provider value={{ id }}>
         <Sheet modal={false} onOpenChange={onOpenChange} open={isOpen}>

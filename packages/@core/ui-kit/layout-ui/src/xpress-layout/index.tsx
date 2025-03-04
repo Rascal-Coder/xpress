@@ -83,7 +83,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   const {
     currentLayout,
     isFullContent,
-    isHeaderMixedNav,
     isHeaderNav,
     isMixedNav,
     isSidebarMixedNav,
@@ -189,7 +188,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       currentLayout === 'mixed-nav' ||
       currentLayout === 'sidebar-mixed-nav' ||
       currentLayout === 'sidebar-nav' ||
-      currentLayout === 'header-mixed-nav' ||
       currentLayout === 'header-sidebar-nav'
     );
   }, [currentLayout]);
@@ -228,7 +226,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       headerFixed &&
       currentLayout !== 'header-nav' &&
       currentLayout !== 'mixed-nav' &&
-      currentLayout !== 'header-mixed-nav' &&
       showSidebar &&
       !isMobile
     ) {
@@ -569,7 +566,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       width={getSidebarWidth}
       zIndex={sidebarZIndex}
     >
-      {isSidebarMixedNav || isHeaderMixedNav ? mixedMenu : menu}
+      {isSidebarMixedNav ? mixedMenu : menu}
     </LayoutSidebar>
   ));
 
