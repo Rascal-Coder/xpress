@@ -29,15 +29,15 @@
     }
   },
   "dependencies": {
-    "@loadable/component": "^5.16.4",
-    "eventemitter3": "^5.0.1",
-    "history": "^5.3.0",
-    "immer": "^10.1.1",
+    "@loadable/component": "catalog:",
+    "eventemitter3": "catalog:",
+    "history": "catalog:",
+    "immer": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
-    "@types/loadable__component": "^5.13.9",
+    "@types/loadable__component": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@xpress-core/shared": "workspace:*",

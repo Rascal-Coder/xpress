@@ -30,9 +30,15 @@ catalogs:
     '@iconify/tailwind':
       specifier: ^1.1.3
       version: 1.2.0
+    '@internationalized/number':
+      specifier: ^3.6.0
+      version: 3.6.0
     '@jspm/generator':
       specifier: ^2.4.1
       version: 2.5.1
+    '@loadable/component':
+      specifier: ^5.16.4
+      version: 5.16.4
     '@manypkg/get-packages':
       specifier: ^2.2.2
       version: 2.2.2
@@ -42,6 +48,9 @@ catalogs:
     '@radix-ui/react-avatar':
       specifier: ^1.1.2
       version: 1.1.3
+    '@radix-ui/react-dialog':
+      specifier: ^1.1.6
+      version: 1.1.6
     '@radix-ui/react-hover-card':
       specifier: ^1.1.2
       version: 1.1.6
@@ -51,12 +60,30 @@ catalogs:
     '@radix-ui/react-scroll-area':
       specifier: ^1.2.1
       version: 1.2.3
+    '@radix-ui/react-separator':
+      specifier: ^1.1.2
+      version: 1.1.2
     '@radix-ui/react-slot':
       specifier: ^1.1.0
+      version: 1.1.2
+    '@radix-ui/react-switch':
+      specifier: ^1.1.3
+      version: 1.1.3
+    '@radix-ui/react-tabs':
+      specifier: ^1.1.3
+      version: 1.1.3
+    '@radix-ui/react-toggle':
+      specifier: ^1.1.2
+      version: 1.1.2
+    '@radix-ui/react-toggle-group':
+      specifier: ^1.1.2
       version: 1.1.2
     '@radix-ui/react-tooltip':
       specifier: ^1.1.4
       version: 1.1.8
+    '@radix-ui/react-visually-hidden':
+      specifier: ^1.1.2
+      version: 1.1.2
     '@react-spring/web':
       specifier: ^9.7.5
       version: 9.7.5
@@ -84,15 +111,24 @@ catalogs:
     '@types/jsonwebtoken':
       specifier: ^9.0.7
       version: 9.0.9
+    '@types/loadable__component':
+      specifier: ^5.13.9
+      version: 5.13.9
     '@types/lodash.clonedeep':
       specifier: ^4.5.9
       version: 4.5.9
     '@types/lodash.get':
       specifier: ^4.4.9
       version: 4.4.9
+    '@types/lodash.uniqueid':
+      specifier: ^4.0.9
+      version: 4.0.9
     '@types/node':
       specifier: ^22.9.0
       version: 22.13.5
+    '@types/nprogress':
+      specifier: ^0.2.3
+      version: 0.2.3
     '@types/postcss-import':
       specifier: ^14.0.3
       version: 14.0.3
@@ -105,6 +141,9 @@ catalogs:
     '@types/react-transition-group':
       specifier: ^4.4.11
       version: 4.4.12
+    '@types/styled-components':
+      specifier: ^5.1.34
+      version: 5.1.34
     '@typescript-eslint/eslint-plugin':
       specifier: ^8.14.0
       version: 8.25.0
@@ -216,6 +255,9 @@ catalogs:
     eslint-plugin-vitest:
       specifier: ^0.5.4
       version: 0.5.4
+    eventemitter3:
+      specifier: ^5.0.1
+      version: 5.0.1
     execa:
       specifier: ^9.5.1
       version: 9.5.2
@@ -234,6 +276,9 @@ catalogs:
     h3:
       specifier: ^1.13.0
       version: 1.15.1
+    history:
+      specifier: ^5.3.0
+      version: 5.3.0
     html-minifier-terser:
       specifier: ^7.2.0
       version: 7.2.0
@@ -264,12 +309,18 @@ catalogs:
     lodash.get:
       specifier: ^4.4.2
       version: 4.4.2
+    lodash.uniqueid:
+      specifier: ^4.0.1
+      version: 4.0.1
     lucide-react:
       specifier: ^0.460.0
       version: 0.460.0
     nitropack:
       specifier: ^2.10.4
       version: 2.10.4
+    nprogress:
+      specifier: ^0.2.0
+      version: 0.2.0
     ora:
       specifier: ^8.1.1
       version: 8.2.0
@@ -306,12 +357,27 @@ catalogs:
     react:
       specifier: ^18.3.1
       version: 18.3.1
+    react-colorful:
+      specifier: ^5.6.1
+      version: 5.6.1
+    react-copy-to-clipboard:
+      specifier: ^5.1.0
+      version: 5.1.0
     react-dom:
       specifier: ^18.3.1
       version: 18.3.1
+    react-helmet-async:
+      specifier: ^2.0.5
+      version: 2.0.5
     react-router:
       specifier: ^7.1.1
       version: 7.2.0
+    react-router-dom:
+      specifier: ^7.1.5
+      version: 7.2.0
+    react-toastify:
+      specifier: ^11.0.3
+      version: 11.0.5
     rimraf:
       specifier: ^6.0.1
       version: 6.0.1
@@ -321,6 +387,9 @@ catalogs:
     sass:
       specifier: ^1.81.0
       version: 1.85.1
+    styled-components:
+      specifier: ^6.1.15
+      version: 6.1.15
     stylelint:
       specifier: ^16.10.0
       version: 16.14.1
@@ -396,6 +465,9 @@ catalogs:
     vitest:
       specifier: ^2.1.6
       version: 2.1.9
+    zustand:
+      specifier: ^5.0.3
+      version: 5.0.3
 
 importers:
 
@@ -405,7 +477,7 @@ importers:
         specifier: 'catalog:'
         version: 9.7.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
-        specifier: ^7.1.5
+        specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@testing-library/react':
@@ -500,10 +572,10 @@ importers:
   apps/web-antd:
     dependencies:
       '@loadable/component':
-        specifier: ^5.16.4
+        specifier: 'catalog:'
         version: 5.16.4(react@18.3.1)
       '@types/styled-components':
-        specifier: ^5.1.34
+        specifier: 'catalog:'
         version: 5.1.34
       '@xpress-core/layout-ui':
         specifier: workspace:*
@@ -536,7 +608,7 @@ importers:
         specifier: ^12.4.2
         version: 12.4.7(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       immer:
-        specifier: ^10.1.1
+        specifier: 'catalog:'
         version: 10.1.1
       react:
         specifier: 'catalog:'
@@ -545,19 +617,19 @@ importers:
         specifier: 'catalog:'
         version: 18.3.1(react@18.3.1)
       react-helmet-async:
-        specifier: ^2.0.5
+        specifier: 'catalog:'
         version: 2.0.5(react@18.3.1)
       react-router-dom:
-        specifier: ^7.1.5
+        specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-toastify:
-        specifier: ^11.0.3
+        specifier: 'catalog:'
         version: 11.0.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
-        specifier: ^6.1.15
+        specifier: 'catalog:'
         version: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       zustand:
-        specifier: ^5.0.3
+        specifier: 'catalog:'
         version: 5.0.3(@types/react@18.3.18)(immer@10.1.1)(react@18.3.1)
     devDependencies:
       '@types/react':
@@ -913,7 +985,7 @@ importers:
         specifier: 'catalog:'
         version: 4.1.0
       '@internationalized/number':
-        specifier: ^3.6.0
+        specifier: 'catalog:'
         version: 3.6.0
       clsx:
         specifier: 'catalog:'
@@ -931,7 +1003,7 @@ importers:
         specifier: 'catalog:'
         version: 4.4.2
       lodash.uniqueid:
-        specifier: ^4.0.1
+        specifier: 'catalog:'
         version: 4.0.1
       tailwind-merge:
         specifier: 'catalog:'
@@ -947,7 +1019,7 @@ importers:
         specifier: 'catalog:'
         version: 4.4.9
       '@types/lodash.uniqueid':
-        specifier: ^4.0.9
+        specifier: 'catalog:'
         version: 4.0.9
 
   packages/@core/base/typings: {}
@@ -996,26 +1068,26 @@ importers:
   packages/@core/react-router-toolset:
     dependencies:
       '@loadable/component':
-        specifier: ^5.16.4
+        specifier: 'catalog:'
         version: 5.16.4(react@18.3.1)
       eventemitter3:
-        specifier: ^5.0.1
+        specifier: 'catalog:'
         version: 5.0.1
       history:
-        specifier: ^5.3.0
+        specifier: 'catalog:'
         version: 5.3.0
       immer:
-        specifier: ^10.1.1
+        specifier: 'catalog:'
         version: 10.1.1
       react:
         specifier: 'catalog:'
         version: 18.3.1
       react-router-dom:
-        specifier: ^7.1.5
+        specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/loadable__component':
-        specifier: ^5.13.9
+        specifier: 'catalog:'
         version: 5.13.9
       '@types/react':
         specifier: 'catalog:'
@@ -1082,7 +1154,7 @@ importers:
         specifier: 'catalog:'
         version: 18.3.1
       zustand:
-        specifier: ^5.0.3
+        specifier: 'catalog:'
         version: 5.0.3(@types/react@18.3.18)(immer@10.1.1)(react@18.3.1)
     devDependencies:
       '@types/react':
@@ -1135,13 +1207,13 @@ importers:
   packages/@core/ui-kit/shadcn-ui:
     dependencies:
       '@internationalized/number':
-        specifier: ^3.6.0
+        specifier: 'catalog:'
         version: 3.6.0
       '@radix-ui/react-avatar':
         specifier: 'catalog:'
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
-        specifier: ^1.1.6
+        specifier: 'catalog:'
         version: 1.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-hover-card':
         specifier: 'catalog:'
@@ -1152,29 +1224,32 @@ importers:
       '@radix-ui/react-scroll-area':
         specifier: 'catalog:'
         version: 1.2.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-select':
+        specifier: ^2.1.6
+        version: 2.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-separator':
-        specifier: ^1.1.2
+        specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
         specifier: 'catalog:'
         version: 1.1.2(@types/react@18.3.18)(react@18.3.1)
       '@radix-ui/react-switch':
-        specifier: ^1.1.3
+        specifier: 'catalog:'
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-tabs':
-        specifier: ^1.1.3
+        specifier: 'catalog:'
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-toggle':
-        specifier: ^1.1.2
+        specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-toggle-group':
-        specifier: ^1.1.2
+        specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-tooltip':
         specifier: 'catalog:'
         version: 1.1.8(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-visually-hidden':
-        specifier: ^1.1.2
+        specifier: 'catalog:'
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@xpress-core/hooks':
         specifier: workspace:*
@@ -1226,20 +1301,20 @@ importers:
         specifier: ^12.4.7
         version: 12.4.7(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nprogress:
-        specifier: ^0.2.0
+        specifier: 'catalog:'
         version: 0.2.0
       react:
         specifier: 'catalog:'
         version: 18.3.1
       react-router-dom:
-        specifier: ^7.1.5
+        specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       styled-components:
-        specifier: ^6.1.15
+        specifier: 'catalog:'
         version: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/nprogress':
-        specifier: ^0.2.3
+        specifier: 'catalog:'
         version: 0.2.3
       '@types/react':
         specifier: 'catalog:'
@@ -1254,7 +1329,7 @@ importers:
   packages/effects/layouts:
     dependencies:
       '@loadable/component':
-        specifier: ^5.16.4
+        specifier: 'catalog:'
         version: 5.16.4(react@18.3.1)
       '@xpress-core/hooks':
         specifier: workspace:*
@@ -1296,16 +1371,16 @@ importers:
         specifier: 'catalog:'
         version: 18.3.1
       react-colorful:
-        specifier: ^5.6.1
+        specifier: 'catalog:'
         version: 5.6.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-copy-to-clipboard:
-        specifier: ^5.1.0
+        specifier: 'catalog:'
         version: 5.1.0(react@18.3.1)
       react-router:
         specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
-        specifier: ^7.1.5
+        specifier: 'catalog:'
         version: 7.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@types/react':
@@ -1327,7 +1402,7 @@ importers:
         specifier: workspace:*
         version: link:../@core/base/typings
       zustand:
-        specifier: ^5.0.3
+        specifier: 'catalog:'
         version: 5.0.3(@types/react@18.3.18)(immer@10.1.1)(react@18.3.1)
 
   packages/styles:
@@ -1339,7 +1414,7 @@ importers:
   packages/utils:
     dependencies:
       '@internationalized/number':
-        specifier: ^3.6.0
+        specifier: 'catalog:'
         version: 3.6.0
 
   scripts/cli:
@@ -3371,6 +3446,19 @@ packages:
 
   '@radix-ui/react-scroll-area@1.2.3':
     resolution: {integrity: sha512-l7+NNBfBYYJa9tNqVcP2AGvxdE3lmE6kFTBXdvHgUaZuy+4wGCL1Cl2AfaR7RKyimj7lZURGLwFO59k4eBnDJQ==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
+  '@radix-ui/react-select@2.1.6':
+    resolution: {integrity: sha512-T6ajELxRvTuAMWH0YmRJ1qez+x4/7Nq7QIx7zJ0VK3qaEWdnWpNbEDnmWldG1zBDwqrLy5aLMUWcoGirVj5kMg==}
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
@@ -11674,6 +11762,35 @@ snapshots:
       '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.18)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.18
+      '@types/react-dom': 18.3.5(@types/react@18.3.18)
+
+  '@radix-ui/react-select@2.1.6(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/number': 1.1.0
+      '@radix-ui/primitive': 1.1.1
+      '@radix-ui/react-collection': 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-context': 1.1.1(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-direction': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-dismissable-layer': 1.1.5(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-focus-guards': 1.1.1(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-focus-scope': 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-popper': 1.2.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-portal': 1.1.4(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-primitive': 2.0.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-slot': 1.1.2(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-use-callback-ref': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-use-layout-effect': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-use-previous': 1.1.0(@types/react@18.3.18)(react@18.3.1)
+      '@radix-ui/react-visually-hidden': 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      aria-hidden: 1.2.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      react-remove-scroll: 2.6.3(@types/react@18.3.18)(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.18
       '@types/react-dom': 18.3.5(@types/react@18.3.18)

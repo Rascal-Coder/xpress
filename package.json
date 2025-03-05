@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@react-spring/web": "catalog:",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@testing-library/react": "catalog:",

@@ -14,8 +14,8 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@loadable/component": "^5.16.4",
-    "@types/styled-components": "^5.1.34",
+    "@loadable/component": "catalog:",
+    "@types/styled-components": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
@@ -26,14 +26,14 @@
     "@xpress/stores": "workspace:*",
     "@xpress/styles": "workspace:*",
     "framer-motion": "^12.4.2",
-    "immer": "^10.1.1",
+    "immer": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.1.5",
-    "react-toastify": "^11.0.3",
-    "styled-components": "^6.1.15",
-    "zustand": "^5.0.3"
+    "react-helmet-async": "catalog:",
+    "react-router-dom": "catalog:",
+    "react-toastify": "catalog:",
+    "styled-components": "catalog:",
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",

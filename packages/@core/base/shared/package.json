@@ -64,19 +64,19 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "catalog:",
-    "@internationalized/number": "^3.6.0",
+    "@internationalized/number": "catalog:",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "defu": "catalog:",
     "lodash.clonedeep": "catalog:",
     "lodash.get": "catalog:",
-    "lodash.uniqueid": "^4.0.1",
+    "lodash.uniqueid": "catalog:",
     "tailwind-merge": "catalog:",
     "theme-colors": "catalog:"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "catalog:",
     "@types/lodash.get": "catalog:",
-    "@types/lodash.uniqueid": "^4.0.9"
+    "@types/lodash.uniqueid": "catalog:"
   }
 }

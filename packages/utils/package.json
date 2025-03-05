@@ -13,6 +13,6 @@
     }
   },
   "dependencies": {
-    "@internationalized/number": "^3.6.0"
+    "@internationalized/number": "catalog:"
   }
 }

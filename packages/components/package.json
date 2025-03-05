@@ -17,13 +17,13 @@
     "@xpress-core/router": "workspace:*",
     "@xpress/stores": "workspace:*",
     "framer-motion": "^12.4.7",
-    "nprogress": "^0.2.0",
+    "nprogress": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "^7.1.5",
-    "styled-components": "^6.1.15"
+    "react-router-dom": "catalog:",
+    "styled-components": "catalog:"
   },
   "devDependencies": {
-    "@types/nprogress": "^0.2.3",
+    "@types/nprogress": "catalog:",
     "@types/react": "catalog:"
   }
 }

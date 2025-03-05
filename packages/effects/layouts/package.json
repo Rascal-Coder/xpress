@@ -13,7 +13,7 @@
     }
   },
   "dependencies": {
-    "@loadable/component": "^5.16.4",
+    "@loadable/component": "catalog:",
     "@xpress-core/hooks": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/popup-ui": "workspace:*",
@@ -27,10 +27,10 @@
     "@xpress/stores": "workspace:*",
     "framer-motion": "^12.4.2",
     "react": "catalog:",
-    "react-colorful": "^5.6.1",
-    "react-copy-to-clipboard": "^5.1.0",
+    "react-colorful": "catalog:",
+    "react-copy-to-clipboard": "catalog:",
     "react-router": "catalog:",
-    "react-router-dom": "^7.1.5"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:"

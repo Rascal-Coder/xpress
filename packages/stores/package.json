@@ -16,6 +16,6 @@
   "dependencies": {
     "@xpress-core/router": "workspace:*",
     "@xpress-core/typings": "workspace:*",
-    "zustand": "^5.0.3"
+    "zustand": "catalog:"
   }
 }

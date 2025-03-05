@@ -270,6 +270,7 @@ export type {
   FooterPreferences,
   HeaderPreferences,
   InitialOptions,
+  LayoutHeaderMenuAlignType,
   LogoPreferences,
   NavigationPreferences,
   Preferences,
