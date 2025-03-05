@@ -1,7 +1,7 @@
 import { cn } from '@xpress-core/shared/utils';
 
 import { Plus } from 'lucide-react';
-import { useContext, useEffect, useMemo, useRef } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 
 import { usePressedHold } from './hooks';
 import { NumberFieldContext } from './NumberFieldItem';
@@ -22,24 +22,11 @@ export const NumberFieldIncrement = ({
     () => disabled || props.disabled || isIncreaseDisabled,
     [disabled, props.disabled, isIncreaseDisabled],
   );
-  const { isPressed, onPressRelease, onPressStart } = usePressedHold({
+  const { isPressed } = usePressedHold({
     disabled: isDisabled,
     onTrigger: handleIncrease,
+    target: currentElement.current,
   });
-
-  useEffect(() => {
-    const handleGlobalPointerUp = () => {
-      onPressRelease();
-    };
-
-    window.addEventListener('pointerup', handleGlobalPointerUp);
-    window.addEventListener('pointercancel', handleGlobalPointerUp);
-
-    return () => {
-      window.removeEventListener('pointerup', handleGlobalPointerUp);
-      window.removeEventListener('pointercancel', handleGlobalPointerUp);
-    };
-  }, [onPressRelease]);
 
   return (
     <button
@@ -54,10 +41,9 @@ export const NumberFieldIncrement = ({
       onContextMenu={(e) => {
         e.preventDefault();
       }}
-      onPointerDown={onPressStart}
       ref={currentElement}
       style={{
-        userSelect: 'none',
+        userSelect: isPressed ? 'none' : undefined,
       }}
       tabIndex={-1}
     >

@@ -24,7 +24,7 @@ import { clamp, snapValueToStep } from './shared';
 export interface NumberFieldItemProps {
   /** The class name of the element. */
   className?: string;
-  defaultValue?: number;
+  defaultValue: number;
   /** When `true`, prevents the user from interacting with the Number Field. */
   disabled?: boolean;
   /** Formatting options for the value displayed in the number field. This also affects what characters are allowed to be typed by the user. */
@@ -62,6 +62,7 @@ export interface NumberFieldRootContext {
   max: number | undefined;
   min: number | undefined;
   modelValue: number;
+  setInputValue: (val: string) => void;
   textValue: string;
   validate: (val: string) => boolean;
 }
@@ -179,6 +180,7 @@ export const NumberFieldItem = ({
     (val: string) => {
       const parsedValue = numberParser.parse(val);
       const clampedValue = clampInputValue(parsedValue);
+
       handleChange(clampedValue);
       // 如果输入值为空，保持空值状态
       if (val.length === 0) {
@@ -191,6 +193,7 @@ export const NumberFieldItem = ({
         setInputValue(textValue);
         return;
       }
+
       setInputValue(textValue);
     },
     [clampInputValue, handleChange, numberParser, textValue],
@@ -211,6 +214,7 @@ export const NumberFieldItem = ({
         max,
         min,
         modelValue: value,
+        setInputValue,
         textValue,
         validate,
       }}

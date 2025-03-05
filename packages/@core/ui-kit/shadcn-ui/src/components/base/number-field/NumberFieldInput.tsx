@@ -23,6 +23,7 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
     max,
     min,
     modelValue,
+    setInputValue,
     textValue,
     validate,
   } = useContext(NumberFieldContext);
@@ -104,10 +105,21 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
       e.preventDefault();
     }
   };
-  const [inputValue, setInputValue] = useState('');
+
+  const [localValue, setLocalValue] = useState(textValue);
+
+  // 当外部值变化时，更新输入框的值
   useEffect(() => {
+    setLocalValue(textValue);
     setInputValue(textValue);
-  }, [textValue]);
+  }, [textValue, setInputValue]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setLocalValue(newValue);
+    setInputValue(newValue);
+  };
+
   return (
     <Input
       aria-roledescription="Number field"
@@ -124,21 +136,15 @@ export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
       onBlur={(e) => {
         applyInputValue(e.target.value);
       }}
-      onChange={(e) => {
-        const traget = e.target as HTMLInputElement;
-        setInputValue(traget.value);
-      }}
-      onInput={(e) => {
-        const traget = e.target as HTMLInputElement;
-        setInputValue(traget.value);
-      }}
+      onChange={handleInputChange}
+      onInput={handleInputChange}
       onKeyDown={handleKeyDown}
       ref={ref}
       role="spinbutton"
       spellCheck={false}
       tabIndex={0}
       type="text"
-      value={inputValue}
+      value={localValue}
     />
   );
 });

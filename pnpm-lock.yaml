@@ -1029,6 +1029,9 @@ importers:
 
   packages/@core/ui-kit/layout-ui:
     dependencies:
+      '@xpress-core/preferences':
+        specifier: workspace:*
+        version: link:../../preferences
       ahooks:
         specifier: 'catalog:'
         version: 3.8.4(react@18.3.1)

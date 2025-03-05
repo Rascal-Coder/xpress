@@ -1,6 +1,7 @@
 import type { LayoutHeaderProps } from './types';
 
 import { useShow } from '@xpress-core/hooks';
+import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { type CSSProperties, type FC, useMemo } from 'react';
 
@@ -14,6 +15,8 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
   toggleButton,
   children,
 }) => {
+  const { preferences } = usePreferencesContext();
+  const width = preferences.sidebar.width;
   const style = useMemo((): CSSProperties => {
     const right = !show || !fullWidth ? undefined : 0;
 
@@ -26,9 +29,9 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
 
   const logoStyle = useMemo((): CSSProperties => {
     return {
-      minWidth: `${isMobile ? 40 : 224}px`,
+      minWidth: `${isMobile ? 40 : width}px`,
     };
-  }, [isMobile]);
+  }, [isMobile, preferences.sidebar.width]);
 
   const logoNode = useShow(!!logo, () => <div style={logoStyle}>{logo}</div>);
   return (

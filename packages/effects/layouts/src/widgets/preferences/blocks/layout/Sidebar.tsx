@@ -8,9 +8,6 @@ import { SwitchItem } from '../SwitchItem';
 export const Sidebar = () => {
   const { updatePreferences, preferences } = usePreferencesContext();
   const [width, setWidth] = useState(preferences.sidebar.width);
-  // useEffect(() => {
-  //   console.log('width', width);
-  // }, [width]);
   return (
     <>
       <SwitchItem
@@ -57,10 +54,14 @@ export const Sidebar = () => {
       </SwitchItem>
       <NumberFieldItem
         className="w-[165px]"
+        defaultValue={160}
         max={320}
         min={160}
         modelValue={width}
-        onChange={(value) => setWidth(value)}
+        onChange={(value) => {
+          setWidth(value);
+          updatePreferences({ sidebar: { width: value } });
+        }}
         step={10}
       />
     </>
