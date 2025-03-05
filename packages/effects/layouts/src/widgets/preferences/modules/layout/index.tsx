@@ -1,4 +1,4 @@
-import { Block, Content, Layout, Sidebar } from '../../blocks';
+import { Block, Content, Header, Layout, Sidebar } from '../../blocks';
 
 export const PreferencesLayout = () => {
   return (
@@ -11,6 +11,9 @@ export const PreferencesLayout = () => {
       </Block>
       <Block title="侧边栏">
         <Sidebar />
+      </Block>
+      <Block title="顶栏">
+        <Header />
       </Block>
     </>
   );

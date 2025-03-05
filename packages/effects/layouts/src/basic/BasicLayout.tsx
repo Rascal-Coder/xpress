@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
+import { Extra } from './extra';
 import LayoutFooter from './footer';
 import Header from './header';
 import { ExtraMenu, Menu, MixedMenu } from './menu';
@@ -143,7 +144,7 @@ function BasicLayout({ router }: { router: Router }) {
         // 内容覆盖层
         // 'content-overlay': <div>content-overlay</div>,
         // 额外内容
-        // extra: <div>extra</div>,
+        extra: <Extra />,
       }}
       contentCompact={preferences.app.contentCompact}
       footerEnable={preferences.footer.enable}
