@@ -912,6 +912,9 @@ importers:
       '@ctrl/tinycolor':
         specifier: 'catalog:'
         version: 4.1.0
+      '@internationalized/number':
+        specifier: ^3.6.0
+        version: 3.6.0
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -1182,9 +1185,6 @@ importers:
       '@xpress-core/shared':
         specifier: workspace:*
         version: link:../../base/shared
-      ahooks:
-        specifier: 'catalog:'
-        version: 3.8.4(react@18.3.1)
       class-variance-authority:
         specifier: 'catalog:'
         version: 0.7.1
@@ -1336,7 +1336,11 @@ importers:
         specifier: workspace:*
         version: link:../@core/base/design
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@internationalized/number':
+        specifier: ^3.6.0
+        version: 3.6.0
 
   scripts/cli:
     dependencies:

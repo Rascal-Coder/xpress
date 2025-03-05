@@ -40,7 +40,6 @@
     "@xpress-core/hooks": "workspace:*",
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
-    "ahooks": "catalog:",
     "class-variance-authority": "catalog:",
     "framer-motion": "^12.4.2",
     "lucide-react": "catalog:",

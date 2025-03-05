@@ -1,3 +1,4 @@
+export * from './clamp';
 export * from './cn';
 export * from './date';
 export * from './diff';
@@ -6,6 +7,7 @@ export * from './download';
 export * from './inference';
 export * from './letter';
 export * from './merge';
+export * from './number';
 export * from './state-handler';
 export * from './to';
 export * from './tree';

@@ -1,17 +1,20 @@
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { NumberFieldItem } from '@xpress-core/shadcn-ui';
+import { NumberFieldCom } from '@xpress-core/shadcn-ui';
 
 import { useState } from 'react';
 
 import { SwitchItem } from '../SwitchItem';
 
 export const Sidebar = () => {
-  const { updatePreferences, preferences } = usePreferencesContext();
+  const { updatePreferences, preferences, isSideMode } =
+    usePreferencesContext();
   const [width, setWidth] = useState(preferences.sidebar.width);
+  const currentLayout = preferences.app.layout;
   return (
     <>
       <SwitchItem
         checked={preferences.sidebar.enable}
+        disabled={!isSideMode}
         onChange={(checked) => {
           updatePreferences({ sidebar: { enable: checked } });
         }}
@@ -20,6 +23,7 @@ export const Sidebar = () => {
       </SwitchItem>
       <SwitchItem
         checked={preferences.sidebar.collapsed}
+        disabled={!preferences.sidebar.enable || !isSideMode}
         onChange={(checked) => {
           updatePreferences({ sidebar: { collapsed: checked } });
         }}
@@ -28,6 +32,11 @@ export const Sidebar = () => {
       </SwitchItem>
       <SwitchItem
         checked={preferences.sidebar.expandOnHover}
+        disabled={
+          !preferences.sidebar.enable ||
+          !isSideMode ||
+          !preferences.sidebar.collapsed
+        }
         onChange={(checked) => {
           updatePreferences({ sidebar: { expandOnHover: checked } });
         }}
@@ -37,6 +46,11 @@ export const Sidebar = () => {
       </SwitchItem>
       <SwitchItem
         checked={preferences.sidebar.collapsedShowTitle}
+        disabled={
+          !preferences.sidebar.enable ||
+          !isSideMode ||
+          !preferences.sidebar.collapsed
+        }
         onChange={(checked) => {
           updatePreferences({ sidebar: { collapsedShowTitle: checked } });
         }}
@@ -45,6 +59,13 @@ export const Sidebar = () => {
       </SwitchItem>
       <SwitchItem
         checked={preferences.sidebar.autoActivateChild}
+        disabled={
+          !preferences.sidebar.enable ||
+          !['mixed-nav', 'sidebar-mixed-nav'].includes(
+            currentLayout as string,
+          ) ||
+          !isSideMode
+        }
         onChange={(checked) => {
           updatePreferences({ sidebar: { autoActivateChild: checked } });
         }}
@@ -52,9 +73,9 @@ export const Sidebar = () => {
       >
         自动激活子菜单
       </SwitchItem>
-      <NumberFieldItem
-        className="w-[165px]"
+      <NumberFieldCom
         defaultValue={160}
+        disabled={!preferences.sidebar.enable || !isSideMode}
         max={320}
         min={160}
         modelValue={width}
@@ -63,7 +84,9 @@ export const Sidebar = () => {
           updatePreferences({ sidebar: { width: value } });
         }}
         step={10}
-      />
+      >
+        宽度
+      </NumberFieldCom>
     </>
   );
 };

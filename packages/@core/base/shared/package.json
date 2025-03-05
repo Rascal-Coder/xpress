@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@ctrl/tinycolor": "catalog:",
+    "@internationalized/number": "^3.6.0",
     "clsx": "catalog:",
     "dayjs": "catalog:",
     "defu": "catalog:",

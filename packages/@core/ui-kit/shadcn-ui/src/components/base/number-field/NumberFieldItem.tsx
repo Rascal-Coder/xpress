@@ -1,4 +1,12 @@
-import { cn } from '@xpress-core/shared/utils';
+import { useControlledState } from '@xpress-core/hooks';
+import {
+  clamp,
+  cn,
+  handleDecimalOperation,
+  snapValueToStep,
+  useNumberFormatter,
+  useNumberParser,
+} from '@xpress-core/shared/utils';
 
 import {
   createContext,
@@ -8,44 +16,37 @@ import {
   useRef,
 } from 'react';
 
-import {
-  handleDecimalOperation,
-  useNumberFormatter,
-  useNumberParser,
-  useVModel,
-} from './hooks';
 import { NumberField } from './NumberField';
 import { NumberFieldContent } from './NumberFieldContent';
 import { NumberFieldDecrement } from './NumberFieldDecrement';
 import { NumberFieldIncrement } from './NumberFieldIncrement';
 import { NumberFieldInput } from './NumberFieldInput';
-import { clamp, snapValueToStep } from './shared';
 
 export interface NumberFieldItemProps {
-  /** The class name of the element. */
+  /** 元素的类名 */
   className?: string;
   defaultValue: number;
-  /** When `true`, prevents the user from interacting with the Number Field. */
+  /** 当为true时，阻止用户与数字输入框交互 */
   disabled?: boolean;
-  /** Formatting options for the value displayed in the number field. This also affects what characters are allowed to be typed by the user. */
+  /** 数字字段中显示的值的格式化选项。这也会影响用户允许输入的字符 */
   formatOptions?: Intl.NumberFormatOptions;
-  /** Id of the element */
+  /** 元素的ID */
   id?: string;
-  /** The locale to use for formatting dates */
+  /** 用于格式化日期的区域设置 */
   locale?: string;
-  /** The largest value allowed for the input. */
+  /** 输入允许的最大值 */
   max?: number;
-  /** The smallest value allowed for the input. */
+  /** 输入允许的最小值 */
   min?: number;
-  /** The amount that the input value changes with each increment or decrement "tick". */
+  /** 每次增加或减少"点击"时输入值变化的数量 */
   modelValue?: null | number;
-  /** The name of the field. Submitted with its owning form as part of a name/value pair. */
+  /** 字段的名称。作为名称/值对的一部分与其所属表单一起提交 */
   name?: string;
-  /** Called when the value changes */
+  /** 值变化时的回调函数 */
   onChange?: (value: number) => void;
-  /** When `true`, indicates that the user must set the value before the owning form can be submitted. */
+  /** 当为true时，表示用户必须在提交所属表单之前设置该值 */
   required?: boolean;
-  /** The locale to use for formatting dates */
+  /** 用于格式化日期的区域设置 */
   step?: number;
 }
 
@@ -82,12 +83,11 @@ export const NumberFieldItem = ({
   onChange,
   step = 1,
 }: NumberFieldItemProps) => {
-  const [value, handleChange] = useVModel({
+  const [value, handleChange] = useControlledState({
     defaultValue,
     modelValue: modelValue ?? 0,
     onModelValueChange: onChange,
   });
-  // Formatter
   const numberFormatter = useNumberFormatter(locale, formatOptions);
   const numberParser = useNumberParser(locale, formatOptions);
   const inputEl = useRef<HTMLInputElement>(null);

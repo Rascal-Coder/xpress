@@ -12,5 +12,7 @@
       "default": "./src/index.ts"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "@internationalized/number": "^3.6.0"
+  }
 }

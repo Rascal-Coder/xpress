@@ -1,4 +1,5 @@
 export * from './NumberField';
+export * from './NumberFieldCom';
 export * from './NumberFieldContent';
 export * from './NumberFieldDecrement';
 export * from './NumberFieldIncrement';

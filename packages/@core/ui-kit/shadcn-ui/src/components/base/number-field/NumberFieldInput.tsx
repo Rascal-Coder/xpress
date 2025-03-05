@@ -1,3 +1,5 @@
+import { getActiveElement } from '@xpress-core/shared/utils';
+
 import {
   type FormEvent,
   forwardRef,
@@ -9,7 +11,6 @@ import {
 
 import { Input } from '../../ui';
 import { NumberFieldContext } from './NumberFieldItem';
-import { getActiveElement } from './shared';
 
 export const NumberFieldInput = forwardRef<HTMLInputElement>((_, ref) => {
   const {

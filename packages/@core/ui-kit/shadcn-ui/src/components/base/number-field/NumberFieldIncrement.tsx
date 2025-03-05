@@ -1,9 +1,9 @@
+import { usePressedHold } from '@xpress-core/hooks';
 import { cn } from '@xpress-core/shared/utils';
 
 import { Plus } from 'lucide-react';
 import { useContext, useMemo, useRef } from 'react';
 
-import { usePressedHold } from './hooks';
 import { NumberFieldContext } from './NumberFieldItem';
 
 export const NumberFieldIncrement = ({
