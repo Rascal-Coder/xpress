@@ -93,3 +93,25 @@ export function triggerWindowResize(): void {
   // 触发 window 的 resize 事件
   window.dispatchEvent(resizeEvent);
 }
+
+/**
+ * `getActiveElement` 函数获取当前文档中活动的元素，
+ * 包括 Shadow DOM 中的活动元素
+ * @returns 返回当前活动的元素，如果没有则返回 null
+ */
+export function getActiveElement(): Element | null {
+  let activeElement = document.activeElement;
+  if (activeElement === null) {
+    return null;
+  }
+
+  while (
+    activeElement !== null &&
+    activeElement.shadowRoot !== null &&
+    activeElement.shadowRoot.activeElement !== null
+  ) {
+    activeElement = activeElement.shadowRoot.activeElement;
+  }
+
+  return activeElement;
+}

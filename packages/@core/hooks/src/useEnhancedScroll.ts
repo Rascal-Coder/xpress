@@ -1,116 +1,108 @@
-import { useScroll } from 'ahooks';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDebounceFn, useEventListener, useThrottleFn } from 'ahooks';
+import { useRef, useState } from 'react';
 
-type Directions = 'down' | 'left' | 'none' | 'right' | 'up';
+type Direction = 'down' | 'left' | 'none' | 'right' | 'up';
 
-interface ScrollState {
-  arrivedState: {
-    bottom: boolean;
-    left: boolean;
-    right: boolean;
-    top: boolean;
-  };
-  directions: Directions;
-  isScrolling: boolean;
-  x: number;
-  y: number;
-}
+/** 到达状态的阈值（像素） */
+const ARRIVED_STATE_THRESHOLD_PIXELS = 1;
+/** 节流等待时间（毫秒），约等于60fps的刷新率 */
+const THROTTLE_WAIT = 16;
 
-const SCROLL_END_DELAY = 200;
-
-export const useEnhancedScroll = (
-  target: Document | HTMLElement,
-): ScrollState => {
-  const position = useScroll(target);
-  const [directions, setDirections] = useState<Directions>('none');
+/**
+ * 增强的滚动监听 Hook，提供滚动位置、方向和状态的监听
+ *
+ * @param target - 需要监听滚动的目标元素，可以是 Document 或 HTMLElement
+ *
+ * @returns {object} 返回滚动相关的状态对象
+ * @property {object} arrivedState - 到达边界的状态
+ * @property {boolean} arrivedState.top - 是否到达顶部
+ * @property {boolean} arrivedState.bottom - 是否到达底部
+ * @property {boolean} arrivedState.left - 是否到达左侧
+ * @property {boolean} arrivedState.right - 是否到达右侧
+ * @property {Direction} directions - 当前滚动方向
+ * @property {boolean} isScrolling - 是否正在滚动
+ * @property {number} x - 当前水平滚动位置
+ * @property {number} y - 当前垂直滚动位置
+ *
+ * @example
+ * ```tsx
+ * const ScrollComponent = () => {
+ *   const { isScrolling, directions, arrivedState, x, y } = useEnhancedScroll(document);
+ *
+ *   return (
+ *     <div>
+ *       <p>滚动位置: ({x}, {y})</p>
+ *       <p>滚动方向: {directions}</p>
+ *       <p>是否滚动中: {isScrolling ? '是' : '否'}</p>
+ *     </div>
+ *   );
+ * };
+ * ```
+ */
+export const useEnhancedScroll = (target: Document | HTMLElement) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isScrolling, setIsScrolling] = useState(false);
-  const prevScroll = useRef<{ left: number; top: number }>({ left: 0, top: 0 });
-  const scrollEndTimer = useRef<ReturnType<typeof setTimeout>>();
+  const [direction, setDirection] = useState<Direction>('none');
+  const prevPosition = useRef({ x: 0, y: 0 });
+  const resetScrollingState = useDebounceFn(
+    () => {
+      setIsScrolling(false);
+      setDirection('none');
+    },
+    { wait: 150 },
+  );
+  const handleScroll = useThrottleFn(
+    () => {
+      const scrollElement =
+        target === document
+          ? document.documentElement
+          : (target as HTMLElement);
 
-  const { left = 0, top = 0 } = position || {};
+      const x = scrollElement.scrollLeft;
+      const y =
+        scrollElement.scrollTop ||
+        (target === document ? document.body.scrollTop : 0);
 
-  const getScrollDirection = (
-    currentTop: number,
-    currentLeft: number,
-    prevTop: number,
-    prevLeft: number,
-  ): Directions => {
-    if (currentTop > prevTop) return 'down';
-    if (currentTop < prevTop) return 'up';
-    if (currentLeft > prevLeft) return 'right';
-    if (currentLeft < prevLeft) return 'left';
-    return 'none';
-  };
+      setPosition({ x, y });
 
-  const handleScroll = useCallback(() => {
-    const currentTop = top;
-    const currentLeft = left;
-    const { left: prevLeft, top: prevTop } = prevScroll.current;
-
-    const newDirection = getScrollDirection(
-      currentTop,
-      currentLeft,
-      prevTop,
-      prevLeft,
-    );
-
-    setDirections(newDirection);
-    prevScroll.current = { left: currentLeft, top: currentTop };
-  }, [top, left]);
-
-  const handleScrollStart = useCallback(() => {
-    setIsScrolling(true);
-  }, []);
-
-  const handleScrollEnd = useCallback(() => {
-    setIsScrolling(false);
-  }, []);
-
-  useEffect(() => {
-    if (!target) return;
-
-    const scrollElement =
-      target === document ? document.documentElement : (target as HTMLElement);
-
-    const debouncedScrollEnd = () => {
-      if (scrollEndTimer.current) {
-        clearTimeout(scrollEndTimer.current);
+      // 计算滚动方向
+      if (y > prevPosition.current.y) {
+        setDirection('down');
+      } else if (y < prevPosition.current.y) {
+        setDirection('up');
+      } else if (x > prevPosition.current.x) {
+        setDirection('right');
+      } else if (x < prevPosition.current.x) {
+        setDirection('left');
       }
-      scrollEndTimer.current = setTimeout(handleScrollEnd, SCROLL_END_DELAY);
-    };
+      prevPosition.current = { x, y };
 
-    scrollElement.addEventListener('scroll', handleScroll);
-    scrollElement.addEventListener('scroll', handleScrollStart);
-    scrollElement.addEventListener('scroll', debouncedScrollEnd);
+      setIsScrolling(true);
+      resetScrollingState.run();
+    },
+    { wait: THROTTLE_WAIT },
+  );
 
-    return () => {
-      if (scrollEndTimer.current) {
-        clearTimeout(scrollEndTimer.current);
-      }
-      scrollElement.removeEventListener('scroll', handleScroll);
-      scrollElement.removeEventListener('scroll', handleScrollStart);
-      scrollElement.removeEventListener('scroll', debouncedScrollEnd);
-    };
-  }, [target, handleScroll, handleScrollStart, handleScrollEnd]);
-
-  const arrivedState = {
-    bottom:
-      target instanceof HTMLElement
-        ? Math.abs(top + target.clientHeight - target.scrollHeight) < 1
-        : false,
-    left: left === 0,
-    right:
-      target instanceof HTMLElement
-        ? Math.abs(left + target.clientWidth - target.scrollWidth) < 1
-        : false,
-    top: top === 0,
-  };
+  useEventListener('scroll', handleScroll.run, { target });
 
   return {
-    arrivedState,
-    directions,
+    arrivedState: {
+      bottom:
+        Math.abs(
+          position.y +
+            window.innerHeight -
+            document.documentElement.scrollHeight,
+        ) <= ARRIVED_STATE_THRESHOLD_PIXELS,
+      left: position.x === 0,
+      right:
+        Math.abs(
+          position.x + window.innerWidth - document.documentElement.scrollWidth,
+        ) <= ARRIVED_STATE_THRESHOLD_PIXELS,
+      top: position.y === 0,
+    },
+    directions: direction,
     isScrolling,
-    x: left,
-    y: top,
+    x: position.x,
+    y: position.y,
   };
 };

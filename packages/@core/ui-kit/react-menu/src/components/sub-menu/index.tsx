@@ -74,13 +74,14 @@ function SubMenu({
 
   const contentProps = useMemo(() => {
     const isHorizontal = mode === 'horizontal';
-    const side = isHorizontal && isFirstLevel ? 'bottom' : 'right';
+    const side =
+      (isHorizontal && isFirstLevel) || isSubMenuMore ? 'bottom' : 'right';
     return {
       collisionPadding: { top: 20 },
       side: side as 'bottom' | 'right',
       sideOffset: isHorizontal ? 5 : 10,
     };
-  }, [isFirstLevel, mode]);
+  }, [isFirstLevel, isSubMenuMore, mode]);
 
   const menuIcon = useMemo(() => {
     return active ? activeIcon || icon : icon;
@@ -112,7 +113,6 @@ function SubMenu({
       }
 
       setIsHovering(true);
-
       // 检查是否应该处理鼠标进入
       if (
         (!rootMenu?.props.collapse && rootMenu?.props.mode === 'vertical') ||
@@ -123,7 +123,6 @@ function SubMenu({
         }
         return;
       }
-
       // 更新鼠标状态
       if (currentSubMenu) {
         currentSubMenu.setMouseInChild(true);
@@ -133,7 +132,6 @@ function SubMenu({
       if (timer.current) {
         window.clearTimeout(timer.current);
       }
-
       // 设置新的定时器来打开菜单
       timer.current = window.setTimeout(() => {
         rootMenu?.openMenu(path, parentPaths);
@@ -191,6 +189,7 @@ function SubMenu({
             <SubMenuContent
               className={cn(is('active', active))}
               icon={menuIcon}
+              isHovering={isHovering}
               isMenuMore={isSubMenuMore}
               isTopLevelMenuSubMenu={isFirstLevel}
               level={currentLevel}
@@ -219,6 +218,7 @@ function SubMenu({
           <SubMenuContent
             className={cn(is('active', active))}
             icon={menuIcon}
+            isHovering={isHovering}
             isMenuMore={isSubMenuMore}
             isTopLevelMenuSubMenu={isFirstLevel}
             level={currentLevel}

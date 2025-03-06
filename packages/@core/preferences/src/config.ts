@@ -2,14 +2,15 @@ import type { Preferences } from './types';
 
 const defaultPreferences: Preferences = {
   app: {
-    accessMode: 'frontend',
+    // accessMode: 'frontend',
     authPageLayout: 'panel-right',
     checkUpdatesInterval: 1,
     colorGrayMode: false,
     colorWeakMode: false,
     compact: false,
     contentCompact: 'wide',
-    defaultAvatar: '',
+    defaultAvatar:
+      'https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp',
     dynamicTitle: true,
     enableCheckUpdates: true,
     enablePreferences: true,
@@ -72,7 +73,7 @@ const defaultPreferences: Preferences = {
     expandOnHover: true,
     extraCollapse: true,
     hidden: false,
-    width: 224,
+    width: 220,
   },
   tabbar: {
     draggable: true,

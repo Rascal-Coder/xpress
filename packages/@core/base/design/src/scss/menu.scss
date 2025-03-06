@@ -10,12 +10,11 @@ $namespace: xpress;
 @mixin menu-item {
   position: relative;
   display: flex;
-  // gap: 12px;
   align-items: center;
   height: var(--menu-item-height);
   padding: var(--menu-item-padding-y) var(--menu-item-padding-x);
   margin: 0 var(--menu-item-margin-x) var(--menu-item-margin-y)
-    var(--menu-item-margin-x);
+    var(--menu-item-margin-x) !important;
   font-size: var(--menu-font-size);
   color: var(--menu-item-color);
   text-decoration: none;
@@ -90,7 +89,6 @@ $namespace: xpress;
 
   &.is-dark {
     --menu-background-color: hsl(var(--menu));
-    // --menu-submenu-opened-background-color: hsl(var(--menu-opened-dark));
     --menu-item-background-color: var(--menu-background-color);
     --menu-item-color: hsl(var(--foreground) / 80%);
     --menu-item-hover-color: hsl(var(--accent-foreground));
@@ -106,7 +104,6 @@ $namespace: xpress;
 
   &.is-light {
     --menu-background-color: hsl(var(--menu));
-    // --menu-submenu-opened-background-color: hsl(var(--menu-opened));
     --menu-item-background-color: var(--menu-background-color);
     --menu-item-color: hsl(var(--foreground));
     --menu-item-hover-color: var(--menu-item-color);
@@ -216,7 +213,7 @@ $namespace: xpress;
     border-right: none;
 
     .#{$namespace}-menu-item {
-      display: inline-flex;
+      // display: inline-flex;
       align-items: center;
       justify-content: center;
       height: var(--menu-item-height);
@@ -237,9 +234,7 @@ $namespace: xpress;
       }
 
       & .#{$namespace}-sub-menu-content {
-        height: 100%;
         padding-right: 40px;
-        // border-bottom: 2px solid transparent;
         border-radius: var(--menu-item-radius);
       }
     }
@@ -401,9 +396,9 @@ $namespace: xpress;
   user-select: none;
   background: var(--menu-submenu-background-color);
   fill: var(--menu-item-color);
-
+  //  div[data-state='open'] >
   &.is-active {
-    div[data-state='open'] > .#{$namespace}-sub-menu-content,
+    .#{$namespace}-sub-menu-content,
     > .#{$namespace}-sub-menu-content {
       // font-weight: 500;
       color: var(--menu-submenu-active-color);
@@ -462,16 +457,11 @@ $namespace: xpress;
     padding-right: 12px !important;
   }
 
-  // &:not(.is-active):hover {
   &:hover {
     color: var(--menu-submenu-hover-color);
     text-decoration: none;
     cursor: pointer;
     background: var(--menu-submenu-hover-background-color) !important;
-
-    // svg {
-    //   fill: var(--menu-submenu-hover-color);
-    // }
   }
 }
 

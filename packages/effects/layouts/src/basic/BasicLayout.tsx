@@ -1,39 +1,21 @@
-import type { MenuRecordRaw } from '@xpress-core/typings';
+import type { Router } from '@xpress-core/router';
 
 import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressLogo } from '@xpress-core/shadcn-ui';
-import { isHttpUrl } from '@xpress-core/shared/utils';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 
 import MemoContent from './content-components/content';
 import Copyright from './copyright';
+import { Extra } from './extra';
 import LayoutFooter from './footer';
 import Header from './header';
-import { Menu, MixedMenu } from './menu';
+import { ExtraMenu, Menu, MixedMenu } from './menu';
+import { useExtraMenu } from './use-extra-menu';
+import { useMixedMenu } from './use-mixed-menu';
 
-interface Props {
-  /**
-   * 侧边菜单
-   */
-  sidebarMenus: MenuRecordRaw[];
-  /**
-   * 内容
-   */
-  // content: React.ReactNode;
-  // namespace: string;
-}
-function BasicLayout({ sidebarMenus }: Props) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [defaultActive, setDefaultActive] = useState(location.pathname);
-
-  useEffect(() => {
-    setDefaultActive(location.pathname);
-  }, [location.pathname]);
-
+function BasicLayout({ router }: { router: Router }) {
   const {
     preferences,
     updatePreferences,
@@ -42,10 +24,10 @@ function BasicLayout({ sidebarMenus }: Props) {
     isMixedNav,
     isMobile,
     isSideMixedNav,
-    isHeaderMixedNav,
     layout,
     sidebarCollapsed,
     theme,
+    isHeaderSidebarNav,
   } = usePreferencesContext();
 
   const sidebarTheme = useMemo(() => {
@@ -82,13 +64,13 @@ function BasicLayout({ sidebarMenus }: Props) {
     if (isMobile && sidebarCollapsed) {
       return true;
     }
-    if (isHeaderNav || isMixedNav) {
+    if (isHeaderNav || isMixedNav || isHeaderSidebarNav) {
       return false;
     }
-    return sidebarCollapsed || isSideMixedNav || isHeaderMixedNav;
+    return sidebarCollapsed || isSideMixedNav;
   }, [
-    isHeaderMixedNav,
     isHeaderNav,
+    isHeaderSidebarNav,
     isMixedNav,
     isMobile,
     isSideMixedNav,
@@ -96,37 +78,58 @@ function BasicLayout({ sidebarMenus }: Props) {
   ]);
 
   const showHeaderNav = useMemo(() => {
-    return !isMobile && (isHeaderNav || isMixedNav || isHeaderMixedNav);
-  }, [isHeaderMixedNav, isHeaderNav, isMixedNav, isMobile]);
+    return !isMobile && (isHeaderNav || isMixedNav);
+  }, [isHeaderNav, isMixedNav, isMobile]);
 
-  const handleSideMouseLeave = () => {
-    // console.log('handleSideMouseLeave');
-  };
+  const {
+    sidebarMenus,
+    handleMenuSelect,
+    headerMenus,
+    sidebarVisible,
+    mixHeaderMenus,
+    handleMenuOpen,
+    sidebarActive,
+    headerActive,
+  } = useMixedMenu(router);
 
+  // 侧边多列菜单
+  const {
+    extraActiveMenu,
+    extraMenus,
+    handleDefaultSelect,
+    handleMenuMouseEnter,
+    handleMixedMenuSelect,
+    handleSideMouseLeave,
+    sidebarExtraVisible,
+  } = useExtraMenu(router);
   const handleToggleSidebar = () => {
     updatePreferences({
       sidebar: {
         hidden: !preferences.sidebar.hidden,
       },
     });
-    // console.log('handleToggleSidebar');
   };
 
-  const handleOpen = () => {
-    // console.log('handleOpen');
-  };
-
-  const handleSelect = (path: string) => {
-    navigate(path);
-    if (!isHttpUrl(path)) {
-      setDefaultActive(path);
-    }
-  };
   return (
     <XpressLayout
       components={{
         // 头部
-        header: <Header></Header>,
+        header: (
+          <Header
+            menu={
+              <Menu
+                defaultActive={headerActive}
+                menus={headerMenus}
+                mode="horizontal"
+                onSelect={(path) => handleMenuSelect(path, 'horizontal')}
+                rounded={isMenuRounded}
+                theme={theme}
+              ></Menu>
+            }
+            router={router}
+            showHeaderNav={showHeaderNav}
+          ></Header>
+        ),
         // 页脚
         footer: preferences.footer.enable && (
           <LayoutFooter>
@@ -142,7 +145,7 @@ function BasicLayout({ sidebarMenus }: Props) {
         // 内容覆盖层
         // 'content-overlay': <div>content-overlay</div>,
         // 额外内容
-        // extra: <div>extra</div>,
+        extra: <Extra />,
       }}
       contentCompact={preferences.app.contentCompact}
       footerEnable={preferences.footer.enable}
@@ -155,7 +158,7 @@ function BasicLayout({ sidebarMenus }: Props) {
       isMobile={preferences.app.isMobile}
       layout={layout}
       logo={
-        preferences.logo.enable ? (
+        preferences.logo.enable && (
           <XpressLogo
             className={logoClass}
             collapsed={logoCollapsed}
@@ -163,7 +166,7 @@ function BasicLayout({ sidebarMenus }: Props) {
             text={preferences.app.name}
             theme={showHeaderNav ? headerTheme : theme}
           />
-        ) : null
+        )
       }
       // 侧边菜单区域
       menu={
@@ -171,17 +174,26 @@ function BasicLayout({ sidebarMenus }: Props) {
           accordion={preferences.navigation.accordion}
           collapse={preferences.sidebar.collapsed}
           collapseShowTitle={preferences.sidebar.collapsedShowTitle}
-          defaultActive={defaultActive}
+          defaultActive={sidebarActive}
           menus={sidebarMenus}
           mode="vertical"
-          onOpen={handleOpen}
-          onSelect={handleSelect}
+          onOpen={handleMenuOpen}
+          onSelect={(path) => handleMenuSelect(path, 'vertical')}
           rounded={isMenuRounded}
-          // defaultOpenKeys={sidebarActive}
           theme={theme}
         />
       }
-      mixedMenu={<MixedMenu />}
+      mixedMenu={
+        <MixedMenu
+          activePath={extraActiveMenu}
+          menus={mixHeaderMenus}
+          onDefaultSelect={handleDefaultSelect}
+          onEnter={handleMenuMouseEnter}
+          onSelect={handleMixedMenuSelect}
+          rounded={isMenuRounded}
+          theme={sidebarTheme}
+        />
+      }
       onSidebarCollapseChange={(value: boolean) => {
         updatePreferences({ sidebar: { collapsed: value } });
       }}
@@ -194,19 +206,26 @@ function BasicLayout({ sidebarMenus }: Props) {
       onSidebarExtraCollapseChange={(value: boolean) =>
         updatePreferences({ sidebar: { extraCollapse: value } })
       }
-      onSidebarExtraVisibleChange={(_value: boolean) => {
-        // console.log('onSidebarExtraVisibleChange', value);
-      }}
       onSideMouseLeave={handleSideMouseLeave}
       onToggleSidebar={handleToggleSidebar}
       sidebarCollapse={preferences.sidebar.collapsed}
       sidebarCollapseShowTitle={preferences.sidebar.collapsedShowTitle}
-      // sidebarEnable={sidebarVisible}
+      sidebarEnable={sidebarVisible}
       sidebarExpandOnHover={preferences.sidebar.expandOnHover}
       sidebarExtraCollapse={preferences.sidebar.extraCollapse}
+      sidebarExtraVisible={sidebarExtraVisible}
       sidebarHidden={preferences.sidebar.hidden}
       sidebarTheme={sidebarTheme}
       sidebarWidth={preferences.sidebar.width}
+      sideExtra={
+        <ExtraMenu
+          accordion={preferences.navigation.accordion}
+          collapse={preferences.sidebar.extraCollapse}
+          menus={extraMenus}
+          rounded={isMenuRounded}
+          theme={sidebarTheme}
+        />
+      }
       tabbarEnable={preferences.tabbar.enable}
       tabbarHeight={preferences.tabbar.height}
     ></XpressLayout>

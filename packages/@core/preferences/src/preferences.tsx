@@ -309,9 +309,6 @@ export function usePreferencesContext() {
     return appPreferences.layout === 'header-nav';
   }, [appPreferences]);
 
-  const isHeaderMixedNav = useMemo(() => {
-    return appPreferences.layout === 'header-mixed-nav';
-  }, [appPreferences]);
   /**
    * @zh_CN 是否为混合导航模式
    */
@@ -429,6 +426,11 @@ export function usePreferencesContext() {
       header: !fixed,
     };
   }, [preferences, isFullContent, isMobile, isShowHeaderNav]);
+
+  const isHeaderSidebarNav = useMemo(() => {
+    return appPreferences.layout === 'header-sidebar-nav';
+  }, [appPreferences]);
+
   return {
     authPanelCenter,
     authPanelLeft,
@@ -440,8 +442,8 @@ export function usePreferencesContext() {
     globalSearchShortcutKey,
     isDark,
     isFullContent,
-    isHeaderMixedNav,
     isHeaderNav,
+    isHeaderSidebarNav,
     isMixedNav,
     isMobile,
     isSideMixedNav,

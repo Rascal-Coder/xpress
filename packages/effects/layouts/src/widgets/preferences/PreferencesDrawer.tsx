@@ -80,7 +80,7 @@ export const PreferencesDrawer = (props: Props) => {
         );
       }
       case 'layout': {
-        return <PreferencesLayout></PreferencesLayout>;
+        return <PreferencesLayout />;
       }
       case 'shortcutkey': {
         return (

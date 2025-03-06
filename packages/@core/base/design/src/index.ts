@@ -1,5 +1,6 @@
 import './design-tokens';
 
+import './scss/bell.scss';
 import './scss/menu.scss';
 import './scss/normal-menu.scss';
 import './css/global.css';

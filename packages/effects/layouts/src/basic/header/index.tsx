@@ -1,4 +1,5 @@
 import { usePreferencesContext } from '@xpress-core/preferences';
+import { type Router } from '@xpress-core/router';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useMemo } from 'react';
@@ -20,9 +21,17 @@ interface HeaderProps {
    * 菜单
    */
   menu?: React.ReactNode;
+  /**
+   * 显示头部导航
+   */
+  showHeaderNav?: boolean;
+  /**
+   * 路由
+   */
+  router: Router;
 }
 const REFERENCE_VALUE = 50;
-const Header = ({ menu }: HeaderProps) => {
+const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
   const { preferences, preferencesButtonPosition } = usePreferencesContext();
 
   const rightSlots = useMemo(() => {
@@ -64,26 +73,24 @@ const Header = ({ menu }: HeaderProps) => {
         name: 'notification',
       });
     }
-
     return list.sort((a, b) => a.index - b.index);
   }, [preferences.widget, preferencesButtonPosition]);
-
   const rightComponents = rightSlots.map(({ name }) => {
     switch (name) {
       case 'fullscreen': {
-        return <Fullscreen key={name} />;
+        return <Fullscreen className="mr-1" key={name} />;
       }
       case 'global-search': {
-        return <GlobalSearch key={name} />;
+        return <GlobalSearch className="mr-1 sm:mr-4" key={name} />;
       }
       case 'language-toggle': {
-        return <LanguageToggle key={name} />;
+        return <LanguageToggle className="mr-1" key={name} />;
       }
       case 'notification': {
         return <Notification key={name} />;
       }
       case 'preferences': {
-        return <Preferences key={name} />;
+        return <Preferences className="mr-1" key={name} />;
       }
       case 'theme-toggle': {
         return <ThemeToggle className="mr-1" key={name} />;
@@ -100,14 +107,22 @@ const Header = ({ menu }: HeaderProps) => {
   return (
     <>
       {preferences.widget.refresh && <Reload />}
-      <Breadcrumb />
+      {!showHeaderNav && preferences.breadcrumb.enable && (
+        <Breadcrumb
+          hideWhenOnlyOne={preferences.breadcrumb.hideOnlyOne}
+          router={router}
+          showHome={preferences.breadcrumb.showHome}
+          showIcon={preferences.breadcrumb.showIcon}
+          type={preferences.breadcrumb.styleType}
+        />
+      )}
       <div
         className={cn(
           `menu-align-${preferences.header.menuAlign}`,
-          'flex h-full min-w-0 flex-1 items-center',
+          'flex h-full w-full min-w-0 flex-1 items-center',
         )}
       >
-        {menu}
+        {showHeaderNav && <div className="w-full">{menu}</div>}
       </div>
       <div className="flex h-full min-w-0 flex-shrink-0 items-center">
         {rightComponents}

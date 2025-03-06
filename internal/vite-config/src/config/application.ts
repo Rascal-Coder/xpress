@@ -64,8 +64,8 @@ function defineApplicationConfig(userConfigPromise?: DefineApplicationOptions) {
             entryFileNames: 'jse/index-[name]-[hash].js',
           },
         },
-        // 设置构建目标为 ES2015
-        target: 'es2015',
+        // 设置构建目标为 esnext
+        target: 'esnext',
       },
       css: createCssOptions(injectGlobalScss),
       esbuild: {

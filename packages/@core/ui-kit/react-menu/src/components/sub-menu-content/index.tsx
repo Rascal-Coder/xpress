@@ -11,6 +11,7 @@ import { useMenuContext } from '../hooks';
 
 interface SubMenuContentProps extends MenuItemProps {
   className?: string;
+  isHovering: boolean;
   isMenuMore: boolean;
   isTopLevelMenuSubMenu: boolean;
   level?: number;
@@ -19,6 +20,7 @@ interface SubMenuContentProps extends MenuItemProps {
 function SubMenuContent({
   className,
   icon,
+  isHovering,
   isMenuMore = false,
   level = 0,
   menuItemClick,
@@ -70,8 +72,12 @@ function SubMenuContent({
   });
   IconComponent.displayName = 'IconComponent';
   const iconArrowStyle = useMemo(() => {
-    return opened ? { transform: `rotate(180deg)` } : {};
-  }, [opened]);
+    if (isHovering && mode === 'horizontal') {
+      return { transform: `rotate(180deg)` };
+    } else if (mode !== 'horizontal') {
+      return opened ? { transform: `rotate(180deg)` } : {};
+    }
+  }, [isHovering, mode, opened]);
   return (
     <div
       className={cn(

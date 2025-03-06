@@ -1,0 +1,63 @@
+:root {
+  --toastify-color-light: #fff;
+  --toastify-color-dark: hsl(0deg 0 14.2%);
+  --toastify-color-info: #035ec7;
+  --toastify-color-success: #4caf50;
+  --toastify-color-warning: #ff9800;
+  --toastify-color-error: #dc3355;
+  --toastify-color-transparent: rgb(255 255 255 / 70%);
+  --toastify-icon-color-info: var(--toastify-color-info);
+  --toastify-icon-color-success: var(--toastify-color-success);
+  --toastify-icon-color-warning: var(--toastify-color-warning);
+  --toastify-icon-color-error: var(--toastify-color-error);
+  --toastify-container-width: fit-content;
+  --toastify-toast-width: 320px;
+  --toastify-toast-offset: 16px;
+  --toastify-toast-top: max(
+    var(--toastify-toast-offset),
+    env(safe-area-inset-top)
+  );
+  --toastify-toast-right: max(
+    var(--toastify-toast-offset),
+    env(safe-area-inset-right)
+  );
+  --toastify-toast-left: max(
+    var(--toastify-toast-offset),
+    env(safe-area-inset-left)
+  );
+  --toastify-toast-bottom: max(
+    var(--toastify-toast-offset),
+    env(safe-area-inset-bottom)
+  );
+  --toastify-toast-background: #fff;
+  --toastify-toast-padding: 14px;
+  --toastify-toast-min-height: 20px;
+  --toastify-toast-max-height: 800px;
+  --toastify-toast-bd-radius: 4px;
+  --toastify-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%),
+    0 3px 6px -4px rgb(0 0 0 / 12%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  --toastify-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  --toastify-z-index: 9999;
+  --toastify-text-color-light: rgb(0 0 0 / 87%);
+  --toastify-text-color-dark: rgb(255 255 255 / 87%);
+
+  /* Used only for colored theme */
+  --toastify-text-color-info: #fff;
+  --toastify-text-color-success: #fff;
+  --toastify-text-color-warning: #fff;
+  --toastify-text-color-error: #fff;
+  --toastify-spinner-color: #1976d2;
+  --toastify-spinner-color-empty-area: rgb(0 0 0 / 12%);
+  --toastify-color-progress-light: linear-gradient(
+    to right,
+    #4c8edb,
+    #035ec7,
+    #024ba0
+  );
+  --toastify-color-progress-dark: #90caf9;
+  --toastify-color-progress-info: var(--toastify-color-info);
+  --toastify-color-progress-success: var(--toastify-color-success);
+  --toastify-color-progress-warning: var(--toastify-color-warning);
+  --toastify-color-progress-error: var(--toastify-color-error);
+  --toastify-color-progress-bgo: 0.2;
+}

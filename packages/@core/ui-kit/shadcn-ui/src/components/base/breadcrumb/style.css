@@ -1,0 +1,56 @@
+.xpress-breadcrumb li {
+  @apply h-7;
+}
+
+.xpress-breadcrumb li a {
+  @apply text-muted-foreground bg-accent relative mr-9 flex h-7 cursor-pointer items-center py-0 pl-[5px] pr-2 text-[13px];
+}
+
+.xpress-breadcrumb li a > span {
+  @apply -ml-3;
+}
+
+.xpress-breadcrumb li:first-child a > span {
+  @apply -ml-1;
+}
+
+.xpress-breadcrumb li:first-child a {
+  @apply rounded-[4px_0_0_4px] pl-[15px];
+}
+
+.xpress-breadcrumb li:first-child a::before {
+  @apply border-none;
+}
+
+.xpress-breadcrumb li:last-child a {
+  @apply rounded-[0_4px_4px_0] pr-[15px];
+}
+
+.xpress-breadcrumb li:last-child a::after {
+  @apply border-none;
+}
+
+.xpress-breadcrumb li a::before,
+.xpress-breadcrumb li a::after {
+  @apply border-accent absolute top-0 h-0 w-0 border-[.875rem] border-solid content-[''];
+}
+
+.xpress-breadcrumb li a::before {
+  @apply -left-7 z-10 border-l-transparent;
+}
+
+.xpress-breadcrumb li a::after {
+  @apply border-l-accent left-full border-transparent;
+}
+
+.xpress-breadcrumb li:not(:last-child) a:hover {
+  @apply bg-accent-hover;
+}
+
+.xpress-breadcrumb li:not(:last-child) a:hover::before {
+  @apply border-accent-hover border-l-transparent;
+}
+
+.xpress-breadcrumb li:not(:last-child) a:hover::after {
+  @apply border-l-accent-hover;
+}

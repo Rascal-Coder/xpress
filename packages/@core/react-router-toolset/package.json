@@ -1,0 +1,46 @@
+{
+  "name": "@xpress-core/router",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "MIT",
+  "author": "",
+  "scripts": {
+    "build": "pnpm unbuild",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "exports": {
+      ".": {
+        "default": "./dist/index.mjs"
+      }
+    }
+  },
+  "dependencies": {
+    "@loadable/component": "catalog:",
+    "eventemitter3": "catalog:",
+    "history": "catalog:",
+    "immer": "catalog:",
+    "react": "catalog:",
+    "react-router-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@types/loadable__component": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@xpress-core/shared": "workspace:*",
+    "@xpress-core/typings": "workspace:*"
+  }
+}

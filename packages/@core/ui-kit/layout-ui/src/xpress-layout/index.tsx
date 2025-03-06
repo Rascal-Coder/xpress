@@ -12,7 +12,7 @@ import { Menu } from '@xpress-core/icons';
 import { XpressIconButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useMouse, useThrottleFn } from 'ahooks';
+import { useEventListener, useThrottleFn } from 'ahooks';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
@@ -80,6 +80,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     isScrolling,
     y: scrollY,
   } = useEnhancedScroll(document);
+
   const {
     currentLayout,
     isFullContent,
@@ -87,8 +88,15 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     isMixedNav,
     isSidebarMixedNav,
   } = useLayout({ isMobile, layout });
-  const { clientY: mouseY } = useMouse(contentRef.current);
 
+  const [mouseY, setMouseY] = useState(0);
+  useEventListener(
+    'mousemove',
+    (e) => {
+      setMouseY(e.clientY);
+    },
+    { target: contentRef },
+  );
   /**
    * 顶栏是否自动隐藏
    */
@@ -186,7 +194,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     return (
       currentLayout === 'mixed-nav' ||
       currentLayout === 'sidebar-mixed-nav' ||
-      currentLayout === 'sidebar-nav'
+      currentLayout === 'sidebar-nav' ||
+      currentLayout === 'header-sidebar-nav'
     );
   }, [currentLayout]);
 
@@ -203,8 +212,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   }, [isMixedNav, headerMode]);
 
   const showSidebar = useMemo(() => {
-    return isSideMode && sidebarEnable;
-  }, [isSideMode, sidebarEnable]);
+    return isSideMode && sidebarEnable && !sidebarHidden;
+  }, [isSideMode, sidebarEnable, sidebarHidden]);
 
   /**
    * 遮罩可见性
@@ -247,10 +256,13 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
           sidebarExpandOnHovering && !sidebarExpandOnHover
             ? `${getSideCollapseWidth}px`
             : `${getSidebarWidth}px`;
+
         width = `calc(100% - ${sidebarAndExtraWidth})`;
+        if (currentLayout === 'header-sidebar-nav') {
+          width = `100%`;
+        }
       }
     }
-
     return {
       sidebarAndExtraWidth,
       width,
@@ -460,14 +472,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
 
     setHeaderIsHidden(true);
     handleMouseMove();
-  }, [
-    headerMode,
-    mouseY,
-    isHeaderAutoMode,
-    isMixedNav,
-    isFullContent,
-    headerWrapperHeight,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [headerMode, mouseY]);
 
   // 处理滚动相关的header隐藏逻辑
   const checkHeaderIsHidden = useThrottleFn(
@@ -502,17 +508,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         arrivedState.top,
       );
     }
-  }, [
-    scrollY,
-    headerMode,
-    isMixedNav,
-    isFullContent,
-    isScrolling,
-    directions,
-    arrivedState.top,
-    headerWrapperHeight,
-    checkHeaderIsHidden,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrollY, headerMode]);
 
   /**
    * 处理遮罩点击事件
@@ -575,7 +572,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         isMobile={isMobile}
         logo={showHeaderLogo ? logo : undefined}
         show={true}
-        sidebarWidth={getSidebarWidth}
+        // sidebarWidth={getSidebarWidth}
         theme={headerTheme}
         toggleButton={
           showHeaderToggleButton && (

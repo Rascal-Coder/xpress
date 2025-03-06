@@ -1,0 +1,29 @@
+{
+  "name": "@xpress/components",
+  "version": "1.0.0",
+  "keywords": [],
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@xpress-core/router": "workspace:*",
+    "@xpress/stores": "workspace:*",
+    "framer-motion": "^12.4.7",
+    "nprogress": "catalog:",
+    "react": "catalog:",
+    "react-router-dom": "catalog:",
+    "styled-components": "catalog:"
+  },
+  "devDependencies": {
+    "@types/nprogress": "catalog:",
+    "@types/react": "catalog:"
+  }
+}

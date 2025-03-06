@@ -1,7 +1,6 @@
 import type { MenuItemClicked, MenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
-import { Ellipsis } from '@xpress-core/icons';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useDebounceFn, useSize } from 'ahooks';
@@ -14,13 +13,16 @@ import React, {
   useState,
 } from 'react';
 
+import { SUB_MENU_MORE_WIDTH } from '../../constants';
 import { MenuContext, type MenuContextType } from '../contexts';
 import { useMenuStyle } from '../hooks';
 import { useMenuStructure } from '../hooks/useMenuStructure';
-import SubMenu from '../sub-menu';
 import { menuReducer } from './menuReducer';
 
-interface Props extends MenuProps {}
+interface Props extends MenuProps {
+  setSliceIndex: React.Dispatch<React.SetStateAction<number>>;
+  sliceIndex: number;
+}
 
 /**
  * Menu 组件 - 一个功能丰富的菜单组件，支持垂直和水平布局、折叠展开、手风琴模式等特性
@@ -38,6 +40,8 @@ interface Props extends MenuProps {}
  * @param props.rounded - 是否使用圆角样式，默认为 true
  * @param props.theme - 菜单主题，可选 'dark' | 'light'，默认为 'dark'
  * @param props.children - 菜单内容
+ * @param props.sliceIndex - 当前切片索引
+ * @param props.setSliceIndex - 设置切片索引的函数
  *
  * @returns React 组件
  */
@@ -52,6 +56,8 @@ export default function Menu(props: Props) {
     onOpen,
     onSelect,
     rounded = true,
+    setSliceIndex,
+    sliceIndex,
     theme = 'dark',
     children,
   } = props;
@@ -59,7 +65,6 @@ export default function Menu(props: Props) {
   const { b, is } = useNamespace('menu');
   const menuRef = useRef<HTMLUListElement>(null);
   const menuStyle = useMenuStyle();
-  const [sliceIndex, setSliceIndex] = useState(-1);
 
   const [mouseInChild, setMouseInChild] = useState(false);
   /**
@@ -72,6 +77,17 @@ export default function Menu(props: Props) {
     defaultOpeneds && !collapse ? [...defaultOpeneds] : [],
   );
 
+  const [calcWidth, setCalcWidth] = useState<number[]>([]);
+  useEffect(() => {
+    const calcWidth: number[] = [];
+    if (menuRef.current) {
+      const childrenArray = [...menuRef.current.children] as HTMLElement[];
+      childrenArray.forEach((item) => {
+        calcWidth.push(calcMenuItemWidth(item));
+      });
+      setCalcWidth(calcWidth);
+    }
+  }, []);
   /**
    * 判断菜单是否需要弹出显示
    */
@@ -165,11 +181,6 @@ export default function Menu(props: Props) {
     children,
   });
 
-  const childrenArray = React.Children.toArray(children);
-  const defaultChildren =
-    sliceIndex === -1 ? childrenArray : childrenArray.slice(0, sliceIndex);
-  const moreChildren = sliceIndex === -1 ? [] : childrenArray.slice(sliceIndex);
-
   /**
    * 计算菜单项的实际宽度，包括外边距
    * @param menuItem - 菜单项 DOM 元素
@@ -179,54 +190,55 @@ export default function Menu(props: Props) {
     const computedStyle = getComputedStyle(menuItem);
     const marginLeft = Number.parseInt(computedStyle.marginLeft, 10);
     const marginRight = Number.parseInt(computedStyle.marginRight, 10);
-    return menuItem.offsetWidth + marginLeft + marginRight || 0;
+    const result = menuItem.offsetWidth + marginLeft + marginRight || 0;
+
+    return result;
   }
 
   /**
    * 计算水平模式下需要移入更多菜单的切片索引
    * @returns 切片索引，-1 表示不需要更多菜单
    */
-  const calcSliceIndex = useCallback(() => {
+  const calcSliceIndex = () => {
     if (!menuRef.current) {
       return -1;
     }
-    const items = [...menuRef.current.children] as HTMLElement[];
-
-    const moreItemWidth = 46;
+    // 菜单的当前宽度
     const computedMenuStyle = getComputedStyle(menuRef.current);
 
     const paddingLeft = Number.parseInt(computedMenuStyle.paddingLeft, 10);
     const paddingRight = Number.parseInt(computedMenuStyle.paddingRight, 10);
     const menuWidth = menuRef.current?.clientWidth - paddingLeft - paddingRight;
 
-    let calcWidth = 0;
+    let _calcWidth = 0;
     let sliceIndex = 0;
-    items.forEach((item, index) => {
-      calcWidth += calcMenuItemWidth(item);
-      if (calcWidth <= menuWidth - moreItemWidth) {
+    calcWidth.forEach((item, index) => {
+      _calcWidth += item;
+      if (_calcWidth <= menuWidth - SUB_MENU_MORE_WIDTH) {
         sliceIndex = index + 1;
       }
     });
-    return sliceIndex === items.length ? -1 : sliceIndex;
-  }, [menuRef]);
 
-  const size = useSize(mode === 'horizontal' ? menuRef : null);
+    return sliceIndex === calcWidth.length ? -1 : sliceIndex;
+  };
+
+  const size = useSize(mode === 'horizontal' ? menuRef.current : null);
   const isFirstTimeRenderRef = useRef(true);
 
   /**
    * 更新切片索引，用于处理水平模式下的响应式布局
    */
-  const updateSliceIndex = useCallback(() => {
+  const updateSliceIndex = () => {
     setSliceIndex(-1);
     requestAnimationFrame(() => {
-      setSliceIndex(calcSliceIndex());
+      setSliceIndex(() => calcSliceIndex());
     });
-  }, [calcSliceIndex]);
+  };
 
   /**
    * 处理窗口大小变化，更新菜单布局
    */
-  const handleResize = useCallback(() => {
+  const handleResize = () => {
     if (sliceIndex === calcSliceIndex()) {
       return;
     }
@@ -239,15 +251,16 @@ export default function Menu(props: Props) {
         setSliceIndex(calcSliceIndex());
       });
     }
-  }, [sliceIndex, calcSliceIndex, updateSliceIndex]);
+  };
 
   const { run: debouncedHandleResize } = useDebounceFn(handleResize, {
     wait: 200,
   });
 
   /**
-   * 监听折叠状态变化
+   * 监听折叠状态变化和水平模式
    * 当菜单被折叠时，重置所有已展开的菜单
+   * 当菜单处于水平模式时，重置所有已展开的菜单
    */
   useEffect(() => {
     if (collapse) {
@@ -291,6 +304,9 @@ export default function Menu(props: Props) {
     items,
   ]);
 
+  useEffect(() => {
+    menuRef.current;
+  }, []);
   return (
     <MenuContext.Provider value={menuProviderValue}>
       <ul
@@ -307,19 +323,7 @@ export default function Menu(props: Props) {
         role="menu"
         style={menuStyle}
       >
-        {mode === 'horizontal' && moreChildren.length > 0 ? (
-          <>
-            {defaultChildren}
-            <SubMenu
-              path="sub-menu-more"
-              title={<Ellipsis className={'size-4'} />}
-            >
-              {moreChildren}
-            </SubMenu>
-          </>
-        ) : (
-          children
-        )}
+        {children}
       </ul>
     </MenuContext.Provider>
   );

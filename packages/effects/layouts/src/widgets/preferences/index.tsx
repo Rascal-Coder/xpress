@@ -1,15 +1,16 @@
 import { Settings } from '@xpress/icons';
 import { XpressButton } from '@xpress-core/shadcn-ui';
+import { cn } from '@xpress-core/shared/utils';
 
 import { useState } from 'react';
 
 import { PreferencesDrawer } from './PreferencesDrawer';
 
-export function Preferences() {
+export function Preferences({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className={cn('flex items-center gap-2', className)}>
         <XpressButton
           onClick={() => setIsOpen(true)}
           size="icon"

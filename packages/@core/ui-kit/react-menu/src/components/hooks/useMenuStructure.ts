@@ -49,7 +49,6 @@ export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
       const currentParentPaths = parentPath
         ? [...parentPaths, path] // 包含当前路径
         : [path]; // 如果是根节点，只包含自身
-
       if (isSubMenu) {
         subMenus[path] = {
           active: currentParentPaths.includes(defaultActive),

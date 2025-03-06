@@ -25,17 +25,20 @@ const LayoutContent: FC<LayoutContentProps> = ({
   const baseStyle = useMemo((): CSSProperties => {
     const compactStyle: CSSProperties =
       contentCompact === 'compact'
-        ? { margin: '0 auto', width: `${contentCompactWidth}px` }
+        ? {
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            width: `${contentCompactWidth}px`,
+          }
         : {};
     return {
       ...compactStyle,
       flex: 1,
-      padding: `${padding}px`,
-      paddingBottom: `${paddingBottom}px`,
-      paddingLeft: `${paddingLeft}px`,
-      paddingRight: `${paddingRight}px`,
-      paddingTop: `${paddingTop}px`,
-      // ...style,
+      paddingBottom: `${paddingBottom ?? padding}px`,
+      paddingLeft: `${paddingLeft ?? padding}px`,
+      paddingRight: `${paddingRight ?? padding}px`,
+      paddingTop: `${paddingTop ?? padding}px`,
+      ...style,
     };
   }, [
     contentCompact,
@@ -45,7 +48,6 @@ const LayoutContent: FC<LayoutContentProps> = ({
     paddingLeft,
     paddingRight,
     paddingTop,
-    // style,
   ]);
   const mergedStyle = useMemo(
     () => ({

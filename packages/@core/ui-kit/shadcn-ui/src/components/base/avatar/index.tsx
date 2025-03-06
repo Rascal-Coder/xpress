@@ -12,7 +12,7 @@ interface Props extends AvatarProps {
   src?: string;
 }
 
-const XpressAvatar = ({
+export const XpressAvatar = ({
   alt = 'avatar',
   dot = false,
   dotClass = 'bg-green-500',
@@ -42,5 +42,3 @@ const XpressAvatar = ({
     </div>
   );
 };
-
-export default XpressAvatar;

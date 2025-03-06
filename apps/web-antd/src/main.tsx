@@ -1,9 +1,8 @@
 import '@xpress/styles';
 import { PreferencesProvider } from '@xpress-core/preferences';
+import { history, HistoryRouter } from '@xpress-core/router';
 
 import { createRoot } from 'react-dom/client';
-
-import { history, HistoryRouter } from '#/router';
 
 import App from './App';
 import { overridesPreferences } from './preferences';

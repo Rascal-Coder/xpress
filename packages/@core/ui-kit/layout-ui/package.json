@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "ahooks": "catalog:",
-    "react": "catalog:"
+    "react": "catalog:",
+    "@xpress-core/preferences": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "catalog:",
