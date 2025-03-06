@@ -1,116 +1,77 @@
-import { useScroll } from 'ahooks';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEventListener, useThrottleFn } from 'ahooks';
+import { useRef, useState } from 'react';
 
-type Directions = 'down' | 'left' | 'none' | 'right' | 'up';
+type Direction = 'down' | 'left' | 'none' | 'right' | 'up';
 
-interface ScrollState {
-  arrivedState: {
-    bottom: boolean;
-    left: boolean;
-    right: boolean;
-    top: boolean;
-  };
-  directions: Directions;
-  isScrolling: boolean;
-  x: number;
-  y: number;
-}
+const ARRIVED_STATE_THRESHOLD_PIXELS = 1;
+const THROTTLE_WAIT = 16; // 约60fps的刷新率
 
-const SCROLL_END_DELAY = 200;
-
-export const useEnhancedScroll = (
-  target: Document | HTMLElement,
-): ScrollState => {
-  const position = useScroll(target);
-  const [directions, setDirections] = useState<Directions>('none');
+export const useEnhancedScroll = (target: Document | HTMLElement) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isScrolling, setIsScrolling] = useState(false);
-  const prevScroll = useRef<{ left: number; top: number }>({ left: 0, top: 0 });
-  const scrollEndTimer = useRef<ReturnType<typeof setTimeout>>();
+  const [direction, setDirection] = useState<Direction>('none');
+  const prevPosition = useRef({ x: 0, y: 0 });
+  const scrollTimer = useRef<ReturnType<typeof setTimeout>>();
 
-  const { left = 0, top = 0 } = position || {};
+  const handleScroll = useThrottleFn(
+    () => {
+      const scrollElement =
+        target === document
+          ? document.documentElement
+          : (target as HTMLElement);
 
-  const getScrollDirection = (
-    currentTop: number,
-    currentLeft: number,
-    prevTop: number,
-    prevLeft: number,
-  ): Directions => {
-    if (currentTop > prevTop) return 'down';
-    if (currentTop < prevTop) return 'up';
-    if (currentLeft > prevLeft) return 'right';
-    if (currentLeft < prevLeft) return 'left';
-    return 'none';
-  };
+      const x = scrollElement.scrollLeft;
+      const y =
+        scrollElement.scrollTop ||
+        (target === document ? document.body.scrollTop : 0);
 
-  const handleScroll = useCallback(() => {
-    const currentTop = top;
-    const currentLeft = left;
-    const { left: prevLeft, top: prevTop } = prevScroll.current;
+      setPosition({ x, y });
 
-    const newDirection = getScrollDirection(
-      currentTop,
-      currentLeft,
-      prevTop,
-      prevLeft,
-    );
-
-    setDirections(newDirection);
-    prevScroll.current = { left: currentLeft, top: currentTop };
-  }, [top, left]);
-
-  const handleScrollStart = useCallback(() => {
-    setIsScrolling(true);
-  }, []);
-
-  const handleScrollEnd = useCallback(() => {
-    setIsScrolling(false);
-  }, []);
-
-  useEffect(() => {
-    if (!target) return;
-
-    const scrollElement =
-      target === document ? document.documentElement : (target as HTMLElement);
-
-    const debouncedScrollEnd = () => {
-      if (scrollEndTimer.current) {
-        clearTimeout(scrollEndTimer.current);
+      // 计算滚动方向
+      if (y > prevPosition.current.y) {
+        setDirection('down');
+      } else if (y < prevPosition.current.y) {
+        setDirection('up');
+      } else if (x > prevPosition.current.x) {
+        setDirection('right');
+      } else if (x < prevPosition.current.x) {
+        setDirection('left');
       }
-      scrollEndTimer.current = setTimeout(handleScrollEnd, SCROLL_END_DELAY);
-    };
+      prevPosition.current = { x, y };
 
-    scrollElement.addEventListener('scroll', handleScroll);
-    scrollElement.addEventListener('scroll', handleScrollStart);
-    scrollElement.addEventListener('scroll', debouncedScrollEnd);
-
-    return () => {
-      if (scrollEndTimer.current) {
-        clearTimeout(scrollEndTimer.current);
+      // 处理滚动状态
+      setIsScrolling(true);
+      if (scrollTimer.current) {
+        clearTimeout(scrollTimer.current);
       }
-      scrollElement.removeEventListener('scroll', handleScroll);
-      scrollElement.removeEventListener('scroll', handleScrollStart);
-      scrollElement.removeEventListener('scroll', debouncedScrollEnd);
-    };
-  }, [target, handleScroll, handleScrollStart, handleScrollEnd]);
+      scrollTimer.current = setTimeout(() => {
+        setIsScrolling(false);
+        setDirection('none');
+      }, 150);
+    },
+    { wait: THROTTLE_WAIT },
+  );
 
-  const arrivedState = {
-    bottom:
-      target instanceof HTMLElement
-        ? Math.abs(top + target.clientHeight - target.scrollHeight) < 1
-        : false,
-    left: left === 0,
-    right:
-      target instanceof HTMLElement
-        ? Math.abs(left + target.clientWidth - target.scrollWidth) < 1
-        : false,
-    top: top === 0,
-  };
+  useEventListener('scroll', handleScroll.run, { target });
 
   return {
-    arrivedState,
-    directions,
+    arrivedState: {
+      bottom:
+        Math.abs(
+          position.y +
+            window.innerHeight -
+            document.documentElement.scrollHeight,
+        ) <= ARRIVED_STATE_THRESHOLD_PIXELS,
+      left: position.x === 0,
+      right:
+        Math.abs(
+          position.x + window.innerWidth - document.documentElement.scrollWidth,
+        ) <= ARRIVED_STATE_THRESHOLD_PIXELS,
+      top: position.y === 0,
+    },
+    directions: direction,
     isScrolling,
-    x: left,
-    y: top,
+    x: position.x,
+    y: position.y,
   };
 };
