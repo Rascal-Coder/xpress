@@ -22,59 +22,53 @@ export function Breadcrumb({
   type = 'background',
   router,
 }: BreadcrumbProps) {
-  const { curRoute, routes } = useRouter(router);
-  const pathname = curRoute?.path;
+  const { curRoute } = useRouter(router);
   const navigate = useNavigate();
   const breadcrumbs = useMemo((): IBreadcrumb[] => {
-    const matched = routes.filter((route) => pathname?.startsWith(route.path));
     const resultBreadcrumb: IBreadcrumb[] = [];
+    const matched = curRoute?.collecttedRouteInfo;
+    if (matched) {
+      for (const match of matched) {
+        const { meta, path, defaultPath } = match;
+        if (!meta || !path) continue;
 
-    for (const match of matched) {
-      const { meta, path } = match;
-      if (!meta || !path) continue;
+        const hideChildrenInMenu = meta.hideChildrenInMenu;
+        const hideInBreadcrumb = meta.hideInBreadcrumb;
+        const { icon, title } = meta;
 
-      const hideChildrenInMenu = meta.hideChildrenInMenu;
-      const hideInBreadcrumb = meta.hideInBreadcrumb;
-      const { icon, title } = meta;
+        if (hideInBreadcrumb || hideChildrenInMenu) {
+          continue;
+        }
 
-      if (hideInBreadcrumb || hideChildrenInMenu) {
-        continue;
+        resultBreadcrumb.push({
+          icon,
+          path,
+          title: title || '',
+          defaultPath,
+        });
       }
 
-      resultBreadcrumb.push({
-        icon,
-        path,
-        title: title || '',
-      });
-    }
+      if (showHome) {
+        resultBreadcrumb.unshift({
+          icon: 'mdi:home-outline',
+          isHome: true,
+          path: '/home',
+          defaultPath: 'analysis',
+        });
+      }
 
-    if (showHome) {
-      resultBreadcrumb.unshift({
-        icon: 'mdi:home-outline',
-        isHome: true,
-        path: '/home/analysis',
-      });
+      if (hideWhenOnlyOne && resultBreadcrumb.length === 1) {
+        return [];
+      }
     }
-
-    if (hideWhenOnlyOne && resultBreadcrumb.length === 1) {
-      return [];
-    }
-    resultBreadcrumb.push(
-      {
-        path: '/error-page',
-        title: 'error-page',
-      },
-      {
-        path: '/error-page/404',
-        title: '404',
-      },
-    );
     return resultBreadcrumb;
-  }, [routes, showHome, hideWhenOnlyOne, pathname]);
+  }, [curRoute?.collecttedRouteInfo, showHome, hideWhenOnlyOne]);
 
-  const handleSelect = (path?: string) => {
-    if (path) {
+  const handleSelect = (path?: string, defaultPath?: string) => {
+    if (path && !defaultPath) {
       navigate(path);
+    } else if (path && defaultPath) {
+      navigate(`${path}/${defaultPath}`);
     }
   };
   return (

@@ -10,7 +10,7 @@ import type { Router } from './router';
  */
 type AccessModeType = 'backend' | 'frontend';
 
-type RouteConfig = {
+interface RouteConfig {
   /** 同react-router */
   caseSensitive?: boolean;
   /** 子路由，同react-router */
@@ -19,6 +19,11 @@ type RouteConfig = {
   collecttedPath?: string[];
   /** ['', '/layout', '/layout/layout-children1', '/layout/layout-children1/permission'] */
   collecttedPathname?: string[];
+  collecttedRouteInfo?: Array<{
+    defaultPath?: string;
+    meta: Record<string, any>;
+    path: string;
+  }>;
   /** 组件的文件地址 */
   component?: () => Promise<any>;
   /** 默认子路由路径，当有children时生效，会自动添加空路径重定向到该路径 */
@@ -136,7 +141,8 @@ type RouteConfig = {
   pathname?: string;
   /** 重定向path */
   redirect?: string;
-};
+}
+
 type ComponentRecordType = Record<
   string,
   () => Promise<{ default: ComponentType }>

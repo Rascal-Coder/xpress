@@ -14,11 +14,11 @@ export function XpressBreadcrumbBackground({
   showIcon = false,
 }: BreadcrumbProps) {
   const { b } = useNamespace('breadcrumb');
-  const handleClick = (index: number, path?: string) => {
+  const handleClick = (index: number, path?: string, defaultPath?: string) => {
     if (!path || index === breadcrumbs.length - 1) {
       return;
     }
-    onSelect?.(path);
+    onSelect?.(path, defaultPath);
   };
 
   return (
@@ -29,7 +29,7 @@ export function XpressBreadcrumbBackground({
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              handleClick(index, item.path);
+              handleClick(index, item.path, item.defaultPath);
             }}
           >
             <span className="flex-center z-10 h-full">

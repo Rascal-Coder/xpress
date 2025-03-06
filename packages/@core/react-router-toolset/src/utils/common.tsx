@@ -69,8 +69,11 @@ export function formatRoutes(
   ): RouteConfig[] {
     return configs.map((routeItem) => {
       const path = routeItem.path === '/' ? '' : routeItem.path;
-      const { collecttedPath: parentPath, collecttedPathname: parentPathname } =
-        parentConfig ?? {};
+      const {
+        collecttedPath: parentPath,
+        collecttedPathname: parentPathname,
+        collecttedRouteInfo: parentMeta = [],
+      } = parentConfig ?? {};
 
       const collecttedPathname = parentPathname
         ? [
@@ -81,10 +84,25 @@ export function formatRoutes(
       const collecttedPath = parentPath ? [...parentPath, path] : [path];
       const pathname = collecttedPath.join('/').replace(/\/$/, '') || '/';
 
+      // 收集当前路由和父路由的meta信息
+      const collecttedRouteInfo = [
+        ...parentMeta,
+        ...(routeItem.meta
+          ? [
+              {
+                defaultPath: routeItem.defaultPath,
+                meta: routeItem.meta,
+                path: pathname,
+              },
+            ]
+          : []),
+      ];
+
       const processedRoute = {
         ...routeItem,
         collecttedPath,
         collecttedPathname,
+        collecttedRouteInfo,
         parent: parentConfig,
         pathname,
       };

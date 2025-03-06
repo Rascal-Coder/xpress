@@ -26,9 +26,9 @@ export function XpressBreadcrumb({
   onSelect,
   showIcon,
 }: BreadcrumbProps) {
-  const handleClick = (path?: string) => {
+  const handleClick = (path?: string, defaultPath?: string) => {
     if (path) {
-      onSelect?.(path);
+      onSelect?.(path, defaultPath);
     }
   };
   return (
@@ -79,7 +79,7 @@ export function XpressBreadcrumb({
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          handleClick(breadcrumb.path);
+                          handleClick(breadcrumb.path, breadcrumb.defaultPath);
                         }}
                       >
                         <div className="flex-center">
