@@ -126,6 +126,7 @@ function BasicLayout({ router }: { router: Router }) {
                 theme={theme}
               ></Menu>
             }
+            router={router}
             showHeaderNav={showHeaderNav}
           ></Header>
         ),

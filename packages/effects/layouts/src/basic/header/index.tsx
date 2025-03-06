@@ -1,4 +1,5 @@
 import { usePreferencesContext } from '@xpress-core/preferences';
+import { type Router } from '@xpress-core/router';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useMemo } from 'react';
@@ -24,9 +25,13 @@ interface HeaderProps {
    * 显示头部导航
    */
   showHeaderNav?: boolean;
+  /**
+   * 路由
+   */
+  router: Router;
 }
 const REFERENCE_VALUE = 50;
-const Header = ({ menu, showHeaderNav }: HeaderProps) => {
+const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
   const { preferences, preferencesButtonPosition } = usePreferencesContext();
 
   const rightSlots = useMemo(() => {
@@ -102,7 +107,9 @@ const Header = ({ menu, showHeaderNav }: HeaderProps) => {
   return (
     <>
       {preferences.widget.refresh && <Reload />}
-      {!showHeaderNav && preferences.breadcrumb.enable && <Breadcrumb />}
+      {!showHeaderNav && preferences.breadcrumb.enable && (
+        <Breadcrumb router={router} showHome={true} showIcon />
+      )}
       <div
         className={cn(
           `menu-align-${preferences.header.menuAlign}`,

@@ -26,6 +26,7 @@
     "@internationalized/number": "catalog:",
     "@radix-ui/react-avatar": "catalog:",
     "@radix-ui/react-dialog": "catalog:",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@radix-ui/react-hover-card": "catalog:",
     "@radix-ui/react-popover": "catalog:",
     "@radix-ui/react-scroll-area": "catalog:",

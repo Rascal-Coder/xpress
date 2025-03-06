@@ -35,17 +35,6 @@ export const Header = () => {
       >
         显示顶栏
       </SwitchItem>
-      <ToggleItem
-        items={headerMenuAlignItems}
-        onChange={(value) => {
-          updatePreferences({
-            header: { menuAlign: value as LayoutHeaderMenuAlignType },
-          });
-        }}
-        value={preferences.header.menuAlign}
-      >
-        菜单位置
-      </ToggleItem>
       <PreferenceSelectItem
         defaultValue={preferences.header.mode}
         items={headerMenuVisibleModes}
@@ -57,6 +46,17 @@ export const Header = () => {
       >
         模式
       </PreferenceSelectItem>
+      <ToggleItem
+        items={headerMenuAlignItems}
+        onChange={(value) => {
+          updatePreferences({
+            header: { menuAlign: value as LayoutHeaderMenuAlignType },
+          });
+        }}
+        value={preferences.header.menuAlign}
+      >
+        菜单位置
+      </ToggleItem>
     </>
   );
 };

@@ -1,4 +1,12 @@
-import { Block, Content, Header, Layout, Sidebar } from '../../blocks';
+import {
+  Block,
+  Breadcrumb,
+  Content,
+  Header,
+  Layout,
+  Navigation,
+  Sidebar,
+} from '../../blocks';
 
 export const PreferencesLayout = () => {
   return (
@@ -14,6 +22,12 @@ export const PreferencesLayout = () => {
       </Block>
       <Block title="顶栏">
         <Header />
+      </Block>
+      <Block title="导航菜单">
+        <Navigation />
+      </Block>
+      <Block title="面包屑导航">
+        <Breadcrumb />
       </Block>
     </>
   );
