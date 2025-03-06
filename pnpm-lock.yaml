@@ -1206,9 +1206,6 @@ importers:
 
   packages/@core/ui-kit/shadcn-ui:
     dependencies:
-      '@internationalized/number':
-        specifier: 'catalog:'
-        version: 3.6.0
       '@radix-ui/react-avatar':
         specifier: 'catalog:'
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

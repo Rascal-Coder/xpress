@@ -108,7 +108,13 @@ const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
     <>
       {preferences.widget.refresh && <Reload />}
       {!showHeaderNav && preferences.breadcrumb.enable && (
-        <Breadcrumb router={router} showHome={true} showIcon />
+        <Breadcrumb
+          hideWhenOnlyOne={preferences.breadcrumb.hideOnlyOne}
+          router={router}
+          showHome={preferences.breadcrumb.showHome}
+          showIcon={preferences.breadcrumb.showIcon}
+          type={preferences.breadcrumb.styleType}
+        />
       )}
       <div
         className={cn(
