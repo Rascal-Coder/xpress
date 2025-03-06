@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 
 import { useMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
+import { Ripple } from '../ripple';
 
 interface Props extends MenuItemProps {
   className?: string;
@@ -79,6 +80,7 @@ function MenuItem(props: Props) {
         is('active', active),
         is('disabled', disabled),
         is('collapse-show-title', collapseShowTitle),
+        'relative',
         className,
       )}
       onClick={handleClick}
@@ -116,6 +118,7 @@ function MenuItem(props: Props) {
           {title}
         </div>
       )}
+      <Ripple color="rgba(0, 0, 0, 0.1)" />
     </li>
   );
 }

@@ -8,6 +8,7 @@ import { cn } from '@xpress-core/shared/utils';
 import { forwardRef, useMemo } from 'react';
 
 import { useMenuContext } from '../hooks';
+import { Ripple } from '../ripple';
 
 interface SubMenuContentProps extends MenuItemProps {
   className?: string;
@@ -85,6 +86,7 @@ function SubMenuContent({
         is('collapse-show-title', getCollapseShowTitle),
         is('more', isMenuMore),
         rootMenu.isMenuPopup && !isFirstLevel && '!justify-normal',
+        'relative',
         className,
       )}
       onClick={() => menuItemClick?.()}
@@ -104,6 +106,7 @@ function SubMenuContent({
         ></IconComponent>
       )}
       {children}
+      <Ripple color="rgba(0, 0, 0, 0.1)" />
     </div>
   );
 }
