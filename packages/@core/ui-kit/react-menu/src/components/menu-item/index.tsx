@@ -8,7 +8,7 @@ import { useMemo } from 'react';
 
 import { useMenuContext } from '../hooks';
 import MenuBadge from '../menu-badge';
-import { Ripple } from '../ripple';
+import Ripple from '../ripple';
 
 interface Props extends MenuItemProps {
   className?: string;
@@ -71,7 +71,7 @@ function MenuItem(props: Props) {
       path,
     });
   };
-
+  const ripple = new Ripple();
   return (
     <li
       className={cn(
@@ -84,6 +84,7 @@ function MenuItem(props: Props) {
         className,
       )}
       onClick={handleClick}
+      onMouseDown={(e) => ripple.create(e as unknown as MouseEvent, 'dark')}
       role="menuitem"
     >
       {showTooltip ? (
@@ -118,7 +119,7 @@ function MenuItem(props: Props) {
           {title}
         </div>
       )}
-      <Ripple color="rgba(0, 0, 0, 0.1)" />
+      {/* <Ripple color="rgba(0, 0, 0, 0.1)" /> */}
     </li>
   );
 }
