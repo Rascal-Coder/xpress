@@ -22,6 +22,7 @@
     "@xpress-core/router": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
+    "@xpress-core/tabs-ui": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "@xpress/icons": "workspace:*",
     "@xpress/stores": "workspace:*",

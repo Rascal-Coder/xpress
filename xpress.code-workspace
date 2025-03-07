@@ -85,6 +85,10 @@
       "path": "packages/@core/ui-kit/shadcn-ui",
     },
     {
+      "name": "@xpress-core/tabs-ui",
+      "path": "packages/@core/ui-kit/tabs-ui",
+    },
+    {
       "name": "@xpress/components",
       "path": "packages/components",
     },
