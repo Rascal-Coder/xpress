@@ -31,7 +31,7 @@ const LayoutHeader: FC<LayoutHeaderProps> = ({
     return {
       minWidth: `${isMobile ? 40 : width}px`,
     };
-  }, [isMobile, preferences.sidebar.width]);
+  }, [isMobile, width]);
 
   const logoNode = useShow(!!logo, () => <div style={logoStyle}>{logo}</div>);
   return (

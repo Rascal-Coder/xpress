@@ -1,10 +1,11 @@
 import type { SubMenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
+import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressHoverCard } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import CollapseTransition from '../collapse-transition';
 import { useMenuContext, useMenuStyle } from '../hooks';
@@ -160,6 +161,13 @@ function SubMenu({
       setIsHovering(false);
     }, 100);
   }
+  const isMobile = usePreferencesContext().isMobile;
+
+  useEffect(() => {
+    if (isMobile) {
+      setIsHovering(false);
+    }
+  }, [isMobile]);
   return (
     <li
       className={cn(

@@ -1172,6 +1172,9 @@ importers:
       '@xpress-core/icons':
         specifier: workspace:*
         version: link:../../base/icons
+      '@xpress-core/preferences':
+        specifier: workspace:*
+        version: link:../../preferences
       '@xpress-core/shadcn-ui':
         specifier: workspace:*
         version: link:../shadcn-ui
