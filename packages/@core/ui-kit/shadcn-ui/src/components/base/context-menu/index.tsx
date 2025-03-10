@@ -17,7 +17,7 @@ import {
   ContextMenuTrigger,
 } from '../../ui';
 
-interface IContextMenuItem {
+export interface IContextMenuItem {
   /**
    * @zh_CN 是否禁用
    */

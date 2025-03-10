@@ -1297,6 +1297,9 @@ importers:
 
   packages/@core/ui-kit/tabs-ui:
     dependencies:
+      '@xpress-core/hooks':
+        specifier: workspace:*
+        version: link:../../hooks
       '@xpress-core/icons':
         specifier: workspace:*
         version: link:../../base/icons

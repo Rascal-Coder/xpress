@@ -1,7 +1,7 @@
 import { TabsView } from '@xpress-core/tabs-ui';
 
 import { useState } from 'react';
-// TODO：tabbar动画未生效
+
 export const Tabbar = () => {
   const [active, setActive] = useState('1');
   const [tabs, setTabs] = useState([
@@ -24,8 +24,6 @@ export const Tabbar = () => {
       setActive(key);
     }
   };
-
-  // TODO: 关闭标签页有bug待修复
   const handleCloseTab = (key: string) => {
     setTabs((prev) => {
       return prev.filter((tab) => tab.key !== key);
@@ -43,7 +41,7 @@ export const Tabbar = () => {
       middleClickToClose
       onClick={(key) => handleTestTab(key)}
       onClose={(key) => handleCloseTab(key)}
-      styleType="plain"
+      styleType="card"
       tabs={tabs}
     />
   );
