@@ -10,7 +10,6 @@ interface AccessStoreActions {
   setAccessMenus: (menus: MenuRecordRaw[]) => void;
   setAccessRoutes: (routes: RouteConfig[]) => void;
   setAccessToken: (token: AccessToken) => void;
-  setAllFlattenMenuItems: (items: Map<React.Key, RouteConfig>) => void;
   setIsAccessChecked: (isAccessChecked: boolean) => void;
   setLoginExpired: (loginExpired: boolean) => void;
   setRefreshToken: (token: AccessToken) => void;
@@ -33,10 +32,6 @@ interface AccessState {
    */
   accessToken: AccessToken;
   /**
-   * 所有扁平化的菜单列表
-   */
-  allFlattenMenuItems: Map<React.Key, RouteConfig>;
-  /**
    * 是否已经检查过权限
    */
   isAccessChecked: boolean;
@@ -54,7 +49,6 @@ const initialState: AccessState = {
   accessMenus: [],
   accessRoutes: [],
   accessToken: null,
-  allFlattenMenuItems: new Map(),
   isAccessChecked: false,
   loginExpired: false,
   refreshToken: null,
@@ -70,8 +64,6 @@ export const useAccessStore = create<AccessStore>()(
         setAccessRoutes: (routes: RouteConfig[]) =>
           set({ accessRoutes: routes }),
         setAccessToken: (token: AccessToken) => set({ accessToken: token }),
-        setAllFlattenMenuItems: (items: Map<React.Key, RouteConfig>) =>
-          set({ allFlattenMenuItems: items }),
         setIsAccessChecked: (isAccessChecked: boolean) =>
           set({ isAccessChecked }),
         setLoginExpired: (loginExpired: boolean) => set({ loginExpired }),
@@ -89,3 +81,39 @@ export const useAccessStore = create<AccessStore>()(
     ),
   ),
 );
+
+export const useAccessMenus = () => {
+  const accessMenus = useAccessStore((state) => state.accessMenus);
+  const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
+  const accessCodes = useAccessStore((state) => state.accessCodes);
+  const setAccessCodes = useAccessStore((state) => state.setAccessCodes);
+  const accessRoutes = useAccessStore((state) => state.accessRoutes);
+  const setAccessRoutes = useAccessStore((state) => state.setAccessRoutes);
+  const isAccessChecked = useAccessStore((state) => state.isAccessChecked);
+  const setIsAccessChecked = useAccessStore(
+    (state) => state.setIsAccessChecked,
+  );
+  const loginExpired = useAccessStore((state) => state.loginExpired);
+  const setLoginExpired = useAccessStore((state) => state.setLoginExpired);
+  const refreshToken = useAccessStore((state) => state.refreshToken);
+  const setRefreshToken = useAccessStore((state) => state.setRefreshToken);
+
+  const accessToken = useAccessStore((state) => state.accessToken);
+  const setAccessToken = useAccessStore((state) => state.setAccessToken);
+  return {
+    accessCodes,
+    accessMenus,
+    accessRoutes,
+    accessToken,
+    isAccessChecked,
+    loginExpired,
+    refreshToken,
+    setAccessCodes,
+    setAccessMenus,
+    setAccessRoutes,
+    setAccessToken,
+    setIsAccessChecked,
+    setLoginExpired,
+    setRefreshToken,
+  };
+};
