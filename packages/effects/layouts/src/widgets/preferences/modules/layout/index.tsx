@@ -6,6 +6,7 @@ import {
   Layout,
   Navigation,
   Sidebar,
+  Tabbar,
 } from '../../blocks';
 
 export const PreferencesLayout = () => {
@@ -28,6 +29,9 @@ export const PreferencesLayout = () => {
       </Block>
       <Block title="面包屑导航">
         <Breadcrumb />
+      </Block>
+      <Block title="标签栏">
+        <Tabbar />
       </Block>
     </>
   );

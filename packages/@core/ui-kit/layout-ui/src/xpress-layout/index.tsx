@@ -112,6 +112,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     if (tabbarEnable) {
       height += tabbarHeight;
     }
+
     return height;
   }, [headerVisible, headerHidden, tabbarEnable, tabbarHeight, headerHeight]);
 
@@ -565,7 +566,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
 
   // 头部渲染
   const headerNode = useShow(
-    headerVisible && !isFullContent && !headerIsHidden,
+    headerVisible && !isFullContent && !headerHidden,
     () => (
       <LayoutHeader
         fullWidth={!isSideMode}

@@ -94,7 +94,7 @@ export function TabsBase({
           onClick={() => onTabClick(tab.key)}
           onMouseDown={(e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab)}
           whileTap={{
-            scale: active ? 1 : 0.9,
+            scale: tab.key === active ? 1 : 0.9,
           }}
         >
           <XpressContextMenu

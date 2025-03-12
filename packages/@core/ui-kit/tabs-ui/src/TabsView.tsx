@@ -55,7 +55,7 @@ export function TabsView(props: Props) {
           horizontal
           onScrollAt={handleScrollAt.run}
           onWheel={onWheel}
-          scroll-bar-class="z-10 hidden"
+          scrollBarClass="z-10 hidden"
           shadow
           shadowBottom={false}
           shadowLeft

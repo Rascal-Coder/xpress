@@ -22,7 +22,6 @@ export function useTabsViewScroll(props: TabsProps) {
 
     const scrollbarWidth = scrollbarEl.clientWidth;
     const scrollViewWidth = scrollViewportEl.clientWidth;
-
     return {
       scrollbarWidth,
       scrollViewWidth,
@@ -66,6 +65,7 @@ export function useTabsViewScroll(props: TabsProps) {
     if (!scrollViewportEl) return;
 
     const { scrollbarWidth } = getScrollClientWidth();
+
     setShowScrollButton(scrollViewportEl.scrollWidth > scrollbarWidth);
   }, [scrollViewportEl, getScrollClientWidth]);
 
@@ -117,8 +117,12 @@ export function useTabsViewScroll(props: TabsProps) {
       childList: true,
       subtree: true,
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calcShowScrollbarButton, scrollToActiveIntoView, handleResize]);
+  }, [
+    calcShowScrollbarButton,
+    scrollToActiveIntoView,
+    handleResize.run,
+    props.tabs?.length,
+  ]);
 
   const handleScrollAt = useDebounceFn(
     ({ left, right }) => {

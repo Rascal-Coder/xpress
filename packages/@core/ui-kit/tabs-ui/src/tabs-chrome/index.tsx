@@ -66,6 +66,26 @@ export function TabsChrome({
   function onHandleClick(key: string) {
     onClick?.(key);
   }
+  const TabBackground = () => {
+    return (
+      <>
+        <svg
+          className="tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150"
+          height="7"
+          width="7"
+        >
+          <path d="M 0 7 A 7 7 0 0 0 7 0 L 7 7 Z" />
+        </svg>
+        <svg
+          className="tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150"
+          height="7"
+          width="7"
+        >
+          <path d="M 0 0 A 7 7 0 0 0 7 7 L 0 7 Z" />
+        </svg>
+      </>
+    );
+  };
   return (
     <motion.div
       className={cn(
@@ -89,7 +109,7 @@ export function TabsChrome({
           data-index={i}
           data-tab-item="true"
           key={tab.key}
-          whileTap={{ scale: active ? 1 : 0.9 }}
+          whileTap={{ scale: tab.key === active ? 1 : 0.9 }}
           {...transition}
           onClick={() => onHandleClick(tab.key)}
           onMouseDown={(e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab)}
@@ -107,20 +127,7 @@ export function TabsChrome({
 
               <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
                 <div className="tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150"></div>
-                <svg
-                  className="tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150"
-                  height="7"
-                  width="7"
-                >
-                  <path d="M 0 7 A 7 7 0 0 0 7 0 L 7 7 Z" />
-                </svg>
-                <svg
-                  className="tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150"
-                  height="7"
-                  width="7"
-                >
-                  <path d="M 0 0 A 7 7 0 0 0 7 7 L 0 7 Z" />
-                </svg>
+                <TabBackground />
               </div>
 
               <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
