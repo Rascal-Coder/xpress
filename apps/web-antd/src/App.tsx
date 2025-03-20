@@ -15,15 +15,11 @@ function App() {
   const element = useRoutes(reactRoutes);
   const { isDark, preferences } = usePreferencesContext();
   const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
-  const setAllFlattenMenuItems = useAccessStore(
-    (state) => state.setAllFlattenMenuItems,
-  );
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    const { menuItems, allFlattenMenuItems } = generateMenuItems(routes);
+    const { menuItems } = generateMenuItems(routes);
     setAccessMenus(menuItems);
-    setAllFlattenMenuItems(allFlattenMenuItems);
-  }, [routes, setAccessMenus, setAllFlattenMenuItems]);
+  }, [routes, setAccessMenus]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
