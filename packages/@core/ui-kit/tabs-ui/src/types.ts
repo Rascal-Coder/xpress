@@ -92,4 +92,13 @@ interface TabsProps {
   wheelable?: boolean;
 }
 
+export interface TabConfig {
+  [key: string]: any;
+  affixTab: boolean;
+  closable: boolean;
+  icon: string;
+  key: string;
+  title: string;
+}
+
 export type { TabsProps };

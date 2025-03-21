@@ -7,7 +7,7 @@ import { type MouseEvent } from 'react';
 import { useMemo } from 'react';
 
 import AnimationWrap from '../AnimationWrap';
-import { type TabsProps } from '../types';
+import { type TabConfig, type TabsProps } from '../types';
 
 interface Props extends TabsProps {
   onClick?: (key: string) => void;
@@ -24,16 +24,20 @@ export function TabsBase({
   tabs = [],
   ...props
 }: Props) {
-  // const transition = useTransition('slide-left');
   const tabView = useMemo(() => {
     return tabs.map((tab) => {
-      const { affixTab, closable, key, title } = tab || {};
+      const { fullPath, meta, path } = tab || {};
+      const { affixTab, icon, newTabTitle, tabClosable, title } = meta || {};
       return {
-        affixTab,
-        closable,
-        key: key as string,
-        title: title as string,
-      } as Record<string, any>;
+        affixTab: !!affixTab,
+        closable: Reflect.has(meta, 'tabClosable') ? !!tabClosable : true,
+        fullPath,
+        icon: icon as string,
+        key: fullPath || path,
+        meta,
+        path,
+        title: (newTabTitle || title) as string,
+      } as TabConfig;
     });
   }, [tabs]);
   const typeWithClass = useMemo(() => {

@@ -4,7 +4,12 @@ import type { RouteObject } from 'react-router-dom';
 import type { RouteConfig } from '../types';
 
 import loadable from '@loadable/component';
-import { Navigate, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
 interface FormatRoutesResult {
   flattenRoutes: Map<string, RouteConfig>;
@@ -49,6 +54,17 @@ export function generateReactRoutes(configs?: RouteConfig[]): RouteObject[] {
 
       return routeObject;
     });
+}
+
+/**
+ * 获取完整的路由路径（包含查询参数和hash）
+ */
+export function getFullPath(
+  pathname: string,
+  search: string = '',
+  hash: string = '',
+): string {
+  return `${pathname}${search}${hash}`;
 }
 
 /**
@@ -125,6 +141,20 @@ export function formatRoutes(
 
   const routes = processRoutes(routesConfig, parent);
   return { flattenRoutes, routes };
+}
+
+/**
+ * 获取当前路由的完整路径（包含查询参数和hash）的 hook
+ */
+export function useFullPath(): string {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const search = searchParams.toString();
+  return getFullPath(
+    location.pathname,
+    search ? `?${search}` : '',
+    location.hash,
+  );
 }
 
 /**

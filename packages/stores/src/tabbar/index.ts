@@ -27,8 +27,25 @@ export const useTabbarStore = create<TabbarStore>()(
           const tabIndex = _tabs.findIndex(
             (tab) => getTabPath(tab) === getTabPath(routeTab),
           );
-          // eslint-disable-next-line unicorn/no-negated-condition
-          if (tabIndex !== -1) {
+          if (tabIndex === -1) {
+            const currentTab = _tabs[tabIndex];
+            const mergedTab = {
+              ...currentTab,
+              ...routeTab,
+              meta: { ...currentTab?.meta, ...routeTab.meta },
+            };
+            if (currentTab) {
+              const curMeta = currentTab.meta;
+              if (Reflect.has(curMeta, 'affixTab')) {
+                mergedTab.meta.affixTab = curMeta.affixTab;
+              }
+              if (Reflect.has(curMeta, 'newTabTitle')) {
+                mergedTab.meta.newTabTitle = curMeta.newTabTitle;
+              }
+            }
+            _tabs.splice(tabIndex, 1, mergedTab);
+            return set({ tabs: [..._tabs] });
+          } else {
             const maxCount = preferences.tabbar.maxCount;
             // 获取动态路由打开数，超过 0 即代表需要控制打开数
             const maxNumOfOpenTab = (routeTab?.meta?.maxNumOfOpenTab ??
@@ -53,31 +70,13 @@ export const useTabbarStore = create<TabbarStore>()(
               );
               index !== -1 && _tabs.splice(index, 1);
             }
-            const res = {
+            const newTab = {
               ...routeTab.meta,
               key: routeTab.path,
             };
-            const tabs = [];
-            tabs.push(res);
-            return set({ tabs });
-          } else {
-            const currentTab = _tabs[tabIndex];
-            const mergedTab = {
-              ...currentTab,
-              ...routeTab,
-              meta: { ...currentTab?.meta, ...routeTab.meta },
-            };
-            if (currentTab) {
-              const curMeta = currentTab.meta;
-              if (Reflect.has(curMeta, 'affixTab')) {
-                mergedTab.meta.affixTab = curMeta.affixTab;
-              }
-              if (Reflect.has(curMeta, 'newTabTitle')) {
-                mergedTab.meta.newTabTitle = curMeta.newTabTitle;
-              }
-            }
-            _tabs.splice(tabIndex, 1, mergedTab);
-            return set({ tabs: _tabs });
+            // const newtabs = [];
+            // tabs.push(res);
+            return set({ tabs: [..._tabs, newTab] });
           }
         },
       }),

@@ -140,7 +140,7 @@ function BasicLayout({ router }: { router: Router }) {
           </LayoutFooter>
         ),
         // 标签栏
-        tabbar: <Tabbar />,
+        tabbar: <Tabbar router={router} />,
         // 内容
         content: <MemoContent></MemoContent>,
         // 内容覆盖层
