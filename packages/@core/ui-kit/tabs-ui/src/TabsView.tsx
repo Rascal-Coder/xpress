@@ -8,8 +8,9 @@ import { type TabsProps } from './types';
 import { useTabsViewScroll } from './use-tabs-view-scroll';
 
 interface Props extends TabsProps {
-  onClick?: (key: string) => void;
-  onClose?: (key: string) => void;
+  onClick?: (tab: Record<string, any>) => void;
+  onClose?: (tab: Record<string, any>) => void;
+  unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsView(props: Props) {
   const {

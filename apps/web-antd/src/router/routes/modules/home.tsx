@@ -16,6 +16,7 @@ const routes: RouteConfig[] = [
           menuVisibleWithForbidden: true,
           title: '分析页',
           permission: ['homeIndex'],
+          affixTab: true,
         },
       },
       {

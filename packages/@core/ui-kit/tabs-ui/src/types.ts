@@ -93,7 +93,6 @@ interface TabsProps {
 }
 
 export interface TabConfig {
-  [key: string]: any;
   affixTab: boolean;
   closable: boolean;
   icon: string;

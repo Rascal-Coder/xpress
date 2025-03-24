@@ -8,12 +8,12 @@ import { type MouseEvent } from 'react';
 
 import AnimationWrap from '../AnimationWrap';
 import { useTransition } from '../hooks/useTransition';
-import { type TabsProps } from '../types';
+import { type TabConfig, type TabsProps } from '../types';
 
 interface TabsChromeProps extends TabsProps {
-  onClick?: (key: string) => void;
-  onClose?: (key: string) => void;
-  onPin?: (tab: Record<string, any>) => void;
+  onClick?: (tab: Record<string, any>) => void;
+  onClose?: (tab: Record<string, any>) => void;
+  unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsChrome({
   active,
@@ -22,9 +22,9 @@ export function TabsChrome({
   gap = 7,
   onClick,
   onClose,
-  onPin,
   showIcon = true,
   tabs = [],
+  unpin,
   ...props
 }: TabsChromeProps) {
   const transition = useTransition('slide-left');
@@ -36,13 +36,18 @@ export function TabsChrome({
 
   const tabView = useMemo(() => {
     return tabs.map((tab) => {
-      const { affixTab, closable, key, title } = tab || {};
+      const { fullPath, meta, path } = tab || {};
+      const { affixTab, icon, newTabTitle, tabClosable, title } = meta || {};
       return {
-        affixTab,
-        closable,
-        key: key as string,
-        title: title as string,
-      } as Record<string, any>;
+        affixTab: !!affixTab,
+        closable: Reflect.has(meta, 'tabClosable') ? !!tabClosable : true,
+        fullPath,
+        icon: icon as string,
+        key: fullPath || path,
+        meta,
+        path,
+        title: (newTabTitle || title) as string,
+      } as TabConfig;
     });
   }, [tabs]);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -60,11 +65,11 @@ export function TabsChrome({
     ) {
       e.preventDefault();
       e.stopPropagation();
-      onClose?.(tab.key);
+      onClose?.(tab);
     }
   }
-  function onHandleClick(key: string) {
-    onClick?.(key);
+  function onHandleClick(tab: Record<string, any>) {
+    onClick?.(tab);
   }
   const TabBackground = () => {
     return (
@@ -89,7 +94,7 @@ export function TabsChrome({
   return (
     <motion.div
       className={cn(
-        'tabs-chrome !flex h-full w-max overflow-y-hidden pr-6',
+        'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
         contentClass,
       )}
       ref={contentRef}
@@ -111,7 +116,7 @@ export function TabsChrome({
           key={tab.key}
           whileTap={{ scale: tab.key === active ? 1 : 0.9 }}
           {...transition}
-          onClick={() => onHandleClick(tab.key)}
+          onClick={() => onHandleClick(tab)}
           onMouseDown={(e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab)}
         >
           <XpressContextMenu
@@ -136,7 +141,7 @@ export function TabsChrome({
                     className="hover:bg-accent stroke-accent-foreground/80 hover:stroke-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[2px] size-3 cursor-pointer rounded-full transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onClose?.(tab.key);
+                      onClose?.(tab);
                     }}
                   />
                 )}
@@ -146,7 +151,7 @@ export function TabsChrome({
                     className="hover:text-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[1px] size-3.5 cursor-pointer rounded-full transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onPin?.(tab);
+                      unpin?.(tab);
                     }}
                   />
                 )}

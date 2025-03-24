@@ -10,9 +10,9 @@ import AnimationWrap from '../AnimationWrap';
 import { type TabConfig, type TabsProps } from '../types';
 
 interface Props extends TabsProps {
-  onClick?: (key: string) => void;
-  onClose?: (key: string) => void;
-  onPin?: (tab: Record<string, any>) => void;
+  onClick?: (tab: Record<string, any>) => void;
+  onClose?: (tab: Record<string, any>) => void;
+  unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsBase({
   active,
@@ -20,8 +20,8 @@ export function TabsBase({
   contextMenus = () => [],
   onClick,
   onClose,
-  onPin,
   tabs = [],
+  unpin,
   ...props
 }: Props) {
   const tabView = useMemo(() => {
@@ -70,11 +70,11 @@ export function TabsBase({
     ) {
       e.preventDefault();
       e.stopPropagation();
-      onClose?.(tab.key);
+      onClose?.(tab);
     }
   }
-  function onTabClick(key: string) {
-    onClick?.(key);
+  function onTabClick(tab: Record<string, any>) {
+    onClick?.(tab);
   }
   return (
     <motion.div
@@ -95,7 +95,7 @@ export function TabsBase({
           data-index={index}
           data-tab-item="true"
           key={tab.key}
-          onClick={() => onTabClick(tab.key)}
+          onClick={() => onTabClick(tab)}
           onMouseDown={(e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab)}
           whileTap={{
             scale: tab.key === active ? 1 : 0.9,
@@ -114,7 +114,7 @@ export function TabsBase({
                     className="hover:bg-accent stroke-accent-foreground/80 hover:stroke-accent-foreground dark:group-[.is-active]:text-accent-foreground group-[.is-active]:text-primary size-3 cursor-pointer rounded-full transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onClose?.(tab.key);
+                      onClose?.(tab);
                     }}
                   ></X>
                 )}
@@ -123,7 +123,7 @@ export function TabsBase({
                     className="hover:bg-accent hover:stroke-accent-foreground group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground mt-[1px] size-3.5 cursor-pointer rounded-full transition-all"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onPin?.(tab);
+                      unpin?.(tab);
                     }}
                   ></Pin>
                 )}
