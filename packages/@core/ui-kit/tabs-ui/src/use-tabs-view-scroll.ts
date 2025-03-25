@@ -2,23 +2,33 @@ import type { TabsProps } from './types';
 
 import { useDebounceFn } from '@xpress-core/hooks';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 type DomElement = Element | null | undefined;
 
-export function useTabsViewScroll(props: TabsProps) {
+export function useTabsViewScroll(
+  props: TabsProps,
+  scrollbarRef: RefObject<HTMLDivElement>,
+) {
   const resizeObserverRef = useRef<null | ResizeObserver>(null);
   const mutationObserverRef = useRef<MutationObserver | null>(null);
   const tabItemCountRef = useRef(0);
-  const scrollbarRef = useRef<any>(null);
+  // const scrollbarRef = useRef<any>(null);
   const [scrollViewportEl, setScrollViewportEl] = useState<DomElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [scrollIsAtLeft, setScrollIsAtLeft] = useState(true);
   const [scrollIsAtRight, setScrollIsAtRight] = useState(false);
 
   const getScrollClientWidth = useCallback(() => {
-    const scrollbarEl = scrollbarRef.current?.$el;
-    if (!scrollbarEl || !scrollViewportEl) return {};
+    const scrollbarEl = scrollbarRef.current;
+    if (!scrollbarEl || !scrollViewportEl)
+      return { scrollbarWidth: 0, scrollViewWidth: 0 };
 
     const scrollbarWidth = scrollbarEl.clientWidth;
     const scrollViewWidth = scrollViewportEl.clientWidth;
@@ -35,12 +45,19 @@ export function useTabsViewScroll(props: TabsProps) {
       if (!scrollbarWidth || !scrollViewWidth) return;
       if (scrollbarWidth > scrollViewWidth) return;
 
-      scrollViewportEl?.scrollBy({
+      if (!scrollViewportEl) {
+        console.warn('scrollViewportEl is null');
+        return;
+      }
+
+      const scrollAmount =
+        direction === 'left'
+          ? -(scrollbarWidth - distance)
+          : +(scrollbarWidth - distance);
+
+      scrollViewportEl.scrollBy({
         behavior: 'smooth',
-        left:
-          direction === 'left'
-            ? -(scrollbarWidth - distance)
-            : +(scrollbarWidth - distance),
+        left: scrollAmount,
       });
     },
     [getScrollClientWidth, scrollViewportEl],
@@ -78,12 +95,23 @@ export function useTabsViewScroll(props: TabsProps) {
   );
 
   const initScrollbar = useCallback(async () => {
-    const scrollbarEl = scrollbarRef.current?.$el;
-    if (!scrollbarEl) return;
+    // 等待一帧以确保组件已完全挂载
+    await new Promise((resolve) => requestAnimationFrame(resolve));
+
+    const scrollbarEl = scrollbarRef.current;
+    if (!scrollbarEl) {
+      console.warn('scrollbarEl is not available yet');
+      return;
+    }
 
     const viewportEl = scrollbarEl?.querySelector(
       'div[data-radix-scroll-area-viewport]',
     );
+
+    if (!viewportEl) {
+      console.warn('viewportEl is not found');
+      return;
+    }
 
     setScrollViewportEl(viewportEl);
     calcShowScrollbarButton();
@@ -118,6 +146,7 @@ export function useTabsViewScroll(props: TabsProps) {
       subtree: true,
     });
   }, [
+    scrollbarRef,
     calcShowScrollbarButton,
     scrollToActiveIntoView,
     handleResize.run,
@@ -134,7 +163,12 @@ export function useTabsViewScroll(props: TabsProps) {
 
   const handleWheel = useCallback(
     ({ deltaY }: WheelEvent) => {
-      scrollViewportEl?.scrollBy({
+      if (!scrollViewportEl) {
+        console.warn('scrollViewportEl is null in handleWheel');
+        return;
+      }
+      scrollViewportEl.scrollBy({
+        // behavior: 'smooth',
         left: deltaY * 3,
       });
     },
