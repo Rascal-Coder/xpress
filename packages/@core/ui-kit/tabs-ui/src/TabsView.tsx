@@ -21,6 +21,7 @@ export function TabsView(props: Props) {
     handleWheel,
     scrollDirection,
     scrollIsAtLeft,
+    scrollIsAtRight,
     showScrollButton,
   } = useTabsViewScroll(props, scrollbarRef);
 
@@ -90,7 +91,9 @@ export function TabsView(props: Props) {
       {showScrollButton && (
         <span
           className={cn(
-            'hover:bg-muted text-muted-foreground cursor-pointer border-l px-2',
+            'cursor-pointer border-l px-2',
+            scrollIsAtRight && 'pointer-events-none opacity-30',
+            !scrollIsAtRight && 'hover:bg-muted',
           )}
           onClick={() => scrollDirection('right')}
         >
