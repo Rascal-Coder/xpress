@@ -44,6 +44,7 @@ export function AuthGuard({ router, children }: AuthGuardProps) {
 
       // 如果不在登录页且需要权限，则重定向到登录页
       if (location.pathname !== LOGIN_PATH) {
+        // TODO: 需要替换为useFullPath
         const fullPath = location.pathname + location.search;
         const redirectPath =
           fullPath === DEFAULT_HOME_PATH

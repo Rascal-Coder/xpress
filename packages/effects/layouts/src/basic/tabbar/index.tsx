@@ -10,7 +10,6 @@ export const Tabbar = ({ router }: { router: Router }) => {
   const { preferences, updatePreferences, contentIsMaximize } =
     usePreferencesContext();
   const fullPath = useFullPath();
-  // const navigate = useNavigate();
   const { curRoute } = useRouter(router);
   const matched = curRoute?.collecttedRouteInfo;
   const { addTab, tabs, closeTab, unpinTab } = useTabbar();
@@ -26,7 +25,9 @@ export const Tabbar = ({ router }: { router: Router }) => {
     };
   }, [currentPath, fullPath]);
   useEffect(() => {
-    addTab(currentTab, preferences);
+    if (!currentPath?.defaultPath) {
+      addTab(currentTab, preferences);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matched]);
   // TODO: 需要优化  抽离为hook
