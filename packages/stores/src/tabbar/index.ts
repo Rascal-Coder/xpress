@@ -1,23 +1,43 @@
 import type { Preferences } from '@xpress-core/preferences';
 import type { TabDefinition } from '@xpress-core/router';
 
+import { openRouteInNewWindow } from '@xpress-core/shared/utils';
+
+import NProgress from 'nprogress';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
 interface TabbarStoreActions {
+  _bulkCloseByPaths: (paths: string[]) => Promise<void>;
   _close: (tab: TabDefinition) => void;
+  _goToDefaultTab: (navigate: any) => Promise<void>;
   _goToTab: (tab: TabDefinition, navigate: any) => Promise<void>;
   addTab: (routeTab: TabDefinition, preferences: Preferences) => void;
   affixTabs: () => TabDefinition[];
+  closeAllTabs: (navigate: any) => Promise<void>;
   closeTab: (tab: TabDefinition, currentTab: any, navigate: any) => void;
   getTabs: () => TabDefinition[];
+  pinTab: (tab: TabDefinition) => void;
+  refresh: () => Promise<void>;
+  resetTabTitle: (tab: TabDefinition) => void;
   sortTabs: (oldIndex: number, newIndex: number) => void;
+  toggleTabPin: (tab: TabDefinition) => void;
   unpinTab: (tab: TabDefinition) => void;
 }
 interface TabbarState {
+  /**
+   * @zh_CN 拖拽结束的索引
+   */
+  dragEndIndex: number;
+  /**
+   * @zh_CN 是否刷新
+   */
+  refreshing?: boolean;
   tabs: any[];
 }
 const initialState: TabbarState = {
+  dragEndIndex: 0,
+  refreshing: false,
   tabs: [],
 };
 type TabbarStore = TabbarState & TabbarStoreActions;
@@ -26,6 +46,18 @@ export const useTabbarStore = create<TabbarStore>()(
     persist(
       (set, get) => ({
         ...initialState,
+        /**
+         * @zh_CN 批量关闭标签页
+         * @param paths
+         */
+        async _bulkCloseByPaths(paths: string[]) {
+          const { tabs } = get();
+          set({
+            tabs: tabs.filter((item) => {
+              return !paths.includes(getTabPath(item));
+            }),
+          });
+        },
         _close(tab: TabDefinition) {
           const { fullPath } = tab;
           if (isAffixTab(tab)) {
@@ -36,10 +68,34 @@ export const useTabbarStore = create<TabbarStore>()(
           index !== -1 && _tabs.splice(index, 1);
           return set({ tabs: [..._tabs] });
         },
+        /**
+         * @zh_CN 跳转到默认标签页
+         * @param navigate
+         */
+        async _goToDefaultTab(navigate: any) {
+          const { _goToTab, tabs } = get();
+          if (tabs.length <= 0) {
+            return;
+          }
+          const firstTab = tabs[0];
+          if (firstTab) {
+            await _goToTab(firstTab, navigate);
+          }
+        },
+        /**
+         * @zh_CN 跳转到标签页
+         * @param tab
+         * @param navigate
+         */
         async _goToTab(tab: TabDefinition, navigate: any) {
           const { fullPath } = tab;
           await navigate(fullPath);
         },
+        /**
+         * @zh_CN 添加标签页
+         * @param routeTab
+         * @param preferences
+         */
         addTab: (routeTab: TabDefinition, preferences: Preferences) => {
           if (!isTabShown(routeTab)) {
             return;
@@ -97,6 +153,9 @@ export const useTabbarStore = create<TabbarStore>()(
             return set({ tabs: [..._tabs] });
           }
         },
+        /**
+         * @zh_CN 获取固定标签页
+         */
         affixTabs() {
           return get()
             .tabs.filter((tab) => isAffixTab(tab))
@@ -105,12 +164,84 @@ export const useTabbarStore = create<TabbarStore>()(
                 (a.meta?.affixTabOrder ?? 0) - (b.meta?.affixTabOrder ?? 0),
             );
         },
-        // async closeAllTabs(router: Router) {
-        //   const newTabs = this.tabs.filter((tab) => isAffixTab(tab));
-        //   this.tabs =
-        //     newTabs.length > 0 ? newTabs : [...this.tabs].splice(0, 1);
-        //   await this._goToDefaultTab(router);
-        // },
+        /**
+         * @zh_CN 关闭所有标签页
+         */
+        async closeAllTabs(navigate: any) {
+          const { _goToDefaultTab, tabs } = get();
+          const newTabs = tabs.filter((tab) => isAffixTab(tab));
+          set({ tabs: newTabs.length > 0 ? newTabs : [...tabs].splice(0, 1) });
+          await _goToDefaultTab(navigate);
+        },
+        /**
+         * @zh_CN 关闭左侧标签页
+         * @param tab
+         */
+        async closeLeftTabs(tab: TabDefinition) {
+          const { _bulkCloseByPaths, tabs } = get();
+          const index = tabs.findIndex(
+            (item) => getTabPath(item) === getTabPath(tab),
+          );
+
+          if (index < 1) {
+            return;
+          }
+
+          const leftTabs = tabs.slice(0, index);
+          const paths: string[] = [];
+
+          for (const item of leftTabs) {
+            if (!isAffixTab(item)) {
+              paths.push(getTabPath(item));
+            }
+          }
+          await _bulkCloseByPaths(paths);
+        },
+        /**
+         * @zh_CN 关闭其他标签页
+         * @param tab
+         */
+        async closeOtherTabs(tab: TabDefinition) {
+          const { _bulkCloseByPaths, tabs } = get();
+          const closePaths = tabs.map((item) => getTabPath(item));
+
+          const paths: string[] = [];
+
+          for (const path of closePaths) {
+            if (path !== tab.fullPath) {
+              const closeTab = tabs.find((item) => getTabPath(item) === path);
+              if (!closeTab) {
+                continue;
+              }
+              if (!isAffixTab(closeTab)) {
+                paths.push(getTabPath(closeTab));
+              }
+            }
+          }
+          await _bulkCloseByPaths(paths);
+        },
+        /**
+         * @zh_CN 关闭右侧标签页
+         * @param tab
+         */
+        async closeRightTabs(tab: TabDefinition) {
+          const { _bulkCloseByPaths, tabs } = get();
+          const index = tabs.findIndex(
+            (item) => getTabPath(item) === getTabPath(tab),
+          );
+
+          if (index !== -1 && index < tabs.length - 1) {
+            const rightTabs = tabs.slice(index + 1);
+
+            const paths: string[] = [];
+            for (const item of rightTabs) {
+              if (!isAffixTab(item)) {
+                paths.push(getTabPath(item));
+              }
+            }
+            await _bulkCloseByPaths(paths);
+          }
+        },
         /**
          * @zh_CN 关闭标签页
          * @param tab
@@ -143,10 +274,85 @@ export const useTabbarStore = create<TabbarStore>()(
             );
           }
         },
+        /**
+         * 根据路径获取标签页
+         * @param path
+         */
+        getTabByPath(path: string) {
+          const { tabs } = get();
+          return tabs.find(
+            (item) => getTabPath(item) === path,
+          ) as TabDefinition;
+        },
         getTabs() {
           const { affixTabs, tabs } = get();
           const _affixTabs = affixTabs();
           return [..._affixTabs, ...tabs.filter((tab) => !isAffixTab(tab))];
+        },
+
+        /**
+         * @zh_CN 新窗口打开标签页
+         * @param tab
+         */
+        async openTabInNewWindow(tab: TabDefinition) {
+          openRouteInNewWindow(tab.fullPath || tab.path);
+        },
+        /**
+         * @zh_CN 固定标签页
+         * @param tab
+         */
+        async pinTab(tab: TabDefinition) {
+          const { sortTabs, tabs } = get();
+          const index = tabs.findIndex(
+            (item) => getTabPath(item) === getTabPath(tab),
+          );
+          if (index !== -1) {
+            const oldTab = tabs[index];
+            tab.meta.affixTab = true;
+            tab.meta.title = oldTab?.meta?.title as string;
+            // this.addTab(tab);
+            tabs.splice(index, 1, tab);
+            set({ tabs: [...tabs] });
+          }
+          // 过滤固定tabs
+          const affixTabs = tabs.filter((tab) => isAffixTab(tab));
+          // 获得固定tabs的index
+          const newIndex = affixTabs.findIndex(
+            (item) => getTabPath(item) === getTabPath(tab),
+          );
+          // 交换位置重新排序
+          sortTabs(index, newIndex);
+        },
+        /**
+         * 刷新标签页
+         */
+        async refresh() {
+          const { refreshing } = get();
+          if (refreshing) {
+            return;
+          }
+          set({ refreshing: true });
+          NProgress.start();
+          NProgress.inc(getRandomNumber(0.2, 0.8));
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          NProgress.done();
+          set({ refreshing: false });
+        },
+        /**
+         * @zh_CN 重置标签页标题
+         */
+        async resetTabTitle(tab: TabDefinition) {
+          const { tabs } = get();
+          if (tab?.meta?.newTabTitle) {
+            return;
+          }
+          const findTab = tabs.find(
+            (item) => getTabPath(item) === getTabPath(tab),
+          );
+          if (findTab) {
+            findTab.meta.newTabTitle = undefined;
+            set({ tabs: [...tabs] });
+          }
         },
         /**
          * @zh_CN 设置标签页顺序
@@ -154,17 +360,26 @@ export const useTabbarStore = create<TabbarStore>()(
          * @param newIndex
          */
         sortTabs(oldIndex: number, newIndex: number) {
-          const { tabs } = get();
+          const { dragEndIndex, tabs } = get();
           const currentTab = tabs[oldIndex];
           if (!currentTab) {
             return;
           }
           tabs.splice(oldIndex, 1);
           tabs.splice(newIndex, 0, currentTab);
-          // this.dragEndIndex = this.dragEndIndex + 1;
+          set({ tabs: [...tabs] });
+          set({ dragEndIndex: dragEndIndex + 1 });
         },
-        //   await (affixTab ? unpinTab(tab) : pinTab(tab));
-        // },
+        /**
+         * @zh_CN 切换固定标签页
+         * @param tab
+         */
+        async toggleTabPin(tab: TabDefinition) {
+          const { pinTab, unpinTab } = get();
+          const affixTab = tab?.meta?.affixTab ?? false;
+
+          affixTab ? unpinTab(tab) : pinTab(tab);
+        },
         /**
          * @zh_CN 取消固定标签页
          * @param tab
@@ -211,9 +426,13 @@ export const useTabbar = () => {
   const closeTab = useTabbarStore((state) => state.closeTab);
   const sortTabs = useTabbarStore((state) => state.sortTabs);
   const unpinTab = useTabbarStore((state) => state.unpinTab);
+  const refreshing = useTabbarStore((state) => state.refreshing);
+  const refresh = useTabbarStore((state) => state.refresh);
   return {
     addTab,
     closeTab,
+    refresh,
+    refreshing,
     sortTabs,
     tabs,
     unpinTab,
@@ -234,4 +453,15 @@ function getTabPath(tab: TabDefinition) {
  */
 function isAffixTab(tab: TabDefinition) {
   return tab?.meta?.affixTab ?? false;
+}
+interface GetRandomNumberOptions {
+  toFixed?: number;
+}
+function getRandomNumber(
+  max: number,
+  min: number,
+  options?: GetRandomNumberOptions,
+) {
+  const { toFixed = 0 } = options ?? {};
+  return Number((Math.random() * (max - min) + min).toFixed(toFixed));
 }

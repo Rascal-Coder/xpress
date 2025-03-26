@@ -16,7 +16,12 @@
   "dependencies": {
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/router": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
+    "nprogress": "catalog:",
     "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@types/nprogress": "catalog:"
   }
 }

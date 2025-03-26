@@ -24,6 +24,7 @@ const routes: RouteConfig[] = [
         component: () => import('#/pages/dashboard/workbench'),
         meta: {
           title: '工作台',
+          keepAlive: true,
         },
       },
     ],

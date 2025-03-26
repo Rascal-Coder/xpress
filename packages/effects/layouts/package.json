@@ -31,6 +31,7 @@
     "@xpress/stores": "workspace:*",
     "framer-motion": "^12.4.2",
     "react": "catalog:",
+    "react-activation": "^0.13.0",
     "react-colorful": "catalog:",
     "react-copy-to-clipboard": "catalog:",
     "react-router": "catalog:",
