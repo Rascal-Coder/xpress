@@ -15,11 +15,16 @@ interface TabbarStoreActions {
   addTab: (routeTab: TabDefinition, preferences: Preferences) => void;
   affixTabs: () => TabDefinition[];
   closeAllTabs: (navigate: any) => Promise<void>;
+  closeLeftTabs: (tab: TabDefinition) => Promise<void>;
+  closeOtherTabs: (tab: TabDefinition) => Promise<void>;
+  closeRightTabs: (tab: TabDefinition) => Promise<void>;
   closeTab: (tab: TabDefinition, currentTab: any, navigate: any) => void;
+  getTabByPath: (path: string) => TabDefinition;
   getTabs: () => TabDefinition[];
   pinTab: (tab: TabDefinition) => void;
   refresh: () => Promise<void>;
   resetTabTitle: (tab: TabDefinition) => void;
+  setAffixTabs: (tabs: TabDefinition[], preferences: Preferences) => void;
   sortTabs: (oldIndex: number, newIndex: number) => void;
   toggleTabPin: (tab: TabDefinition) => void;
   unpinTab: (tab: TabDefinition) => void;
@@ -355,6 +360,17 @@ export const useTabbarStore = create<TabbarStore>()(
           }
         },
         /**
+         * 设置固定标签页
+         * @param tabs
+         */
+        setAffixTabs(tabs: TabDefinition[], preferences: Preferences) {
+          const { addTab } = get();
+          for (const tab of tabs) {
+            tab.meta.affixTab = true;
+            addTab(tab, preferences);
+          }
+        },
+        /**
          * @zh_CN 设置标签页顺序
          * @param oldIndex
          * @param newIndex
@@ -428,11 +444,27 @@ export const useTabbar = () => {
   const unpinTab = useTabbarStore((state) => state.unpinTab);
   const refreshing = useTabbarStore((state) => state.refreshing);
   const refresh = useTabbarStore((state) => state.refresh);
+  const closeAllTabs = useTabbarStore((state) => state.closeAllTabs);
+  const closeLeftTabs = useTabbarStore((state) => state.closeLeftTabs);
+  const closeRightTabs = useTabbarStore((state) => state.closeRightTabs);
+  const closeOtherTabs = useTabbarStore((state) => state.closeOtherTabs);
+  const getTabByPath = useTabbarStore((state) => state.getTabByPath);
+  const affixTabs = useTabbarStore((state) => state.affixTabs);
+  const getTabs = useTabbarStore((state) => state.getTabs);
+  const setAffixTabs = useTabbarStore((state) => state.setAffixTabs);
   return {
     addTab,
+    affixTabs,
+    closeAllTabs,
+    closeLeftTabs,
+    closeOtherTabs,
+    closeRightTabs,
     closeTab,
+    getTabByPath,
+    getTabs,
     refresh,
     refreshing,
+    setAffixTabs,
     sortTabs,
     tabs,
     unpinTab,

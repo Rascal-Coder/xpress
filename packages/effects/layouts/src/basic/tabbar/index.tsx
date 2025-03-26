@@ -1,36 +1,17 @@
 import { useTabbar } from '@xpress/stores';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type Router, useFullPath, useRouter } from '@xpress-core/router';
+import { type Router } from '@xpress-core/router';
 import { TabsToolMore, TabsToolScreen, TabsView } from '@xpress-core/tabs-ui';
 
-import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import { useTabbarFn } from './useTabbar';
 
 export const Tabbar = ({ router }: { router: Router }) => {
   const { preferences, updatePreferences, contentIsMaximize } =
     usePreferencesContext();
-  const fullPath = useFullPath();
-  const { curRoute } = useRouter(router);
-  const matched = curRoute?.collecttedRouteInfo;
-  const { addTab, tabs, closeTab, unpinTab } = useTabbar();
-  const { pathname } = useLocation();
-  const currentPath = useMemo(() => {
-    return matched?.find((item) => item.path === pathname);
-  }, [pathname, matched]);
-  const currentTab = useMemo(() => {
-    return {
-      ...currentPath,
-      fullPath,
-      key: fullPath,
-    };
-  }, [currentPath, fullPath]);
-  useEffect(() => {
-    if (!currentPath?.defaultPath) {
-      addTab(currentTab, preferences);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matched]);
-  // TODO: 需要优化  抽离为hook
+  const { currentActive, currentTab } = useTabbarFn({ router });
+  const { tabs, closeTab, unpinTab } = useTabbar();
   const toggleMaximize = () => {
     updatePreferences({
       header: {
@@ -41,9 +22,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
       },
     });
   };
-  const currentActive = useMemo(() => {
-    return fullPath;
-  }, [fullPath]);
+
   const navigate = useNavigate();
   const handleTabClick = (tab: Record<string, any>) => {
     navigate(tab.fullPath);
