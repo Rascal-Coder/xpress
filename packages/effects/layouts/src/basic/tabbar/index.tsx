@@ -7,7 +7,7 @@ import {
   TabsView,
 } from '@xpress-core/tabs-ui';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useTabbarFn } from './useTabbar';
 
@@ -19,8 +19,10 @@ export const Tabbar = ({ router }: { router: Router }) => {
     handleTabClick,
     handleTabClose,
     handleUnpin,
+    sortTabs,
     tabs,
     createContextMenus,
+    currentTab,
   } = useTabbarFn({ router });
   const toggleMaximize = () => {
     updatePreferences({
@@ -36,6 +38,17 @@ export const Tabbar = ({ router }: { router: Router }) => {
   const handleOpenChange = (tab: Record<string, any>) => {
     setMenus(createContextMenus(tab));
   };
+  const [moreMenus, setMoreMenus] = useState<IContextMenuItem[]>([]);
+  useEffect(() => {
+    const menus = createContextMenus(currentTab).map((item) => {
+      return {
+        ...item,
+        label: item.text,
+        value: item.key,
+      };
+    });
+    setMoreMenus(menus);
+  }, [createContextMenus, currentTab]);
   return (
     <>
       <TabsView
@@ -43,27 +56,18 @@ export const Tabbar = ({ router }: { router: Router }) => {
         contextMenus={() => menus}
         draggable={preferences.tabbar.draggable}
         middleClickToClose={preferences.tabbar.middleClickToClose}
-        onClick={() => handleTabClick}
+        onClick={handleTabClick}
         onClose={handleTabClose}
         onOpenChange={handleOpenChange}
         showIcon={true}
+        sortTabs={sortTabs}
         styleType={preferences.tabbar.styleType}
         tabs={tabs}
         unpin={handleUnpin}
         wheelable={preferences.tabbar.wheelable}
       />
       <div className="flex-center h-full">
-        {preferences.tabbar.showMore && (
-          <TabsToolMore
-            menus={[
-              {
-                label: '关闭',
-                value: 'close',
-                key: 'close',
-              },
-            ]}
-          />
-        )}
+        {preferences.tabbar.showMore && <TabsToolMore menus={moreMenus} />}
         {preferences.tabbar.showMaximize && (
           <TabsToolScreen
             screen={contentIsMaximize}

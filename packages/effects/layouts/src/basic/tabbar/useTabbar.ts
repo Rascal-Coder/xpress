@@ -38,6 +38,7 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
     closeRightTabs,
     openTabInNewWindow,
     refresh,
+    sortTabs,
     toggleTabPin,
     unpinTab,
   } = useTabbar();
@@ -85,6 +86,7 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
   };
   useEffect(() => {
     initAffixTabs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!currentPath?.defaultPath) {
@@ -249,5 +251,6 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
     handleTabClose,
     handleUnpin,
     tabs,
+    sortTabs,
   };
 };

@@ -13,6 +13,7 @@ interface Props extends TabsProps {
   onClick?: (tab: Record<string, any>) => void;
   onClose?: (tab: Record<string, any>) => void;
   onOpenChange?: (tab: Record<string, any>) => void;
+  sortTabs?: (oldIndex: number, newIndex: number) => void;
   unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsView(props: Props) {
@@ -27,7 +28,7 @@ export function TabsView(props: Props) {
   } = useTabsViewScroll(props, scrollbarRef);
 
   const containerRef = useRef<HTMLDivElement>(null);
-
+  // const { sortTabs } = useTabbar();
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -82,7 +83,12 @@ export function TabsView(props: Props) {
           shadowTop={false}
         >
           {props.styleType === 'chrome' ? (
-            <TabsChrome {...props} />
+            <TabsChrome
+              {...props}
+              onSort={(oldIndex, newIndex) => {
+                props.sortTabs?.(oldIndex, newIndex);
+              }}
+            />
           ) : (
             <TabsBase {...props} />
           )}

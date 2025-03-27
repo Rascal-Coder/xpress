@@ -69,10 +69,14 @@ export const XpressContextMenu = ({
   const menusView = useMemo(() => {
     return props.menus?.(props.handlerData);
   }, [props]);
-  const handleClick = (menu: IContextMenuItem) => {
+  const handleClick = (
+    menu: IContextMenuItem,
+    e: React.MouseEvent<HTMLDivElement>,
+  ) => {
     if (menu.disabled) {
       return;
     }
+    e.stopPropagation();
     menu?.handler?.(props.handlerData);
   };
   return (
@@ -86,7 +90,7 @@ export const XpressContextMenu = ({
               disabled={menu.disabled}
               inset={menu.inset || !menu.icon}
               key={menu.key}
-              onClick={() => handleClick(menu)}
+              onClick={(e) => handleClick(menu, e)}
             >
               {menu.icon && <menu.icon className="mr-2 size-4 text-lg" />}
               {menu.text}
