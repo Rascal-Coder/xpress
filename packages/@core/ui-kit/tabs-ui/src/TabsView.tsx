@@ -90,7 +90,12 @@ export function TabsView(props: Props) {
               }}
             />
           ) : (
-            <TabsBase {...props} />
+            <TabsBase
+              {...props}
+              onSort={(oldIndex, newIndex) => {
+                props.sortTabs?.(oldIndex, newIndex);
+              }}
+            />
           )}
         </XpressScrollbar>
       </div>

@@ -2,26 +2,12 @@ import { Pin, X } from '@xpress-core/icons';
 import { XpressContextMenu, XpressIcon } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import {
-  DndContext,
-  type DragEndEvent,
-  DragOverlay,
-  type DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  horizontalListSortingStrategy,
-  SortableContext,
-  useSortable,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { motion } from 'framer-motion';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import { type MouseEvent } from 'react';
 
-import AnimationWrap from '../AnimationWrap';
+import { DraggableTabs } from '../components/DraggableTabs';
+import { SortableTab } from '../components/SortableTab';
+import { useDraggableTabs } from '../hooks/useDraggableTabs';
 import { useTransition } from '../hooks/useTransition';
 import { type TabConfig, type TabsProps } from '../types';
 
@@ -31,60 +17,6 @@ interface TabsChromeProps extends TabsProps {
   onOpenChange?: (tab: Record<string, any>) => void;
   onSort?: (oldIndex: number, newIndex: number) => void;
   unpin?: (tab: Record<string, any>) => void;
-}
-
-function SortableTab({ index, tab, ...props }: any) {
-  const sortableConfig = tab.affixTab
-    ? { disabled: true, id: tab.key }
-    : { id: tab.key };
-
-  const {
-    attributes,
-    isDragging,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable(sortableConfig);
-
-  const style: React.CSSProperties = {
-    ...props.style,
-    cursor: isDragging ? 'grabbing' : 'default',
-    transform: CSS.Transform.toString(
-      transform && { ...transform, scaleX: 1, y: 0 },
-    ),
-    transition: isDragging ? 'none' : transition,
-    zIndex: isDragging ? 2 : 1,
-  };
-
-  const dragAttributes = tab.affixTab ? {} : { ...listeners };
-
-  return (
-    <AnimationWrap
-      className={cn(
-        'tabs-chrome__item translate-all group relative -mr-3 flex h-full select-none items-center',
-        {
-          'affix-tab': tab.affixTab,
-          draggable: !tab.affixTab,
-          'is-active': tab.key === props.active,
-          isDragging,
-        },
-      )}
-      data-active-tab={props.active}
-      data-index={index}
-      data-tab-item="true"
-      ref={setNodeRef}
-      style={style}
-      whileTap={{ scale: tab.key === props.active ? 1 : 0.9 }}
-      {...props.transition}
-      {...attributes}
-      {...dragAttributes}
-      onClick={() => props.onTabClick(tab)}
-      onMouseDown={(e: MouseEvent<HTMLDivElement>) => props.onMouseDown(e, tab)}
-    >
-      {props.children}
-    </AnimationWrap>
-  );
 }
 
 export function TabsChrome({
@@ -124,12 +56,13 @@ export function TabsChrome({
       } as TabConfig;
     });
   }, [tabs]);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [activeId, setActiveId] = useState<null | string>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const activeTab = activeId
-    ? tabView.find((tab) => tab.key === activeId)
-    : null;
+
+  // 使用自定义hook处理拖拽逻辑
+  const { activeId, activeTab, handleDragEnd, handleDragStart, isDragging } =
+    useDraggableTabs({
+      onSort,
+      tabs: tabView,
+    });
 
   function onMouseDown(
     e: MouseEvent<HTMLDivElement>,
@@ -147,49 +80,12 @@ export function TabsChrome({
       onClose?.(tab);
     }
   }
+
   function onTabClick(tab: Record<string, any>) {
     onClick?.(tab);
   }
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 10 },
-    }),
-  );
-
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-    const draggedTab = tabView.find((tab) => tab.key === active.id);
-
-    if (draggedTab?.affixTab) {
-      return;
-    }
-
-    setActiveId(active.id as string);
-    setIsDragging(true);
-  }
-
-  function onDragEnd({ active, over }: DragEndEvent) {
-    setIsDragging(false);
-
-    setTimeout(() => {
-      setActiveId(null);
-    }, 50);
-
-    if (active.id !== over?.id) {
-      const activeTab = tabView.find((tab) => tab.key === active.id);
-      const overTab = tabView.find((tab) => tab.key === over?.id);
-
-      if (activeTab?.affixTab && overTab?.affixTab) {
-        return;
-      }
-
-      const oldIndex = tabView.findIndex((item) => item.key === active.id);
-      const newIndex = tabView.findIndex((item) => item.key === over?.id);
-      onSort?.(oldIndex, newIndex);
-    }
-  }
-
+  // 标签页背景SVG组件
   const TabBackground = ({ isActive }: { isActive?: boolean }) => {
     return (
       <>
@@ -219,6 +115,7 @@ export function TabsChrome({
     );
   };
 
+  // 渲染标签页内容
   const renderTabContent = (tab: TabConfig) => {
     if (!tab) return null;
 
@@ -226,6 +123,7 @@ export function TabsChrome({
 
     return (
       <div className="relative size-full px-1">
+        {/* 标签分隔线 - 仅在非激活状态显示 */}
         <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
           <div
             className={cn(
@@ -236,6 +134,8 @@ export function TabsChrome({
           ></div>
           <TabBackground isActive={isActiveTab} />
         </div>
+
+        {/* 右侧关闭或固定图标 */}
         <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
           {!tab.affixTab && tabView.length > 1 && tab.closable && (
             <X
@@ -257,6 +157,8 @@ export function TabsChrome({
             />
           )}
         </div>
+
+        {/* 标签主体内容 */}
         <div
           className={cn(
             'tabs-chrome__item-main z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
@@ -279,116 +181,108 @@ export function TabsChrome({
     );
   };
 
-  return (
-    <DndContext
-      onDragEnd={onDragEnd}
-      onDragStart={handleDragStart}
-      sensors={sensors}
+  // 拖拽预览的Overlay内容
+  const dragOverlay = activeTab && (
+    <div
+      className={cn(
+        'tabs-chrome__item draggable translate-all group relative -mr-3 flex h-full select-none items-center opacity-80',
+        activeId === active && 'is-active',
+        activeId !== active && 'bg-background !mx-0 rounded-md !p-0 shadow-lg',
+      )}
+      style={{ cursor: 'grabbing', zIndex: 50 }}
     >
-      <motion.div
-        className={cn(
-          'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
-          contentClass,
-        )}
-        ref={contentRef}
-        style={style}
-      >
-        <SortableContext
-          items={tabView.map((tab) => tab.key)}
-          strategy={horizontalListSortingStrategy}
+      {renderTabContent(activeTab)}
+    </div>
+  );
+
+  return (
+    <DraggableTabs
+      activeId={activeId}
+      activeTab={activeTab}
+      className={cn(
+        'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
+        contentClass,
+      )}
+      isDragging={isDragging}
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      overlayContent={dragOverlay}
+      style={style}
+      tabs={tabView}
+    >
+      {tabView.map((tab, i) => (
+        <SortableTab
+          active={active}
+          contentClass={cn(
+            'tabs-chrome__item translate-all group relative -mr-3 flex h-full select-none items-center',
+          )}
+          index={i}
+          key={tab.key}
+          onMouseDown={onMouseDown}
+          onTabClick={onTabClick}
+          tab={tab}
+          transition={transition}
         >
-          {tabView.map((tab, i) => (
-            <SortableTab
-              active={active}
-              index={i}
-              key={tab.key}
-              onMouseDown={onMouseDown}
-              onTabClick={onTabClick}
-              tab={tab}
-              transition={transition}
-            >
-              <XpressContextMenu
-                handlerData={tab}
-                itemClass="pr-6"
-                menus={contextMenus}
-                modal={false}
-                onOpenChange={(open) => {
-                  if (open) {
-                    onOpenChange?.(tab);
-                  }
-                }}
-              >
-                <div className="relative size-full px-1">
-                  {i !== 0 && tab.key !== active && (
-                    <div className="tabs-chrome__divider bg-border absolute left-[var(--gap)] top-1/2 z-0 h-4 w-[1px] translate-y-[-50%] transition-all"></div>
-                  )}
-
-                  <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
-                    <div className="tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150"></div>
-                    <TabBackground isActive={tab.key === active} />
-                  </div>
-
-                  <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
-                    {!tab.affixTab && tabView.length > 1 && tab.closable && (
-                      <X
-                        className="hover:bg-accent stroke-accent-foreground/80 hover:stroke-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[2px] size-3 cursor-pointer rounded-full transition-all"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClose?.(tab);
-                        }}
-                      />
-                    )}
-
-                    {tab.affixTab && tabView.length > 1 && tab.closable && (
-                      <Pin
-                        className="hover:text-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[1px] size-3.5 cursor-pointer rounded-full transition-all"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          unpin?.(tab);
-                        }}
-                      />
-                    )}
-                  </div>
-
-                  <div className="tabs-chrome__item-main group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150">
-                    {showIcon && (
-                      <XpressIcon
-                        className="mr-1 flex size-4 items-center overflow-hidden"
-                        icon={tab.icon}
-                      />
-                    )}
-
-                    <span className="flex-1 overflow-hidden whitespace-nowrap text-sm">
-                      {tab.title}
-                    </span>
-                  </div>
-                </div>
-              </XpressContextMenu>
-            </SortableTab>
-          ))}
-        </SortableContext>
-
-        <DragOverlay
-          dropAnimation={{
-            duration: 50,
-            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
-          }}
-        >
-          {activeId && isDragging ? (
-            <div
-              className={cn(
-                'tabs-chrome__item draggable translate-all group relative flex h-full select-none items-center opacity-80',
-                activeId === active && 'is-active',
-                activeId !== active &&
-                  'bg-background !mx-0 rounded-md !p-0 shadow-lg',
+          <XpressContextMenu
+            handlerData={tab}
+            itemClass="pr-6"
+            menus={contextMenus}
+            modal={false}
+            onOpenChange={(open) => {
+              if (open) {
+                onOpenChange?.(tab);
+              }
+            }}
+          >
+            {/* 展示标签内容 */}
+            <div className="relative size-full px-1">
+              {i !== 0 && tab.key !== active && (
+                <div className="tabs-chrome__divider bg-border absolute left-[var(--gap)] top-1/2 z-0 h-4 w-[1px] translate-y-[-50%] transition-all"></div>
               )}
-              style={{ cursor: 'grabbing', zIndex: 50 }}
-            >
-              {renderTabContent(activeTab as TabConfig)}
+
+              <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
+                <div className="tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150"></div>
+                <TabBackground isActive={tab.key === active} />
+              </div>
+
+              <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
+                {!tab.affixTab && tabView.length > 1 && tab.closable && (
+                  <X
+                    className="hover:bg-accent stroke-accent-foreground/80 hover:stroke-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[2px] size-3 cursor-pointer rounded-full transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onClose?.(tab);
+                    }}
+                  />
+                )}
+
+                {tab.affixTab && tabView.length > 1 && tab.closable && (
+                  <Pin
+                    className="hover:text-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[1px] size-3.5 cursor-pointer rounded-full transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      unpin?.(tab);
+                    }}
+                  />
+                )}
+              </div>
+
+              <div className="tabs-chrome__item-main group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150">
+                {showIcon && (
+                  <XpressIcon
+                    className="mr-1 flex size-4 items-center overflow-hidden"
+                    icon={tab.icon}
+                  />
+                )}
+
+                <span className="flex-1 overflow-hidden whitespace-nowrap text-sm">
+                  {tab.title}
+                </span>
+              </div>
             </div>
-          ) : null}
-        </DragOverlay>
-      </motion.div>
-    </DndContext>
+          </XpressContextMenu>
+        </SortableTab>
+      ))}
+    </DraggableTabs>
   );
 }
