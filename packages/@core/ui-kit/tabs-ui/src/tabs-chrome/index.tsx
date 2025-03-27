@@ -34,6 +34,10 @@ interface TabsChromeProps extends TabsProps {
 }
 
 function SortableTab({ index, tab, ...props }: any) {
+  const sortableConfig = tab.affixTab
+    ? { disabled: true, id: tab.key }
+    : { id: tab.key };
+
   const {
     attributes,
     isDragging,
@@ -41,7 +45,7 @@ function SortableTab({ index, tab, ...props }: any) {
     setNodeRef,
     transform,
     transition,
-  } = useSortable({ id: tab.key });
+  } = useSortable(sortableConfig);
 
   const style: React.CSSProperties = {
     ...props.style,
@@ -53,10 +57,12 @@ function SortableTab({ index, tab, ...props }: any) {
     zIndex: isDragging ? 2 : 1,
   };
 
+  const dragAttributes = tab.affixTab ? {} : { ...listeners };
+
   return (
     <AnimationWrap
       className={cn(
-        'tabs-chrome__item draggable translate-all group relative -mr-3 flex h-full select-none items-center',
+        'tabs-chrome__item translate-all group relative -mr-3 flex h-full select-none items-center',
         {
           'affix-tab': tab.affixTab,
           draggable: !tab.affixTab,
@@ -72,7 +78,7 @@ function SortableTab({ index, tab, ...props }: any) {
       whileTap={{ scale: tab.key === props.active ? 1 : 0.9 }}
       {...props.transition}
       {...attributes}
-      {...listeners}
+      {...dragAttributes}
       onClick={() => props.onTabClick(tab)}
       onMouseDown={(e: MouseEvent<HTMLDivElement>) => props.onMouseDown(e, tab)}
     >
@@ -153,6 +159,12 @@ export function TabsChrome({
 
   function handleDragStart(event: DragStartEvent) {
     const { active } = event;
+    const draggedTab = tabView.find((tab) => tab.key === active.id);
+
+    if (draggedTab?.affixTab) {
+      return;
+    }
+
     setActiveId(active.id as string);
     setIsDragging(true);
   }
@@ -165,6 +177,13 @@ export function TabsChrome({
     }, 50);
 
     if (active.id !== over?.id) {
+      const activeTab = tabView.find((tab) => tab.key === active.id);
+      const overTab = tabView.find((tab) => tab.key === over?.id);
+
+      if (activeTab?.affixTab && overTab?.affixTab) {
+        return;
+      }
+
       const oldIndex = tabView.findIndex((item) => item.key === active.id);
       const newIndex = tabView.findIndex((item) => item.key === over?.id);
       onSort?.(oldIndex, newIndex);
@@ -217,7 +236,27 @@ export function TabsChrome({
           ></div>
           <TabBackground isActive={isActiveTab} />
         </div>
+        <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
+          {!tab.affixTab && tabView.length > 1 && tab.closable && (
+            <X
+              className="hover:bg-accent stroke-accent-foreground/80 hover:stroke-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[2px] size-3 cursor-pointer rounded-full transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose?.(tab);
+              }}
+            />
+          )}
 
+          {tab.affixTab && tabView.length > 1 && tab.closable && (
+            <Pin
+              className="hover:text-accent-foreground text-accent-foreground/80 group-[.is-active]:text-accent-foreground mt-[1px] size-3.5 cursor-pointer rounded-full transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                unpin?.(tab);
+              }}
+            />
+          )}
+        </div>
         <div
           className={cn(
             'tabs-chrome__item-main z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
@@ -338,7 +377,7 @@ export function TabsChrome({
           {activeId && isDragging ? (
             <div
               className={cn(
-                'tabs-chrome__item draggable translate-all group relative -mr-3 flex h-full select-none items-center opacity-80',
+                'tabs-chrome__item draggable translate-all group relative flex h-full select-none items-center opacity-80',
                 activeId === active && 'is-active',
                 activeId !== active &&
                   'bg-background !mx-0 rounded-md !p-0 shadow-lg',
