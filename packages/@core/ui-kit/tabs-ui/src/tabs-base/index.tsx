@@ -12,6 +12,7 @@ import { type TabConfig, type TabsProps } from '../types';
 interface Props extends TabsProps {
   onClick?: (tab: Record<string, any>) => void;
   onClose?: (tab: Record<string, any>) => void;
+  onOpenChange?: (tab: Record<string, any>) => void;
   unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsBase({
@@ -20,6 +21,7 @@ export function TabsBase({
   contextMenus = () => [],
   onClick,
   onClose,
+  onOpenChange,
   tabs = [],
   unpin,
   ...props
@@ -106,6 +108,11 @@ export function TabsBase({
             item-class="pr-6"
             menus={contextMenus}
             modal={false}
+            onOpenChange={(open) => {
+              if (open) {
+                onOpenChange?.(tab);
+              }
+            }}
           >
             <div className="relative flex size-full items-center">
               <div className="absolute right-1.5 top-1/2 z-[3] translate-y-[-50%] overflow-hidden">

@@ -1380,6 +1380,9 @@ importers:
       '@xpress-core/hooks':
         specifier: workspace:*
         version: link:../../@core/hooks
+      '@xpress-core/icons':
+        specifier: workspace:*
+        version: link:../../@core/base/icons
       '@xpress-core/layout-ui':
         specifier: workspace:*
         version: link:../../@core/ui-kit/layout-ui

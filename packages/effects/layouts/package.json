@@ -18,6 +18,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@loadable/component": "catalog:",
     "@xpress-core/hooks": "workspace:*",
+    "@xpress-core/icons": "workspace:*",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/popup-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",

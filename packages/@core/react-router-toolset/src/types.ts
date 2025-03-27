@@ -30,6 +30,8 @@ interface RouteConfig {
   defaultPath?: string;
   /** 将子路由的菜单层级提升到本级 */
   flatten?: boolean;
+  /** 是否是常量路由 */
+  isConstant?: boolean;
   /** 是否是根路由 */
   isRoot?: boolean;
   meta?: {

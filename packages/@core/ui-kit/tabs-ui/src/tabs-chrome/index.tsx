@@ -13,6 +13,7 @@ import { type TabConfig, type TabsProps } from '../types';
 interface TabsChromeProps extends TabsProps {
   onClick?: (tab: Record<string, any>) => void;
   onClose?: (tab: Record<string, any>) => void;
+  onOpenChange?: (tab: Record<string, any>) => void;
   unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsChrome({
@@ -22,6 +23,7 @@ export function TabsChrome({
   gap = 7,
   onClick,
   onClose,
+  onOpenChange,
   showIcon = true,
   tabs = [],
   unpin,
@@ -68,7 +70,7 @@ export function TabsChrome({
       onClose?.(tab);
     }
   }
-  function onHandleClick(tab: Record<string, any>) {
+  function onTabClick(tab: Record<string, any>) {
     onClick?.(tab);
   }
   const TabBackground = () => {
@@ -116,7 +118,7 @@ export function TabsChrome({
           key={tab.key}
           whileTap={{ scale: tab.key === active ? 1 : 0.9 }}
           {...transition}
-          onClick={() => onHandleClick(tab)}
+          onClick={() => onTabClick(tab)}
           onMouseDown={(e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab)}
         >
           <XpressContextMenu
@@ -124,6 +126,11 @@ export function TabsChrome({
             itemClass="pr-6"
             menus={contextMenus}
             modal={false}
+            onOpenChange={(open) => {
+              if (open) {
+                onOpenChange?.(tab);
+              }
+            }}
           >
             <div className="relative size-full px-1">
               {i !== 0 && tab.key !== active && (

@@ -45,7 +45,7 @@ interface TabsProps {
   /**
    * @zh_CN 右键菜单
    */
-  contextMenus?: (data: any) => IContextMenuItem[];
+  contextMenus?: () => IContextMenuItem[];
   /**
    * @zh_CN 是否可以拖拽
    */

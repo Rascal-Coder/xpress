@@ -21,10 +21,11 @@ interface TabbarStoreActions {
   closeTab: (tab: TabDefinition, currentTab: any, navigate: any) => void;
   getTabByPath: (path: string) => TabDefinition;
   getTabs: () => TabDefinition[];
+  openTabInNewWindow: (tab: TabDefinition) => void;
   pinTab: (tab: TabDefinition) => void;
   refresh: () => Promise<void>;
   resetTabTitle: (tab: TabDefinition) => void;
-  setAffixTabs: (tabs: TabDefinition[], preferences: Preferences) => void;
+  setAffixTabs: (tabs: TabDefinition[]) => void;
   sortTabs: (oldIndex: number, newIndex: number) => void;
   toggleTabPin: (tab: TabDefinition) => void;
   unpinTab: (tab: TabDefinition) => void;
@@ -155,7 +156,7 @@ export const useTabbarStore = create<TabbarStore>()(
               }
             }
             _tabs.splice(tabIndex, 1, mergedTab);
-            return set({ tabs: [..._tabs] });
+            set({ tabs: [..._tabs] });
           }
         },
         /**
@@ -307,26 +308,23 @@ export const useTabbarStore = create<TabbarStore>()(
          * @param tab
          */
         async pinTab(tab: TabDefinition) {
-          const { sortTabs, tabs } = get();
+          const { tabs } = get();
           const index = tabs.findIndex(
             (item) => getTabPath(item) === getTabPath(tab),
           );
           if (index !== -1) {
             const oldTab = tabs[index];
-            tab.meta.affixTab = true;
-            tab.meta.title = oldTab?.meta?.title as string;
-            // this.addTab(tab);
-            tabs.splice(index, 1, tab);
+            // 从原位置移除
+            tabs.splice(index, 1);
+
+            // 设置标签页为固定
+            oldTab.meta.affixTab = true;
+
+            // 插入到最前面
+            tabs.unshift(oldTab);
+
             set({ tabs: [...tabs] });
           }
-          // 过滤固定tabs
-          const affixTabs = tabs.filter((tab) => isAffixTab(tab));
-          // 获得固定tabs的index
-          const newIndex = affixTabs.findIndex(
-            (item) => getTabPath(item) === getTabPath(tab),
-          );
-          // 交换位置重新排序
-          sortTabs(index, newIndex);
         },
         /**
          * 刷新标签页
@@ -363,11 +361,20 @@ export const useTabbarStore = create<TabbarStore>()(
          * 设置固定标签页
          * @param tabs
          */
-        setAffixTabs(tabs: TabDefinition[], preferences: Preferences) {
-          const { addTab } = get();
-          for (const tab of tabs) {
-            tab.meta.affixTab = true;
-            addTab(tab, preferences);
+        setAffixTabs(_tabs: TabDefinition[]) {
+          const { tabs } = get();
+          if (_tabs.length > 0) {
+            const newTabs = _tabs.filter(
+              (newTab) =>
+                !tabs.some(
+                  (existingTab) =>
+                    getTabPath(existingTab) === getTabPath(newTab),
+                ),
+            );
+            if (newTabs.length > 0) {
+              tabs.unshift(...newTabs);
+              set({ tabs: [...tabs] });
+            }
           }
         },
         /**
@@ -401,29 +408,31 @@ export const useTabbarStore = create<TabbarStore>()(
          * @param tab
          */
         unpinTab(tab: TabDefinition) {
-          const _tabs = get().tabs;
-          const sortTabs = get().sortTabs;
-          const index = _tabs.findIndex(
+          const { tabs } = get();
+          const index = tabs.findIndex(
             (item) => getTabPath(item) === getTabPath(tab),
           );
+          if (index !== -1) {
+            const oldTab = tabs[index];
+            // 找到最后一个固定标签页的索引
+            let lastAffixIndex = -1;
+            for (const [i, tab_] of tabs.entries()) {
+              if (isAffixTab(tab_)) {
+                lastAffixIndex = i;
+              }
+            }
 
-          if (index === -1) {
-            console.warn('Tab not found when trying to unpin');
-            return;
+            // 从原位置移除
+            tabs.splice(index, 1);
+
+            // 设置标签页为非固定
+            oldTab.meta.affixTab = false;
+
+            // 插入到最后一个固定标签页之后
+            tabs.splice(lastAffixIndex, 0, oldTab);
+
+            set({ tabs: [...tabs] });
           }
-
-          const oldTab = _tabs[index];
-          tab.meta.affixTab = false;
-          tab.meta.title = oldTab?.meta?.title as string;
-
-          // 先进行排序
-          const affixTabs = _tabs.filter((tab) => isAffixTab(tab));
-          const newIndex = affixTabs.length;
-          sortTabs(index, newIndex);
-
-          // 最后更新状态
-          _tabs.splice(index, 1, tab);
-          set({ tabs: [..._tabs] });
         },
       }),
       {
@@ -452,6 +461,10 @@ export const useTabbar = () => {
   const affixTabs = useTabbarStore((state) => state.affixTabs);
   const getTabs = useTabbarStore((state) => state.getTabs);
   const setAffixTabs = useTabbarStore((state) => state.setAffixTabs);
+  const openTabInNewWindow = useTabbarStore(
+    (state) => state.openTabInNewWindow,
+  );
+  const toggleTabPin = useTabbarStore((state) => state.toggleTabPin);
   return {
     addTab,
     affixTabs,
@@ -462,11 +475,13 @@ export const useTabbar = () => {
     closeTab,
     getTabByPath,
     getTabs,
+    openTabInNewWindow,
     refresh,
     refreshing,
     setAffixTabs,
     sortTabs,
     tabs,
+    toggleTabPin,
     unpinTab,
   };
 };

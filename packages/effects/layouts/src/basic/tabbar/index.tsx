@@ -1,17 +1,27 @@
-import { useTabbar } from '@xpress/stores';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { type Router } from '@xpress-core/router';
-import { TabsToolMore, TabsToolScreen, TabsView } from '@xpress-core/tabs-ui';
+import {
+  type IContextMenuItem,
+  TabsToolMore,
+  TabsToolScreen,
+  TabsView,
+} from '@xpress-core/tabs-ui';
 
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import { useTabbarFn } from './useTabbar';
 
 export const Tabbar = ({ router }: { router: Router }) => {
   const { preferences, updatePreferences, contentIsMaximize } =
     usePreferencesContext();
-  const { currentActive, currentTab } = useTabbarFn({ router });
-  const { tabs, closeTab, unpinTab } = useTabbar();
+  const {
+    currentActive,
+    handleTabClick,
+    handleTabClose,
+    handleUnpin,
+    tabs,
+    createContextMenus,
+  } = useTabbarFn({ router });
   const toggleMaximize = () => {
     updatePreferences({
       header: {
@@ -22,31 +32,20 @@ export const Tabbar = ({ router }: { router: Router }) => {
       },
     });
   };
-
-  const navigate = useNavigate();
-  const handleTabClick = (tab: Record<string, any>) => {
-    navigate(tab.fullPath);
-  };
-  const handleTabClose = (tab: Record<string, any>) => {
-    closeTab(tab, currentTab, navigate);
-  };
-  const handleUnpin = (tab: Record<string, any>) => {
-    unpinTab(tab);
+  const [menus, setMenus] = useState<IContextMenuItem[]>([]);
+  const handleOpenChange = (tab: Record<string, any>) => {
+    setMenus(createContextMenus(tab));
   };
   return (
     <>
       <TabsView
         active={currentActive}
-        contextMenus={() => [
-          {
-            key: 'close',
-            text: '关闭',
-          },
-        ]}
+        contextMenus={() => menus}
         draggable={preferences.tabbar.draggable}
         middleClickToClose={preferences.tabbar.middleClickToClose}
-        onClick={handleTabClick}
+        onClick={() => handleTabClick}
         onClose={handleTabClose}
+        onOpenChange={handleOpenChange}
         showIcon={true}
         styleType={preferences.tabbar.styleType}
         tabs={tabs}
