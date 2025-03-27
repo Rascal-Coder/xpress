@@ -5,6 +5,8 @@ import { cn } from '@xpress-core/shared/utils';
 import {
   DndContext,
   type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -16,7 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { motion } from 'framer-motion';
-import { useMemo, useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { type MouseEvent } from 'react';
 
 import AnimationWrap from '../AnimationWrap';
@@ -117,6 +119,11 @@ export function TabsChrome({
     });
   }, [tabs]);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [activeId, setActiveId] = useState<null | string>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const activeTab = activeId
+    ? tabView.find((tab) => tab.key === activeId)
+    : null;
 
   function onMouseDown(
     e: MouseEvent<HTMLDivElement>,
@@ -144,7 +151,19 @@ export function TabsChrome({
     }),
   );
 
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+    setActiveId(active.id as string);
+    setIsDragging(true);
+  }
+
   function onDragEnd({ active, over }: DragEndEvent) {
+    setIsDragging(false);
+
+    setTimeout(() => {
+      setActiveId(null);
+    }, 50);
+
     if (active.id !== over?.id) {
       const oldIndex = tabView.findIndex((item) => item.key === active.id);
       const newIndex = tabView.findIndex((item) => item.key === over?.id);
@@ -152,18 +171,26 @@ export function TabsChrome({
     }
   }
 
-  const TabBackground = () => {
+  const TabBackground = ({ isActive }: { isActive?: boolean }) => {
     return (
       <>
         <svg
-          className="tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150"
+          className={cn(
+            'absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150',
+            isActive &&
+              'tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
+          )}
           height="7"
           width="7"
         >
           <path d="M 0 7 A 7 7 0 0 0 7 0 L 7 7 Z" />
         </svg>
         <svg
-          className="tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150"
+          className={cn(
+            'absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150',
+            isActive &&
+              'tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
+          )}
           height="7"
           width="7"
         >
@@ -173,8 +200,52 @@ export function TabsChrome({
     );
   };
 
+  const renderTabContent = (tab: TabConfig) => {
+    if (!tab) return null;
+
+    const isActiveTab = tab.key === active;
+
+    return (
+      <div className="relative size-full px-1">
+        <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
+          <div
+            className={cn(
+              'tabs-chrome__background-content h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150',
+              isActiveTab &&
+                'group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent',
+            )}
+          ></div>
+          <TabBackground isActive={isActiveTab} />
+        </div>
+
+        <div
+          className={cn(
+            'tabs-chrome__item-main z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
+            isActiveTab &&
+              'group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground',
+          )}
+        >
+          {showIcon && (
+            <XpressIcon
+              className="mr-1 flex size-4 items-center overflow-hidden"
+              icon={tab.icon}
+            />
+          )}
+
+          <span className="flex-1 overflow-hidden whitespace-nowrap text-sm">
+            {tab.title}
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <DndContext onDragEnd={onDragEnd} sensors={sensors}>
+    <DndContext
+      onDragEnd={onDragEnd}
+      onDragStart={handleDragStart}
+      sensors={sensors}
+    >
       <motion.div
         className={cn(
           'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
@@ -215,7 +286,7 @@ export function TabsChrome({
 
                   <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
                     <div className="tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150"></div>
-                    <TabBackground />
+                    <TabBackground isActive={tab.key === active} />
                   </div>
 
                   <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
@@ -257,6 +328,27 @@ export function TabsChrome({
             </SortableTab>
           ))}
         </SortableContext>
+
+        <DragOverlay
+          dropAnimation={{
+            duration: 50,
+            easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+          }}
+        >
+          {activeId && isDragging ? (
+            <div
+              className={cn(
+                'tabs-chrome__item draggable translate-all group relative -mr-3 flex h-full select-none items-center opacity-80',
+                activeId === active && 'is-active',
+                activeId !== active &&
+                  'bg-background !mx-0 rounded-md !p-0 shadow-lg',
+              )}
+              style={{ cursor: 'grabbing', zIndex: 50 }}
+            >
+              {renderTabContent(activeTab as TabConfig)}
+            </div>
+          ) : null}
+        </DragOverlay>
       </motion.div>
     </DndContext>
   );
