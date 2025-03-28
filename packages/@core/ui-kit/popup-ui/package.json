@@ -36,9 +36,11 @@
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "react": "catalog:",
+    "react-dom": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@types/react": "catalog:"
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:"
   }
 }
