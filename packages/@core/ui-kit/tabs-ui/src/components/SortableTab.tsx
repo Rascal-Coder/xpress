@@ -1,3 +1,5 @@
+import type { TabDefinition } from '../types';
+
 import { cn } from '@xpress-core/shared/utils';
 
 import { useSortable } from '@dnd-kit/sortable';
@@ -12,12 +14,9 @@ interface SortableTabProps {
   contentClass?: string;
   index: number;
   isDraggingDisabled?: boolean;
-  onMouseDown: (
-    e: MouseEvent<HTMLDivElement>,
-    tab: Record<string, any>,
-  ) => void;
-  onTabClick: (tab: Record<string, any>) => void;
-  tab: Record<string, any>;
+  onMouseDown: (e: MouseEvent<HTMLDivElement>, tab: TabDefinition) => void;
+  onTabClick: (tab: TabDefinition) => void;
+  tab: TabDefinition;
   transition?: any;
 }
 

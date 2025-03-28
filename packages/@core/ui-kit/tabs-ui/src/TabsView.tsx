@@ -10,11 +10,7 @@ import { type TabsProps } from './types';
 import { useTabsViewScroll } from './use-tabs-view-scroll';
 
 interface Props extends TabsProps {
-  onClick?: (tab: Record<string, any>) => void;
-  onClose?: (tab: Record<string, any>) => void;
-  onOpenChange?: (tab: Record<string, any>) => void;
   sortTabs?: (oldIndex: number, newIndex: number) => void;
-  unpin?: (tab: Record<string, any>) => void;
 }
 export function TabsView(props: Props) {
   const scrollbarRef = useRef<HTMLDivElement>(null);

@@ -9,14 +9,14 @@ import { DraggableTabs } from '../components/DraggableTabs';
 import { SortableTab } from '../components/SortableTab';
 import { useDraggableTabs } from '../hooks/useDraggableTabs';
 import { useTransition } from '../hooks/useTransition';
-import { type TabConfig, type TabsProps } from '../types';
+import { type TabConfig, type TabDefinition, type TabsProps } from '../types';
 
 interface TabsChromeProps extends TabsProps {
-  onClick?: (tab: Record<string, any>) => void;
-  onClose?: (tab: Record<string, any>) => void;
-  onOpenChange?: (tab: Record<string, any>) => void;
+  onClick?: (tab: TabDefinition) => void;
+  onClose?: (tab: TabDefinition) => void;
+  onOpenChange?: (tab: TabDefinition) => void;
   onSort?: (oldIndex: number, newIndex: number) => void;
-  unpin?: (tab: Record<string, any>) => void;
+  unpin?: (tab: TabDefinition) => void;
 }
 
 export function TabsChrome({
@@ -64,10 +64,7 @@ export function TabsChrome({
       tabs: tabView,
     });
 
-  function onMouseDown(
-    e: MouseEvent<HTMLDivElement>,
-    tab: Record<string, any>,
-  ) {
+  function onMouseDown(e: MouseEvent<HTMLDivElement>, tab: TabDefinition) {
     if (
       e.button === 1 &&
       tab.closable &&
@@ -77,11 +74,11 @@ export function TabsChrome({
     ) {
       e.preventDefault();
       e.stopPropagation();
-      onClose?.(tab);
+      onClose?.(tab as TabDefinition);
     }
   }
 
-  function onTabClick(tab: Record<string, any>) {
+  function onTabClick(tab: TabDefinition) {
     onClick?.(tab);
   }
 

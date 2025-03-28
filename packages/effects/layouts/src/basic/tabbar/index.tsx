@@ -2,6 +2,7 @@ import { usePreferencesContext } from '@xpress-core/preferences';
 import { type Router } from '@xpress-core/router';
 import {
   type IContextMenuItem,
+  type TabDefinition,
   TabsToolMore,
   TabsToolScreen,
   TabsView,
@@ -35,7 +36,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
     });
   };
   const [menus, setMenus] = useState<IContextMenuItem[]>([]);
-  const handleOpenChange = (tab: Record<string, any>) => {
+  const handleOpenChange = (tab: TabDefinition) => {
     setMenus(createContextMenus(tab));
   };
   const [moreMenus, setMoreMenus] = useState<IContextMenuItem[]>([]);

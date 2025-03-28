@@ -1,3 +1,6 @@
+import type { IContextMenuItem } from '@xpress-core/shadcn-ui';
+import type { TabDefinition } from '@xpress-core/tabs-ui';
+
 import { useTabbar } from '@xpress/stores';
 import {
   ArrowLeftToLine,
@@ -13,12 +16,7 @@ import {
   X,
 } from '@xpress-core/icons';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import {
-  type Router,
-  type TabDefinition,
-  useFullPath,
-  useRouter,
-} from '@xpress-core/router';
+import { type Router, useFullPath, useRouter } from '@xpress-core/router';
 
 import { useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -62,6 +60,10 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
       ...currentPath,
       fullPath,
       key: fullPath,
+      affixTab: false,
+      closable: true,
+      icon: '',
+      title: currentPath?.meta?.title || '',
     };
   }, [currentPath, fullPath]);
 
@@ -79,9 +81,16 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
           fullPath: item.pathname,
         };
       });
-    const fixedRoutes = allFlattenRoutes.filter(
-      (route) => route.meta?.affixTab,
-    );
+    const fixedRoutes = allFlattenRoutes
+      .filter((route) => route.meta?.affixTab)
+      .map((route) => ({
+        ...route,
+        affixTab: true,
+        closable: false,
+        icon: route.meta?.icon?.toString() || '',
+        title: route.meta?.title || '',
+        key: route.path || '',
+      }));
     setAffixTabs(fixedRoutes);
   };
   useEffect(() => {
@@ -149,7 +158,7 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
         },
       });
     };
-    const menus: any[] = [
+    const menus: IContextMenuItem[] = [
       {
         disabled: disabledCloseCurrent,
         handler: () => {
@@ -170,7 +179,7 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
       {
         handler: async () => {
           if (!contentIsMaximize) {
-            await navigate(tab.fullPath || tab.path);
+            await navigate(tab.fullPath || tab.path || '');
           }
           toggleMaximize();
         },
@@ -236,10 +245,10 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
   const handleTabClick = (tab: Record<string, any>) => {
     navigate(tab.fullPath || tab.path);
   };
-  const handleTabClose = (tab: Record<string, any>) => {
+  const handleTabClose = (tab: TabDefinition) => {
     closeTab(tab, currentTab, navigate);
   };
-  const handleUnpin = (tab: Record<string, any>) => {
+  const handleUnpin = (tab: TabDefinition) => {
     unpinTab(tab);
   };
   return {

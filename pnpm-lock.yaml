@@ -1468,6 +1468,9 @@ importers:
       '@xpress-core/shared':
         specifier: workspace:*
         version: link:../@core/base/shared
+      '@xpress-core/tabs-ui':
+        specifier: workspace:*
+        version: link:../@core/ui-kit/tabs-ui
       '@xpress-core/typings':
         specifier: workspace:*
         version: link:../@core/base/typings

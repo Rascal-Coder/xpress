@@ -8,15 +8,7 @@ import { useMemo } from 'react';
 import { DraggableTabs } from '../components/DraggableTabs';
 import { SortableTab } from '../components/SortableTab';
 import { useDraggableTabs } from '../hooks/useDraggableTabs';
-import { type TabConfig, type TabsProps } from '../types';
-
-interface Props extends TabsProps {
-  onClick?: (tab: Record<string, any>) => void;
-  onClose?: (tab: Record<string, any>) => void;
-  onOpenChange?: (tab: Record<string, any>) => void;
-  onSort?: (oldIndex: number, newIndex: number) => void;
-  unpin?: (tab: Record<string, any>) => void;
-}
+import { type TabConfig, type TabDefinition, type TabsProps } from '../types';
 
 export function TabsBase({
   active,
@@ -29,7 +21,7 @@ export function TabsBase({
   tabs = [],
   unpin,
   ...props
-}: Props) {
+}: TabsProps) {
   const tabView = useMemo(() => {
     return tabs.map((tab) => {
       const { fullPath, meta, path } = tab || {};
@@ -71,10 +63,7 @@ export function TabsBase({
     return typeClasses[props.styleType || 'plain'] || { content: '' };
   }, [props.styleType]);
 
-  function onMouseDown(
-    e: MouseEvent<HTMLDivElement>,
-    tab: Record<string, any>,
-  ) {
+  function onMouseDown(e: MouseEvent<HTMLDivElement>, tab: TabDefinition) {
     if (
       e.button === 1 &&
       tab.closable &&
@@ -88,7 +77,7 @@ export function TabsBase({
     }
   }
 
-  function onTabClick(tab: Record<string, any>) {
+  function onTabClick(tab: TabDefinition) {
     onClick?.(tab);
   }
 

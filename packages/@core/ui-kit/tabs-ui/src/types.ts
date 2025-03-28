@@ -1,5 +1,18 @@
 import type { Icon, TabsStyleType } from '@xpress-core/typings';
 
+interface TabConfig {
+  affixTab: boolean;
+  closable: boolean;
+  icon: string;
+  key: string;
+  title: string;
+}
+type TabDefinition = {
+  defaultPath?: string;
+  fullPath?: string;
+  meta?: Record<string, any>;
+  path?: string;
+} & TabConfig;
 interface IContextMenuItem {
   /**
    * @zh_CN 是否禁用
@@ -72,6 +85,12 @@ interface TabsProps {
    */
   minWidth?: number;
 
+  onClick?: (tab: TabDefinition) => void;
+  onClose?: (tab: TabDefinition) => void;
+
+  onOpenChange?: (tab: TabDefinition) => void;
+
+  onSort?: (oldIndex: number, newIndex: number) => void;
   /**
    * @zh_CN 是否显示图标
    */
@@ -80,24 +99,15 @@ interface TabsProps {
    * @zh_CN 标签页风格
    */
   styleType?: TabsStyleType;
-
   /**
    * @zh_CN 选项卡数据
    */
   tabs?: any[];
-
+  unpin?: (tab: TabDefinition) => void;
   /**
    * @zh_CN 是否响应滚轮事件
    */
   wheelable?: boolean;
 }
 
-export interface TabConfig {
-  affixTab: boolean;
-  closable: boolean;
-  icon: string;
-  key: string;
-  title: string;
-}
-
-export type { TabsProps };
+export type { TabConfig, TabDefinition, TabsProps };

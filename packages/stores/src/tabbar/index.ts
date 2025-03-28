@@ -1,6 +1,7 @@
 import type { Preferences } from '@xpress-core/preferences';
-import type { TabDefinition } from '@xpress-core/router';
+import type { TabDefinition } from '@xpress-core/tabs-ui';
 
+import { type NavigateFunction } from '@xpress-core/router';
 import { openRouteInNewWindow } from '@xpress-core/shared/utils';
 
 import NProgress from 'nprogress';
@@ -10,15 +11,19 @@ import { devtools, persist } from 'zustand/middleware';
 interface TabbarStoreActions {
   _bulkCloseByPaths: (paths: string[]) => Promise<void>;
   _close: (tab: TabDefinition) => void;
-  _goToDefaultTab: (navigate: any) => Promise<void>;
-  _goToTab: (tab: TabDefinition, navigate: any) => Promise<void>;
+  _goToDefaultTab: (navigate: NavigateFunction) => Promise<void>;
+  _goToTab: (tab: TabDefinition, navigate: NavigateFunction) => Promise<void>;
   addTab: (routeTab: TabDefinition, preferences: Preferences) => void;
   affixTabs: () => TabDefinition[];
-  closeAllTabs: (navigate: any) => Promise<void>;
+  closeAllTabs: (navigate: NavigateFunction) => Promise<void>;
   closeLeftTabs: (tab: TabDefinition) => Promise<void>;
   closeOtherTabs: (tab: TabDefinition) => Promise<void>;
   closeRightTabs: (tab: TabDefinition) => Promise<void>;
-  closeTab: (tab: TabDefinition, currentTab: any, navigate: any) => void;
+  closeTab: (
+    tab: TabDefinition,
+    currentTab: TabDefinition,
+    navigate: NavigateFunction,
+  ) => void;
   getTabByPath: (path: string) => TabDefinition;
   getTabs: () => TabDefinition[];
   openTabInNewWindow: (tab: TabDefinition) => void;
@@ -78,7 +83,7 @@ export const useTabbarStore = create<TabbarStore>()(
          * @zh_CN 跳转到默认标签页
          * @param navigate
          */
-        async _goToDefaultTab(navigate: any) {
+        async _goToDefaultTab(navigate: NavigateFunction) {
           const { _goToTab, tabs } = get();
           if (tabs.length <= 0) {
             return;
@@ -173,7 +178,7 @@ export const useTabbarStore = create<TabbarStore>()(
         /**
          * @zh_CN 关闭所有标签页
          */
-        async closeAllTabs(navigate: any) {
+        async closeAllTabs(navigate: NavigateFunction) {
           const { _goToDefaultTab, tabs } = get();
           const newTabs = tabs.filter((tab) => isAffixTab(tab));
           set({ tabs: newTabs.length > 0 ? newTabs : [...tabs].splice(0, 1) });
@@ -253,7 +258,11 @@ export const useTabbarStore = create<TabbarStore>()(
          * @param tab
          * @param router
          */
-        async closeTab(tab: TabDefinition, currentTab: any, navigate: any) {
+        async closeTab(
+          tab: TabDefinition,
+          currentTab: TabDefinition,
+          navigate: NavigateFunction,
+        ) {
           const { _close, _goToTab, getTabs } = get();
           // 关闭不是激活选项卡
           if (getTabPath(currentTab) !== getTabPath(tab)) {
@@ -301,7 +310,7 @@ export const useTabbarStore = create<TabbarStore>()(
          * @param tab
          */
         async openTabInNewWindow(tab: TabDefinition) {
-          openRouteInNewWindow(tab.fullPath || tab.path);
+          openRouteInNewWindow(tab.fullPath || tab.path || '');
         },
         /**
          * @zh_CN 固定标签页
@@ -487,11 +496,11 @@ export const useTabbar = () => {
 };
 
 function isTabShown(tab: TabDefinition) {
-  return !tab.meta.hideInTab;
+  return !tab.meta?.hideInTab;
 }
 
 function getTabPath(tab: TabDefinition) {
-  return decodeURIComponent(tab.fullPath || tab.path);
+  return decodeURIComponent(tab.fullPath || tab.path || '');
 }
 
 /**
