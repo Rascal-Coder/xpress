@@ -28,6 +28,7 @@
     "framer-motion": "^12.4.2",
     "immer": "catalog:",
     "react": "catalog:",
+    "react-activation": "^0.13.0",
     "react-dom": "catalog:",
     "react-helmet-async": "catalog:",
     "react-router-dom": "catalog:",

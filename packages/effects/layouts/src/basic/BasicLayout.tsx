@@ -6,12 +6,13 @@ import { XpressLogo } from '@xpress-core/shadcn-ui';
 
 import { useMemo } from 'react';
 
-import MemoContent from './content-components/content';
+import ContentCom from './content-components/content';
 import Copyright from './copyright';
 import { Extra } from './extra';
 import LayoutFooter from './footer';
 import Header from './header';
 import { ExtraMenu, Menu, MixedMenu } from './menu';
+import { Tabbar } from './tabbar';
 import { useExtraMenu } from './use-extra-menu';
 import { useMixedMenu } from './use-mixed-menu';
 
@@ -139,9 +140,9 @@ function BasicLayout({ router }: { router: Router }) {
           </LayoutFooter>
         ),
         // 标签栏
-        tabbar: <div>tabbar</div>,
+        tabbar: <Tabbar router={router} />,
         // 内容
-        content: <MemoContent></MemoContent>,
+        content: <ContentCom router={router} />,
         // 内容覆盖层
         // 'content-overlay': <div>content-overlay</div>,
         // 额外内容

@@ -4,15 +4,16 @@ import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { AliveScope } from 'react-activation';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { useRoutes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 
-import router, { generateMenuItems, useRouter } from '#/router';
+import router, { generateMenuItems, useRouter, useRoutes } from '#/router';
 
 function App() {
   const { curRoute, reactRoutes, routes } = useRouter(router);
   const element = useRoutes(reactRoutes);
+
   const { isDark, preferences } = usePreferencesContext();
   const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,28 +34,30 @@ function App() {
   }
 
   return (
-    <HelmetProvider>
-      <Helmet>
-        <title>{curRoute?.meta?.title}</title>
-      </Helmet>
-      <Progress />
-      <ToastContainer
-        autoClose={500}
-        closeOnClick
-        draggable
-        hideProgressBar={false}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="top-right"
-        rtl={false}
-        theme={isDark ? 'dark' : 'light'}
-        transition={Bounce}
-      />
-      <AuthGuard router={router}>
-        <AnimatePresence mode="wait">{element}</AnimatePresence>
-      </AuthGuard>
-    </HelmetProvider>
+    <AliveScope>
+      <HelmetProvider>
+        <Helmet>
+          <title>{curRoute?.meta?.title}</title>
+        </Helmet>
+        <Progress />
+        <ToastContainer
+          autoClose={500}
+          closeOnClick
+          draggable
+          hideProgressBar={false}
+          newestOnTop={false}
+          pauseOnFocusLoss
+          pauseOnHover
+          position="top-right"
+          rtl={false}
+          theme={isDark ? 'dark' : 'light'}
+          transition={Bounce}
+        />
+        <AuthGuard router={router}>
+          <AnimatePresence mode="wait">{element}</AnimatePresence>
+        </AuthGuard>
+      </HelmetProvider>
+    </AliveScope>
   );
 }
 

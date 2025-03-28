@@ -1,5 +1,6 @@
+import { Outlet } from '@xpress-core/router';
+
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 
 const Nest: React.FC = () => {
   return (

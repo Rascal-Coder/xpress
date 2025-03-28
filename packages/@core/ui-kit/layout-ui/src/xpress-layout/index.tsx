@@ -112,6 +112,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     if (tabbarEnable) {
       height += tabbarHeight;
     }
+
     return height;
   }, [headerVisible, headerHidden, tabbarEnable, tabbarHeight, headerHeight]);
 
@@ -445,7 +446,8 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     if (isMobile) {
       setSidebarCollapse(true);
     }
-  }, [isMobile, setSidebarCollapse]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
   // 监听headerWrapperHeight和isFullContent变化
   useEffect(() => {
@@ -525,7 +527,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     if (isMobile) {
       setSidebarCollapse(false);
     } else {
-      onToggleSidebar();
+      onToggleSidebar?.();
     }
   };
 
@@ -564,7 +566,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
 
   // 头部渲染
   const headerNode = useShow(
-    headerVisible && !isFullContent && !headerIsHidden,
+    headerVisible && !isFullContent && !headerHidden,
     () => (
       <LayoutHeader
         fullWidth={!isSideMode}

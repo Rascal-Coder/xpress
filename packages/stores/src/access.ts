@@ -81,3 +81,39 @@ export const useAccessStore = create<AccessStore>()(
     ),
   ),
 );
+
+export const useAccessMenus = () => {
+  const accessMenus = useAccessStore((state) => state.accessMenus);
+  const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
+  const accessCodes = useAccessStore((state) => state.accessCodes);
+  const setAccessCodes = useAccessStore((state) => state.setAccessCodes);
+  const accessRoutes = useAccessStore((state) => state.accessRoutes);
+  const setAccessRoutes = useAccessStore((state) => state.setAccessRoutes);
+  const isAccessChecked = useAccessStore((state) => state.isAccessChecked);
+  const setIsAccessChecked = useAccessStore(
+    (state) => state.setIsAccessChecked,
+  );
+  const loginExpired = useAccessStore((state) => state.loginExpired);
+  const setLoginExpired = useAccessStore((state) => state.setLoginExpired);
+  const refreshToken = useAccessStore((state) => state.refreshToken);
+  const setRefreshToken = useAccessStore((state) => state.setRefreshToken);
+
+  const accessToken = useAccessStore((state) => state.accessToken);
+  const setAccessToken = useAccessStore((state) => state.setAccessToken);
+  return {
+    accessCodes,
+    accessMenus,
+    accessRoutes,
+    accessToken,
+    isAccessChecked,
+    loginExpired,
+    refreshToken,
+    setAccessCodes,
+    setAccessMenus,
+    setAccessRoutes,
+    setAccessToken,
+    setIsAccessChecked,
+    setLoginExpired,
+    setRefreshToken,
+  };
+};

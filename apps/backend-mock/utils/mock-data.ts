@@ -73,6 +73,7 @@ const dashboardMenus = [
               menuVisibleWithForbidden: true,
               title: '分析页',
               permission: ['homeIndex'],
+              affixTab: true,
             },
           },
           {

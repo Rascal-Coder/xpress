@@ -2,7 +2,6 @@ import type { Icon } from '@xpress-core/typings';
 import type { ComponentType } from 'react';
 
 import type { Router } from './router';
-
 /**
  * 权限模式
  * backend 后端权限模式
@@ -30,6 +29,8 @@ interface RouteConfig {
   defaultPath?: string;
   /** 将子路由的菜单层级提升到本级 */
   flatten?: boolean;
+  /** 是否是常量路由 */
+  isConstant?: boolean;
   /** 是否是根路由 */
   isRoot?: boolean;
   meta?: {

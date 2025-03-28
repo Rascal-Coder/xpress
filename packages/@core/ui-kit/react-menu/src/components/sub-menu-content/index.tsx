@@ -8,6 +8,7 @@ import { cn } from '@xpress-core/shared/utils';
 import { forwardRef, useMemo } from 'react';
 
 import { useMenuContext } from '../hooks';
+import Ripple from '../ripple';
 
 interface SubMenuContentProps extends MenuItemProps {
   className?: string;
@@ -78,6 +79,7 @@ function SubMenuContent({
       return opened ? { transform: `rotate(180deg)` } : {};
     }
   }, [isHovering, mode, opened]);
+  const ripple = new Ripple();
   return (
     <div
       className={cn(
@@ -85,9 +87,11 @@ function SubMenuContent({
         is('collapse-show-title', getCollapseShowTitle),
         is('more', isMenuMore),
         rootMenu.isMenuPopup && !isFirstLevel && '!justify-normal',
+        'relative',
         className,
       )}
       onClick={() => menuItemClick?.()}
+      onMouseDown={(e) => ripple.create(e as unknown as MouseEvent, 'dark')}
     >
       {!isMenuMore && (
         <XpressIcon

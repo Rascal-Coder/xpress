@@ -4,9 +4,9 @@ import { useAccessStore } from '@xpress/stores';
 import { useFindMenu } from '@xpress-core/hooks';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { type Router, useRouter } from '@xpress-core/router';
+import { useNavigate } from '@xpress-core/router';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export function useMixedMenu(router: Router) {
   const navigate = useNavigate();
@@ -19,10 +19,10 @@ export function useMixedMenu(router: Router) {
   const [rootMenuPath, setRootMenuPath] = useState<string>('');
   /** 记录当前顶级菜单下哪个子菜单最后激活 */
   const defaultSubMap = useMemo(() => new Map<string, string>(), []);
-  const { preferences, isMixedNav, isHeaderMixedNav } = usePreferencesContext();
+  const { preferences, isMixedNav } = usePreferencesContext();
   const needSplit = useMemo(() => {
-    return (preferences.navigation.split && isMixedNav) || isHeaderMixedNav;
-  }, [isHeaderMixedNav, isMixedNav, preferences.navigation.split]);
+    return preferences.navigation.split && isMixedNav;
+  }, [isMixedNav, preferences.navigation.split]);
   const sidebarVisible = useMemo(() => {
     const enableSidebar = preferences.sidebar.enable;
     if (needSplit) {
@@ -54,8 +54,8 @@ export function useMixedMenu(router: Router) {
   }, [menus, needSplit, splitSideMenus]);
 
   const mixHeaderMenus = useMemo(() => {
-    return isHeaderMixedNav ? sidebarMenus : headerMenus;
-  }, [isHeaderMixedNav, sidebarMenus, headerMenus]);
+    return headerMenus;
+  }, [headerMenus]);
   /**
    * 侧边菜单激活路径
    */

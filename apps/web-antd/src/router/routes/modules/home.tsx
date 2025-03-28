@@ -16,6 +16,8 @@ const routes: RouteConfig[] = [
           menuVisibleWithForbidden: true,
           title: '分析页',
           permission: ['homeIndex'],
+          affixTab: true,
+          // affixTabOrder: 2,
         },
       },
       {
@@ -23,6 +25,9 @@ const routes: RouteConfig[] = [
         component: () => import('#/pages/dashboard/workbench'),
         meta: {
           title: '工作台',
+          keepAlive: true,
+          affixTab: true,
+          affixTabOrder: 1,
         },
       },
     ],

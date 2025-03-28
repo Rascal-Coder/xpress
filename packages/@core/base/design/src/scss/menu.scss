@@ -394,7 +394,7 @@ $namespace: xpress;
   margin: 0;
   list-style: none;
   user-select: none;
-  background: var(--menu-submenu-background-color);
+  // background: var(--menu-submenu-background-color);
   fill: var(--menu-item-color);
   //  div[data-state='open'] >
   &.is-active {

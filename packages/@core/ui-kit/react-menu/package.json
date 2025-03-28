@@ -33,6 +33,7 @@
     "@types/react-transition-group": "catalog:",
     "@xpress-core/hooks": "workspace:*",
     "@xpress-core/icons": "workspace:*",
+    "@xpress-core/preferences": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "ahooks": "catalog:",

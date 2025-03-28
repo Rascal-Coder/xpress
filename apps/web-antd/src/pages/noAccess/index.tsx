@@ -1,6 +1,7 @@
+import { useNavigate } from '@xpress-core/router';
+
 import { motion } from 'framer-motion';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const NoAccess: React.FC = () => {
   const navigate = useNavigate();

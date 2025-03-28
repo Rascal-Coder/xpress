@@ -1,13 +1,18 @@
-import { memo, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { useTabbar } from '@xpress/stores';
+import { type Router, useFullPath, useRouter } from '@xpress-core/router';
+import { Outlet } from '@xpress-core/router';
 
-function Content() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Outlet />
-    </Suspense>
+import KeepAlive from 'react-activation';
+
+function Content({ router }: { router: Router }) {
+  const { curRoute } = useRouter(router);
+  const keepAlive = curRoute?.meta?.keepAlive;
+  const fullPath = useFullPath();
+  const { refreshing } = useTabbar();
+  return keepAlive ? (
+    <KeepAlive cacheKey={fullPath}>{refreshing ? null : <Outlet />}</KeepAlive>
+  ) : (
+    !refreshing && <Outlet />
   );
 }
-const MemoContent = memo(Content);
-MemoContent.displayName = 'MemoContent';
-export default MemoContent;
+export default Content;

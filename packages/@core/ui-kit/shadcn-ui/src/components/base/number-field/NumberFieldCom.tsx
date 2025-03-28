@@ -9,11 +9,18 @@ interface TooltipContentProps {
   content: string;
 }
 
-const DefaultTooltipContent = ({ content }: TooltipContentProps) => (
-  <XpressTooltip trigger={<CircleHelp className="ml-1 size-3 cursor-help" />}>
-    {content?.split('\n').map((line, index) => <p key={index}>{line}</p>)}
-  </XpressTooltip>
-);
+const DefaultTooltipContent = ({ content }: TooltipContentProps) => {
+  return (
+    <XpressTooltip trigger={<CircleHelp className="ml-1 size-3 cursor-help" />}>
+      {content
+        .replaceAll(String.raw`\n`, '\n')
+        .split('\n')
+        .map((line, index) => (
+          <p key={index}>{line}</p>
+        ))}
+    </XpressTooltip>
+  );
+};
 
 export interface NumberFieldComProps extends NumberFieldItemProps {
   children?: React.ReactNode;
@@ -34,7 +41,13 @@ export const NumberFieldCom = ({
 }: NumberFieldComProps) => {
   const renderTooltip = () => {
     if (tooltipComponent) {
-      return tooltipComponent;
+      return (
+        <XpressTooltip
+          trigger={<CircleHelp className="ml-1 size-3 cursor-help" />}
+        >
+          {tooltipComponent}
+        </XpressTooltip>
+      );
     }
     if (tip) {
       return <DefaultTooltipContent content={tip} />;

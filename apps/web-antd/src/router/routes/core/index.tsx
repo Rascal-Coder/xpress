@@ -5,6 +5,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',
     component: () => import('#/pages/login'),
+    isConstant: true,
     meta: {
       title: '登录页',
       hideInBreadcrumb: true,
@@ -15,6 +16,7 @@ export const constantRoutes: RouteConfig[] = [
   {
     path: '/register',
     component: () => import('#/pages/register'),
+    isConstant: true,
     meta: {
       title: '注册页',
       hideInBreadcrumb: true,
@@ -40,6 +42,7 @@ export const fallBackRoutes: RouteConfig[] = [
   {
     path: '/no-access',
     component: () => import('#/pages/noAccess'),
+    isConstant: true,
     meta: {
       title: '出错了',
       hideInBreadcrumb: true,
@@ -50,6 +53,7 @@ export const fallBackRoutes: RouteConfig[] = [
   {
     path: '/not-found',
     component: () => import('#/pages/notFound'),
+    isConstant: true,
     meta: {
       title: '页面不存在',
       hideInBreadcrumb: true,
@@ -60,6 +64,7 @@ export const fallBackRoutes: RouteConfig[] = [
   {
     path: '*',
     component: () => import('#/pages/notFound'),
+    isConstant: true,
     meta: {
       title: '页面不存在',
       hideInBreadcrumb: true,

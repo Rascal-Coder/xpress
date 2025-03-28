@@ -1,15 +1,16 @@
 import type { RouteConfig } from './types';
 
-import EventEmitter from 'eventemitter3';
-import { produce } from 'immer';
-import { useEffect, useMemo, useState } from 'react';
 import {
   matchPath,
   matchRoutes,
   type RouteMatch,
   type RouteObject,
   useLocation,
-} from 'react-router-dom';
+} from '@xpress-core/router';
+
+import EventEmitter from 'eventemitter3';
+import { produce } from 'immer';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   findroutesConfigItem,

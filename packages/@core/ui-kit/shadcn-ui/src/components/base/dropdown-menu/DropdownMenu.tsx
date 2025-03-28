@@ -24,14 +24,14 @@ export function XpressDropdownMenu({
   };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex h-full items-center gap-1">
+      <DropdownMenuTrigger className="flex h-full items-center gap-1 focus-visible:outline-none">
         {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuGroup>
           {menus.map((menu) => (
             <DropdownMenuItem
-              className="data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground text-foreground/80 mb-1 cursor-pointer"
+              className="data-[state=checked]:bg-accent data-[state=checked]:text-accent-foreground text-foreground/80 mb-1 cursor-pointer focus-visible:outline-none"
               disabled={menu.disabled}
               key={menu.value}
               onClick={() => {

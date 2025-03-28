@@ -2,10 +2,10 @@ import type { IBreadcrumb } from '@xpress-core/shadcn-ui';
 import type { BreadcrumbStyleType } from '@xpress-core/typings';
 
 import { type Router, useRouter } from '@xpress-core/router';
+import { useNavigate } from '@xpress-core/router';
 import { XpressBreadcrumbView } from '@xpress-core/shadcn-ui';
 
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface BreadcrumbProps {
   hideWhenOnlyOne?: boolean;
