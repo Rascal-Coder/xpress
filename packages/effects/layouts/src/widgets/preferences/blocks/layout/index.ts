@@ -1,5 +1,7 @@
 export * from './Breadcrumb';
 export * from './Content';
+export * from './Copyright';
+export * from './Footer';
 export * from './Header';
 export * from './Layout';
 export * from './Navigation';

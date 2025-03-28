@@ -2,6 +2,8 @@ import {
   Block,
   Breadcrumb,
   Content,
+  Copyright,
+  Footer,
   Header,
   Layout,
   Navigation,
@@ -36,6 +38,12 @@ export const PreferencesLayout = () => {
       </Block>
       <Block title="小部件">
         <Widget />
+      </Block>
+      <Block title="页脚">
+        <Footer />
+      </Block>
+      <Block title="版权信息">
+        <Copyright />
       </Block>
     </>
   );
