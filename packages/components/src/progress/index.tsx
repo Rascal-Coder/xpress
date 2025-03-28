@@ -1,6 +1,7 @@
+import { useLocation } from '@xpress-core/router';
+
 import NProgress from 'nprogress';
 import { useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { setNProgressColor } from './utils';
 

@@ -1,8 +1,8 @@
 import { useAccessStore, useUserStore } from '@xpress/stores';
 import { type Router, useRouter } from '@xpress-core/router';
+import { useLocation, useNavigate, useSearchParams } from '@xpress-core/router';
 
 import { type ReactNode, useEffect } from 'react';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 interface AuthGuardProps {
   children: ReactNode;

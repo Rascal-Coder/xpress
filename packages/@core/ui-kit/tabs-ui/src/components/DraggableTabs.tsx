@@ -23,6 +23,7 @@ interface DraggableTabsProps {
   activeTab: null | TabConfig;
   children: React.ReactNode;
   className?: string;
+  draggable?: boolean;
   isDragging: boolean;
   onDragEnd: (event: DragEndEvent) => void;
   onDragStart: (event: DragStartEvent) => void;
@@ -40,6 +41,7 @@ export function DraggableTabs({
   activeId,
   activeTab,
   className,
+  draggable = true,
   isDragging,
   onDragEnd,
   onDragStart,
@@ -52,7 +54,7 @@ export function DraggableTabs({
   const contentRef = useRef<HTMLDivElement>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 10 },
+      activationConstraint: { distance: draggable ? 10 : Infinity },
     }),
   );
 

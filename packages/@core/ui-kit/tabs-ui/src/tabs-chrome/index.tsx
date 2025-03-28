@@ -200,6 +200,7 @@ export function TabsChrome({
         'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
         contentClass,
       )}
+      draggable={props.draggable}
       isDragging={isDragging}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
@@ -217,6 +218,7 @@ export function TabsChrome({
           key={tab.key}
           onMouseDown={onMouseDown}
           onTabClick={onTabClick}
+          styleType={props.styleType || 'chrome'}
           tab={tab}
           transition={transition}
         >

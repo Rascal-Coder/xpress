@@ -139,6 +139,7 @@ export function TabsBase({
       activeId={activeId}
       activeTab={activeTab}
       className={cn('h-full w-max items-center pr-6', contentClass)}
+      draggable={props.draggable}
       isDragging={isDragging}
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
@@ -153,6 +154,7 @@ export function TabsBase({
           key={tab.key}
           onMouseDown={onMouseDown}
           onTabClick={onTabClick}
+          styleType={props.styleType || 'plain'}
           tab={tab}
         >
           <XpressContextMenu

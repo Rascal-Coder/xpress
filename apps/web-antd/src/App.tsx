@@ -6,10 +6,9 @@ import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { AliveScope } from 'react-activation';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { useRoutes } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
 
-import router, { generateMenuItems, useRouter } from '#/router';
+import router, { generateMenuItems, useRouter, useRoutes } from '#/router';
 
 function App() {
   const { curRoute, reactRoutes, routes } = useRouter(router);

@@ -16,10 +16,15 @@ import {
   X,
 } from '@xpress-core/icons';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type Router, useFullPath, useRouter } from '@xpress-core/router';
+import {
+  type Router,
+  useFullPath,
+  useLocation,
+  useNavigate,
+  useRouter,
+} from '@xpress-core/router';
 
 import { useEffect, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 export const useTabbarFn = ({ router }: { router: Router }) => {
   const { curRoute, flattenRoutes } = useRouter(router);
@@ -95,6 +100,9 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
   };
   useEffect(() => {
     initAffixTabs();
+    if (!preferences.tabbar.persist) {
+      closeOtherTabs(currentTab);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {

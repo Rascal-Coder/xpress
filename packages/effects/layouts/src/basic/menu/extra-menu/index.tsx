@@ -2,8 +2,7 @@ import type { MenuProps } from '@xpress-core/react-menu';
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
 import { MenuView } from '@xpress-core/react-menu';
-
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from '@xpress-core/router';
 
 interface ExtraMenuProps extends Omit<MenuProps, 'children'> {
   collapse?: boolean;

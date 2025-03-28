@@ -1,10 +1,12 @@
+import type { TabsStyleType } from '@xpress-core/typings';
+
 import type { TabDefinition } from '../types';
 
 import { cn } from '@xpress-core/shared/utils';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { type MouseEvent } from 'react';
+import { type MouseEvent, useMemo } from 'react';
 
 import AnimationWrap from '../AnimationWrap';
 
@@ -16,6 +18,7 @@ interface SortableTabProps {
   isDraggingDisabled?: boolean;
   onMouseDown: (e: MouseEvent<HTMLDivElement>, tab: TabDefinition) => void;
   onTabClick: (tab: TabDefinition) => void;
+  styleType: TabsStyleType;
   tab: TabDefinition;
   transition?: any;
 }
@@ -31,6 +34,7 @@ export function SortableTab({
   isDraggingDisabled = false,
   onMouseDown,
   onTabClick,
+  styleType,
   tab,
   transition,
   children,
@@ -40,6 +44,7 @@ export function SortableTab({
     tab.affixTab || isDraggingDisabled
       ? { disabled: true, id: tab.key }
       : { id: tab.key };
+  // console.log('styleType', styleType);
 
   const {
     attributes,
@@ -62,19 +67,36 @@ export function SortableTab({
   // 只对非固定标签页应用拖拽监听器
   const dragAttributes =
     tab.affixTab || isDraggingDisabled ? {} : { ...listeners };
-
+  const className = useMemo(() => {
+    const baseClass =
+      'translate-all group relative flex cursor-pointer select-none';
+    const draggableClass = {
+      'affix-tab': tab.affixTab,
+      draggable: !tab.affixTab && !isDraggingDisabled,
+    };
+    const activeClass =
+      styleType === 'chrome'
+        ? {
+            'is-active': tab.key === active,
+          }
+        : {
+            'is-active dark:bg-accent bg-primary/15': tab.key === active,
+          };
+    return cn(baseClass, contentClass, draggableClass, activeClass, {
+      isDragging,
+    });
+  }, [
+    active,
+    contentClass,
+    isDragging,
+    isDraggingDisabled,
+    styleType,
+    tab.affixTab,
+    tab.key,
+  ]);
   return (
     <AnimationWrap
-      className={cn(
-        'translate-all group relative flex cursor-pointer select-none',
-        contentClass,
-        {
-          'affix-tab': tab.affixTab,
-          draggable: !tab.affixTab && !isDraggingDisabled,
-          'is-active': tab.key === active,
-          isDragging,
-        },
-      )}
+      className={className}
       data-active-tab={active}
       data-index={index}
       data-tab-item="true"

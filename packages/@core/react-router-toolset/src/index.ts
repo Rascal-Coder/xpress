@@ -6,4 +6,4 @@ export { Router, useRouter } from './router';
 
 export * from './types';
 export * from './utils';
-export type * from 'react-router-dom';
+export * from 'react-router-dom';

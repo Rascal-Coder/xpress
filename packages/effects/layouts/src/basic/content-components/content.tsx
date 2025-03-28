@@ -1,8 +1,8 @@
 import { useTabbar } from '@xpress/stores';
 import { type Router, useFullPath, useRouter } from '@xpress-core/router';
+import { Outlet } from '@xpress-core/router';
 
 import KeepAlive from 'react-activation';
-import { Outlet } from 'react-router-dom';
 
 function Content({ router }: { router: Router }) {
   const { curRoute } = useRouter(router);

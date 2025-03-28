@@ -4,9 +4,9 @@ import { useAccessStore } from '@xpress/stores';
 import { useFindMenu } from '@xpress-core/hooks';
 import { usePreferencesContext } from '@xpress-core/preferences';
 import { type Router, useRouter } from '@xpress-core/router';
+import { useNavigate } from '@xpress-core/router';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export function useExtraMenu(router: Router) {
   const { curRoute } = useRouter(router);

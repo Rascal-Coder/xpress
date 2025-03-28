@@ -111,58 +111,65 @@ export const useTabbarStore = create<TabbarStore>()(
           if (!isTabShown(routeTab)) {
             return;
           }
+
           const _tabs = get().tabs;
           const tabIndex = _tabs.findIndex(
             (tab) => getTabPath(tab) === getTabPath(routeTab),
           );
-          if (tabIndex === -1) {
-            const maxCount = preferences.tabbar.maxCount;
-            // 获取动态路由打开数，超过 0 即代表需要控制打开数
-            const maxNumOfOpenTab = (routeTab?.meta?.maxNumOfOpenTab ??
-              -1) as number;
-            // 如果动态路由层级大于 0 了，那么就要限制该路由的打开数限制了
-            // 获取到已经打开的动态路由数, 判断是否大于某一个值
-            if (
-              maxNumOfOpenTab > 0 &&
-              _tabs.filter((tab) => tab.path === routeTab.path).length >=
-                maxNumOfOpenTab
-            ) {
-              // 关闭第一个
-              const index = _tabs.findIndex(
-                (item) => item.path === routeTab.path,
-              );
-              index !== -1 && _tabs.splice(index, 1);
-            } else if (maxCount > 0 && _tabs.length >= maxCount) {
-              // 关闭第一个
-              const index = _tabs.findIndex(
-                (item) =>
-                  !Reflect.has(item.meta, 'affixTab') || !item.meta.affixTab,
-              );
-              index !== -1 && _tabs.splice(index, 1);
-            }
-            const newTab = {
-              ...routeTab,
-            };
-            return set({ tabs: [..._tabs, newTab] });
-          } else {
+
+          // 如果找到相同的tab，只更新状态
+          if (tabIndex !== -1) {
             const currentTab = _tabs[tabIndex];
             const mergedTab = {
               ...currentTab,
               ...routeTab,
-              meta: { ...currentTab?.meta, ...routeTab.meta },
+              meta: {
+                ...routeTab.meta,
+                // 保留原有的固定状态和自定义标题
+                affixTab: currentTab.meta?.affixTab ?? routeTab.meta?.affixTab,
+                newTabTitle:
+                  currentTab.meta?.newTabTitle ?? routeTab.meta?.newTabTitle,
+              },
             };
-            if (currentTab) {
-              const curMeta = currentTab.meta;
-              if (Reflect.has(curMeta, 'affixTab')) {
-                mergedTab.meta.affixTab = curMeta.affixTab;
-              }
-              if (Reflect.has(curMeta, 'newTabTitle')) {
-                mergedTab.meta.newTabTitle = curMeta.newTabTitle;
+            _tabs[tabIndex] = mergedTab;
+            set({ tabs: [..._tabs] });
+            return;
+          }
+
+          // 处理动态路由打开数限制
+          const maxNumOfOpenTab = (routeTab?.meta?.maxNumOfOpenTab ??
+            -1) as number;
+          if (maxNumOfOpenTab > 0) {
+            const samePathTabs = _tabs.filter(
+              (tab) => tab.path === routeTab.path,
+            );
+            if (samePathTabs.length >= maxNumOfOpenTab) {
+              // 移除同路径的第一个tab
+              const removeIndex = _tabs.findIndex(
+                (tab) => tab.path === routeTab.path,
+              );
+              if (removeIndex !== -1) {
+                _tabs.splice(removeIndex, 1);
               }
             }
-            _tabs.splice(tabIndex, 1, mergedTab);
-            set({ tabs: [..._tabs] });
           }
+
+          // 处理总数限制
+          const maxCount = preferences.tabbar.maxCount;
+          if (
+            maxCount > 0 &&
+            _tabs.filter((tab) => !tab.meta?.affixTab).length >= maxCount
+          ) {
+            // 找到第一个非固定的tab并移除
+            const removeIndex = _tabs.findIndex((tab) => !tab.meta?.affixTab);
+            if (removeIndex !== -1) {
+              _tabs.splice(removeIndex, 1);
+            }
+          }
+
+          // 添加新tab
+          _tabs.push(routeTab);
+          set({ tabs: [..._tabs] });
         },
         /**
          * @zh_CN 获取固定标签页

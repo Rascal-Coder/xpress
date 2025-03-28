@@ -1,15 +1,16 @@
+import type { RouteObject } from '@xpress-core/router';
 import type { ReactNode } from 'react';
-import type { RouteObject } from 'react-router-dom';
 
 import type { RouteConfig } from '../types';
 
-import loadable from '@loadable/component';
 import {
   Navigate,
   useLocation,
   useParams,
   useSearchParams,
-} from 'react-router-dom';
+} from '@xpress-core/router';
+
+import loadable from '@loadable/component';
 
 interface FormatRoutesResult {
   flattenRoutes: Map<string, RouteConfig>;

@@ -50,6 +50,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
     });
     setMoreMenus(menus);
   }, [createContextMenus, currentTab]);
+
   return (
     <>
       <TabsView
@@ -60,7 +61,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
         onClick={handleTabClick}
         onClose={handleTabClose}
         onOpenChange={handleOpenChange}
-        showIcon={true}
+        showIcon={preferences.tabbar.showIcon}
         sortTabs={sortTabs}
         styleType={preferences.tabbar.styleType}
         tabs={tabs}

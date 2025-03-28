@@ -26,7 +26,9 @@ export const ToggleItem = ({
       <ToggleGroup
         className="gap-2"
         defaultValue={items?.[0]?.value}
-        onValueChange={onChange}
+        onValueChange={(newValue) => {
+          onChange(newValue || value);
+        }}
         size="sm"
         type="single"
         value={value}
