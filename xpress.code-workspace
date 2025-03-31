@@ -9,10 +9,6 @@
       "path": "apps/web-antd",
     },
     {
-      "name": "@xpress/docs",
-      "path": "docs",
-    },
-    {
       "name": "@xpress/eslint-config",
       "path": "internal/lint-configs/eslint-config",
     },
