@@ -8,7 +8,6 @@ packages:
   - packages/effects/*
   - apps/*
   - scripts/*
-  - docs
   - playground
 catalog:
   "@changesets/git": ^3.0.1
