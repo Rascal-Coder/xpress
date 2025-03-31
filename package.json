@@ -27,7 +27,8 @@
     "prepare": "is-ci || husky",
     "test:unit": "vitest run",
     "test:e2e": "turbo run test:e2e",
-    "preview": "turbo-run preview"
+    "preview": "turbo-run preview",
+    "build:mock": "pnpm run build --filter=@xpress/backend-mock"
   },
   "dependencies": {
     "@react-spring/web": "catalog:",
