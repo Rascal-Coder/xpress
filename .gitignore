@@ -51,3 +51,5 @@ vite.config.ts.*
 *.sln
 *.sw?
 .history
+
+.vercel

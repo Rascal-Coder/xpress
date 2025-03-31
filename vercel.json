@@ -1,15 +1,17 @@
 {
   "version": 2,
+  "buildCommand": "pnpm run build:mock",
+  "outputDirectory": "apps/backend-mock/.output",
   "builds": [
     {
-      "src": ".output/server/index.mjs",
+      "src": "apps/backend-mock/.output/server/index.mjs",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": ".output/server/index.mjs"
+      "dest": "apps/backend-mock/.output/server/index.mjs"
     }
   ]
 }
