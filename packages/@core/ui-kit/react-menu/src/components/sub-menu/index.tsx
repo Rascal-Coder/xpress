@@ -11,9 +11,6 @@ import CollapseTransition from '../collapse-transition';
 import { useMenuContext, useMenuStyle } from '../hooks';
 import SubMenuContent from '../sub-menu-content';
 
-// 添加 NodeJS.Timeout 类型
-type TimeoutType = ReturnType<typeof setTimeout>;
-
 interface Props extends SubMenuProps {
   className?: string;
   isSubMenuMore?: boolean;
@@ -44,7 +41,7 @@ function SubMenu({
   }, [parentPaths.length]);
   const subMenuStyle = useMenuStyle(level - 1);
 
-  const timer = useRef<null | TimeoutType>(null);
+  const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
   const [isHovering, setIsHovering] = useState(false);
   const subMenuRef = useRef<HTMLLIElement | null>(null);
 
@@ -134,10 +131,10 @@ function SubMenu({
 
       // 清除现有定时器
       if (timer.current) {
-        window.clearTimeout(timer.current);
+        clearTimeout(timer.current);
       }
       // 设置新的定时器来打开菜单
-      timer.current = window.setTimeout(() => {
+      timer.current = setTimeout(() => {
         rootMenu?.openMenu(path, parentPaths);
       }, showTimeout);
     },
@@ -154,12 +151,14 @@ function SubMenu({
       return;
     }
 
-    timer.current && window.clearTimeout(timer.current);
+    if (timer.current) {
+      clearTimeout(timer.current);
+    }
 
     if (currentSubMenu) {
       currentSubMenu.setMouseInChild(false);
     }
-    timer.current = window.setTimeout(() => {
+    timer.current = setTimeout(() => {
       !currentSubMenu?.mouseInChild && rootMenu?.closeMenu(path, parentPaths);
       setIsHovering(false);
     }, 100);
