@@ -53,7 +53,7 @@ type SheetVariants = VariantProps<typeof sheetVariants>;
 
 interface SheetContentProps
   extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
-    VariantProps<typeof sheetVariants> {
+    SheetVariants {
   class?: any;
   closeIcon?: React.ReactNode;
   container?: HTMLElement;
@@ -87,8 +87,10 @@ const SheetContent = React.forwardRef<
     ref,
   ) => {
     useScrollLock();
-    const position = container ? ('absolute' as const) : ('fixed' as const);
-
+    const position = React.useMemo(
+      () => (container ? 'absolute' : 'fixed'),
+      [container],
+    );
     const overlayStyle = {
       ...(zIndex ? { zIndex } : {}),
       backdropFilter:

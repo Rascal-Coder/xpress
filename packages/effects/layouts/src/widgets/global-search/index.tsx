@@ -1,16 +1,19 @@
 import { Search } from '@xpress/icons';
-import { useModal } from '@xpress-core/popup-ui';
+import { Modal } from '@xpress-core/popup-ui';
 import { isWindowsOs } from '@xpress-core/shared/utils';
 
+import { useState } from 'react';
+
 export function GlobalSearch({ className }: { className?: string }) {
-  const [Modal, modalApi] = useModal({
-    title: '自定义对话框',
-    onConfirm: () => {
-      modalApi?.close();
-    },
-  });
+  const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className={className} onClick={() => modalApi?.open()}>
+    <div
+      className={className}
+      onClick={() => {
+        console.warn('GlobalSearch clicked, setting isOpen to true');
+        setIsOpen(true);
+      }}
+    >
       <div className="md:bg-accent group flex h-8 cursor-pointer items-center gap-3 rounded-2xl border-none bg-none px-2 py-0.5 outline-none">
         <Search className="text-muted-foreground group-hover:text-foreground size-4 group-hover:opacity-100" />
         <span className="text-muted-foreground group-hover:text-foreground hidden text-xs duration-300 md:block">
@@ -21,7 +24,9 @@ export function GlobalSearch({ className }: { className?: string }) {
           <kbd>K</kbd>
         </span>
       </div>
-      <Modal>这是自定义对话框的内容</Modal>
+      <Modal isOpen={isOpen} modal={true} setIsOpen={setIsOpen}>
+        这是自定义对话框的内容
+      </Modal>
     </div>
   );
 }

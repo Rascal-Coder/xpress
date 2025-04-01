@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Transform {
   offsetX: number;
   offsetY: number;
 }
 
-export const useDraggable = (
+export const useModalDraggable = (
   targetRef: React.RefObject<HTMLElement>,
   dragRef: React.RefObject<HTMLElement>,
   draggable: boolean,
@@ -15,7 +15,7 @@ export const useDraggable = (
     offsetX: 0,
     offsetY: 0,
   });
-
+  const [dragging, setDragging] = useState(false);
   const onMousedown = (e: MouseEvent) => {
     const downX = e.clientX;
     const downY = e.clientY;
@@ -43,6 +43,7 @@ export const useDraggable = (
       if (!overflow) {
         moveX = Math.min(Math.max(moveX, minLeft), maxLeft);
         moveY = Math.min(Math.max(moveY, minTop), maxTop);
+        setDragging(true);
       }
 
       transformRef.current = {
@@ -56,6 +57,7 @@ export const useDraggable = (
     };
 
     const onMouseup = () => {
+      setDragging(false);
       document.removeEventListener('mousemove', onMousemove);
       document.removeEventListener('mouseup', onMouseup);
     };
@@ -100,6 +102,7 @@ export const useDraggable = (
   }, [draggable]);
 
   return {
+    dragging,
     resetPosition,
   };
 };

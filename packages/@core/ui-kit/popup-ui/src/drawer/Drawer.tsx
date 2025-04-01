@@ -70,7 +70,7 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
     const { lock, unlock } = useScrollLock(document.body);
     const id = useId();
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const onOpenChange = async (open: boolean) => {
+    const onOpenChange = (open: boolean) => {
       if (open) {
         setIsOpen(true);
       } else {
@@ -134,7 +134,6 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
               {confirmText || '确定'}
             </XpressButton>
           )}
-          {appendFooter}
         </>
       );
     };
@@ -230,7 +229,7 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
                   )}
                   {description && (
                     <SheetDescription className="ml-1 mt-1 text-xs">
-                      {customTitle || <>{description}</>}
+                      {description}
                     </SheetDescription>
                   )}
                   {(!title || !description) && (
@@ -284,6 +283,7 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
               >
                 {prependFooter}
                 {footer || <DefaultFooter />}
+                {appendFooter}
               </SheetFooter>
             )}
           </SheetContent>
