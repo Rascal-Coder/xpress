@@ -1,5 +1,3 @@
-// / <reference types="node" />
-
 import type { SubMenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
@@ -12,6 +10,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CollapseTransition from '../collapse-transition';
 import { useMenuContext, useMenuStyle } from '../hooks';
 import SubMenuContent from '../sub-menu-content';
+
+// 添加 NodeJS.Timeout 类型
+type TimeoutType = ReturnType<typeof setTimeout>;
 
 interface Props extends SubMenuProps {
   className?: string;
@@ -43,7 +44,7 @@ function SubMenu({
   }, [parentPaths.length]);
   const subMenuStyle = useMenuStyle(level - 1);
 
-  const timer = useRef<null | ReturnType<typeof setTimeout>>(null);
+  const timer = useRef<null | TimeoutType>(null);
   const [isHovering, setIsHovering] = useState(false);
   const subMenuRef = useRef<HTMLLIElement | null>(null);
 
