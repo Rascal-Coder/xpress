@@ -48,6 +48,7 @@ const LayoutContent: FC<LayoutContentProps> = ({
     paddingLeft,
     paddingRight,
     paddingTop,
+    style,
   ]);
   const mergedStyle = useMemo(
     () => ({

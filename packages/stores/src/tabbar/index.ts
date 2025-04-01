@@ -263,7 +263,8 @@ export const useTabbarStore = create<TabbarStore>()(
         /**
          * @zh_CN 关闭标签页
          * @param tab
-         * @param router
+         * @param currentTab
+         * @param navigate
          */
         async closeTab(
           tab: TabDefinition,
@@ -375,7 +376,7 @@ export const useTabbarStore = create<TabbarStore>()(
         },
         /**
          * 设置固定标签页
-         * @param tabs
+         * @param _tabs
          */
         setAffixTabs(_tabs: TabDefinition[]) {
           const { tabs } = get();

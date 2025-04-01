@@ -181,6 +181,7 @@ export const useModal = (
   options: ModalOptions = {},
 ): [React.ComponentType<any>, ModalApi] => {
   const { connectedComponent, ...restOptions } = options;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const modalApi = useMemo(() => createModalApi(restOptions), []);
   const [state, setState] = useState<ModalState>(modalApi.getState());
 

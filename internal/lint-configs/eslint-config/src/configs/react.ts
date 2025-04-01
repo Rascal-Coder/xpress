@@ -40,11 +40,12 @@ export async function react(): Promise<Linter.Config[]> {
         // react runtime
         'react/react-in-jsx-scope': 'off',
       },
-      // settings: {
-      //   react: {
-      //     version: 'detect', // 自动检测React版本
-      //   },
-      // },
+      settings: {
+        react: {
+          runtime: 'automatic',
+          version: '18.3.1', // 使用固定版本，与 pnpm-workspace.yaml 中的版本保持一致
+        },
+      },
     },
   ];
 }

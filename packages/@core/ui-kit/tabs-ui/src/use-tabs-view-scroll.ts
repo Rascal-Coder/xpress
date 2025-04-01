@@ -55,7 +55,7 @@ export function useTabsViewScroll(
       scrollbarWidth,
       scrollViewWidth,
     };
-  }, [scrollViewportEl]);
+  }, [scrollViewportEl, scrollbarRef]);
 
   const scrollDirection = useCallback(
     (direction: 'left' | 'right', distance: number = 150) => {

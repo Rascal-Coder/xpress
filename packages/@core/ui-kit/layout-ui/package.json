@@ -32,9 +32,9 @@
     }
   },
   "dependencies": {
+    "@xpress-core/preferences": "workspace:*",
     "ahooks": "catalog:",
-    "react": "catalog:",
-    "@xpress-core/preferences": "workspace:*"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",
