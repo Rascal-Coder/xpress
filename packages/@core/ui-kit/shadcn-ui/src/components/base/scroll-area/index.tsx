@@ -23,6 +23,7 @@ interface ScrollAreaProps {
   shadowLeft?: boolean;
   shadowRight?: boolean;
   shadowTop?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const XpressScrollbar = forwardRef<HTMLDivElement, ScrollAreaProps>(
