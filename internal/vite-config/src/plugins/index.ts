@@ -7,6 +7,7 @@ import type {
   LibraryPluginOptions,
 } from '../typing';
 
+import { codeInspectorPlugin } from 'code-inspector-plugin';
 import { visualizer as viteVisualizerPlugin } from 'rollup-plugin-visualizer';
 import viteCompressPlugin from 'vite-plugin-compression';
 import viteDtsPlugin from 'vite-plugin-dts';
@@ -92,6 +93,14 @@ async function loadApplicationPlugins(
   const commonPlugins = await loadCommonPlugins(commonOptions);
   return await loadConditionPlugins([
     ...commonPlugins,
+    {
+      condition: !isBuild,
+      plugins: () => [
+        codeInspectorPlugin({
+          bundler: 'vite',
+        }),
+      ],
+    },
     {
       condition: true,
       plugins: () => [tsconfigPaths()],

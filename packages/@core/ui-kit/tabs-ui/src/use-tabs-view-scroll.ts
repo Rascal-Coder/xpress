@@ -12,10 +12,29 @@ import {
 
 type DomElement = Element | null | undefined;
 
+// 定义useDebounceFn返回类型
+interface DebouncedFunction<T extends (...args: any[]) => any> {
+  cancel: () => void;
+  run: (...args: Parameters<T>) => ReturnType<T>;
+}
+
+interface TabsViewScrollReturn {
+  handleScrollAt: DebouncedFunction<
+    (arg: { left: boolean; right: boolean }) => void
+  >;
+  handleWheel: (event: WheelEvent) => void;
+  initScrollbar: () => Promise<void>;
+  scrollbarRef: RefObject<HTMLDivElement>;
+  scrollDirection: (direction: 'left' | 'right', distance?: number) => void;
+  scrollIsAtLeft: boolean;
+  scrollIsAtRight: boolean;
+  showScrollButton: boolean;
+}
+
 export function useTabsViewScroll(
   props: TabsProps,
   scrollbarRef: RefObject<HTMLDivElement>,
-) {
+): TabsViewScrollReturn {
   const resizeObserverRef = useRef<null | ResizeObserver>(null);
   const mutationObserverRef = useRef<MutationObserver | null>(null);
   const tabItemCountRef = useRef(0);

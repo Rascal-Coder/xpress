@@ -37,6 +37,7 @@
     "@types/html-minifier-terser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@xpress/node-utils": "workspace:*",
+    "code-inspector-plugin": "^0.20.7",
     "dayjs": "catalog:",
     "dotenv": "catalog:",
     "rollup-plugin-visualizer": "catalog:",
