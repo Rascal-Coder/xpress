@@ -1,3 +1,5 @@
+// / <reference types="node" />
+
 import type { SubMenuProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
@@ -156,7 +158,7 @@ function SubMenu({
     if (currentSubMenu) {
       currentSubMenu.setMouseInChild(false);
     }
-    timer.current = setTimeout(() => {
+    timer.current = window.setTimeout(() => {
       !currentSubMenu?.mouseInChild && rootMenu?.closeMenu(path, parentPaths);
       setIsHovering(false);
     }, 100);
