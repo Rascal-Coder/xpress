@@ -6,7 +6,7 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { defaultPreferences } from '../src/config';
-import { PreferencesProvider, usePreferencesContext } from '../src/Preferences';
+import { PreferencesProvider, usePreferencesContext } from '../src/preferences';
 
 const mockOptions = {
   namespace: 'test',

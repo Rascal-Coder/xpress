@@ -3,14 +3,13 @@
 exports[`defaultPreferences immutability test > should not modify the config object 1`] = `
 {
   "app": {
-    "accessMode": "frontend",
     "authPageLayout": "panel-right",
     "checkUpdatesInterval": 1,
     "colorGrayMode": false,
     "colorWeakMode": false,
     "compact": false,
     "contentCompact": "wide",
-    "defaultAvatar": "",
+    "defaultAvatar": "https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp",
     "dynamicTitle": true,
     "enableCheckUpdates": true,
     "enablePreferences": true,
@@ -46,11 +45,12 @@ exports[`defaultPreferences immutability test > should not modify the config obj
   "header": {
     "enable": true,
     "hidden": false,
+    "menuAlign": "start",
     "mode": "fixed",
   },
   "logo": {
     "enable": true,
-    "source": "",
+    "source": "/images/logo.svg",
   },
   "navigation": {
     "accordion": true,
@@ -72,13 +72,15 @@ exports[`defaultPreferences immutability test > should not modify the config obj
     "expandOnHover": true,
     "extraCollapse": true,
     "hidden": false,
-    "width": 224,
+    "width": 220,
   },
   "tabbar": {
     "draggable": true,
     "enable": true,
     "height": 38,
     "keepAlive": true,
+    "maxCount": 0,
+    "middleClickToClose": true,
     "persist": true,
     "showIcon": true,
     "showMaximize": true,
