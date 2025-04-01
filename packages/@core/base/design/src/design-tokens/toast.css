@@ -34,8 +34,9 @@
   --toastify-toast-min-height: 20px;
   --toastify-toast-max-height: 800px;
   --toastify-toast-bd-radius: 4px;
-  --toastify-toast-shadow: 0 6px 16px 0 rgb(0 0 0 / 8%),
-    0 3px 6px -4px rgb(0 0 0 / 12%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+  --toastify-toast-shadow:
+    0 6px 16px 0 rgb(0 0 0 / 8%), 0 3px 6px -4px rgb(0 0 0 / 12%),
+    0 9px 28px 8px rgb(0 0 0 / 5%);
   --toastify-font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   --toastify-z-index: 9999;
   --toastify-text-color-light: rgb(0 0 0 / 87%);
