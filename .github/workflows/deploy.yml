@@ -68,15 +68,15 @@ jobs:
           password: ${{ secrets.WEB_ANTD_FTP_PASSWORD }}
           local-dir: ./apps/web-antd/dist/
 
-  rerun-on-failure:
-    name: Rerun on failure
-    needs:
-      - deploy-docs-ftp
-    if: failure() && fromJSON(github.run_attempt) < 10
-    runs-on: ubuntu-latest
-    steps:
-      - name: Retry ${{ fromJSON(github.run_attempt) }} of 10
-        env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
+  # rerun-on-failure:
+  #   name: Rerun on failure
+  #   needs:
+  #     - deploy-docs-ftp
+  #   if: failure() && fromJSON(github.run_attempt) < 10
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Retry ${{ fromJSON(github.run_attempt) }} of 10
+  #       env:
+  #         GH_REPO: ${{ github.repository }}
+  #         GH_TOKEN: ${{ github.token }}
+  #       run: gh workflow run rerun.yml -F run_id=${{ github.run_id }}
