@@ -23,6 +23,7 @@
     "commit:verify": "xpress commit:verify",
     "dev": "turbo-run dev",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
+    "build:antd": "pnpm run build --filter=@xpress/web-antd",
     "build:analyze": "turbo build:analyze",
     "prepare": "is-ci || husky",
     "test:unit": "vitest run",
