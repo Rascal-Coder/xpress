@@ -17,7 +17,7 @@ import {
 import { ELEMENT_ID_MAIN_CONTENT } from '@xpress-core/shared/constants';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useEffect, useId, useMemo, useRef } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { useModalDraggable } from './useModalDraggable';
 
@@ -39,11 +39,9 @@ interface ModalProps {
   footer?: React.ReactNode;
   footerClass?: string;
   headerClass?: string;
-  isFullscreen?: boolean;
   isOpen: boolean;
   modal?: boolean;
   modalClass?: string;
-  onFullscreenChange?: (isFullscreen: boolean) => void;
   onModalBeforeClose?: () => void;
   onModalCancel?: () => void;
   onModalClosed?: () => void;
@@ -72,11 +70,9 @@ export const Modal = ({
   confirmText,
   draggable,
   footer = false,
-  isFullscreen = false,
   isOpen,
   modal,
   modalClass,
-  onFullscreenChange,
   onModalBeforeClose,
   onModalCancel,
   onModalClosed,
@@ -92,6 +88,7 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const id = useId();
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleClose = () => {
     const allowClose = onModalBeforeClose ? onModalBeforeClose() : true;
@@ -111,15 +108,39 @@ export const Modal = ({
   const shouldDraggable = useMemo(() => {
     return draggable && !shouldFullscreen && showHeader;
   }, [draggable, shouldFullscreen, showHeader]);
+
   const dialogRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const [modalRendered, setModalRendered] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 等待下一帧，确保 Modal 已经渲染到 DOM
+      requestAnimationFrame(() => {
+        if (dialogRef.current) {
+          setModalRendered(true);
+        }
+      });
+    } else {
+      setModalRendered(false);
+    }
+  }, [isOpen]);
+
   const { dragging } = useModalDraggable(
-    dialogRef,
-    headerRef,
+    modalRendered ? dialogRef : { current: null },
+    modalRendered ? headerRef : { current: null },
     shouldDraggable ?? false,
   );
-  const handleFullscreen = (isFullscreen: boolean) => {
-    onFullscreenChange?.(isFullscreen);
+  useEffect(() => {
+    if (dialogRef.current) {
+      dialogRef.current.style.transition = dragging
+        ? 'none'
+        : 'transform 0.2s ease-out';
+    }
+  }, [dragging]);
+
+  const handleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
   };
   const handerOpenAutoFocus = (e: Event) => {
     if (!props.openAutoFocus) {
@@ -232,6 +253,7 @@ export const Modal = ({
               },
               props.headerClass,
             )}
+            data-draggable={shouldDraggable}
             ref={headerRef}
           >
             {props.title && (
@@ -279,9 +301,7 @@ export const Modal = ({
           {props.showFullScreenButton && (
             <XpressIconButton
               className="hover:bg-accent hover:text-accent-foreground text-foreground/80 flex-center absolute right-10 top-3 hidden size-6 rounded-full px-1 text-lg opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none sm:block"
-              onClick={() => {
-                handleFullscreen(isFullscreen ?? false);
-              }}
+              onClick={handleFullscreen}
             >
               {isFullscreen ? (
                 <Shrink className="size-3.5" />

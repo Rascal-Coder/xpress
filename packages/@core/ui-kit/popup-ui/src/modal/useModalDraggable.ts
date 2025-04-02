@@ -1,119 +1,114 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-interface Transform {
+interface Position {
   offsetX: number;
   offsetY: number;
 }
 
-export const useModalDraggable = (
+/**
+ * Modal拖拽Hook
+ * @param targetRef Modal容器的ref
+ * @param dragRef 拖拽句柄的ref
+ * @param draggable 是否可拖拽
+ * @returns 拖拽相关的状态和方法
+ */
+export function useModalDraggable(
   targetRef: React.RefObject<HTMLElement>,
   dragRef: React.RefObject<HTMLElement>,
   draggable: boolean,
-  overflow?: boolean,
-) => {
-  const transformRef = useRef<Transform>({
+) {
+  const [position, setPosition] = useState<Position>({
     offsetX: 0,
     offsetY: 0,
   });
+
   const [dragging, setDragging] = useState(false);
-  const onMousedown = (e: MouseEvent) => {
-    const downX = e.clientX;
-    const downY = e.clientY;
-    const { offsetX, offsetY } = transformRef.current;
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const targetRect = targetRef.current!.getBoundingClientRect();
-    const targetLeft = targetRect.left;
-    const targetTop = targetRect.top;
-    const targetWidth = targetRect.width;
-    const targetHeight = targetRect.height;
+  const handleMouseDown = useCallback(
+    (e: MouseEvent) => {
+      if (!targetRef.current) return;
 
-    const clientWidth = document.documentElement.clientWidth;
-    const clientHeight = document.documentElement.clientHeight;
+      const downX = e.clientX;
+      const downY = e.clientY;
+      const targetRect = targetRef.current.getBoundingClientRect();
 
-    const minLeft = -targetLeft + offsetX;
-    const minTop = -targetTop + offsetY;
-    const maxLeft = clientWidth - targetLeft - targetWidth + offsetX;
-    const maxTop = clientHeight - targetTop - targetHeight + offsetY;
+      const { offsetX, offsetY } = position;
+      const targetLeft = targetRect.left;
+      const targetTop = targetRect.top;
+      const targetWidth = targetRect.width;
+      const targetHeight = targetRect.height;
+      const docElement = document.documentElement;
+      const clientWidth = docElement.clientWidth;
+      const clientHeight = docElement.clientHeight;
 
-    const onMousemove = (e: MouseEvent) => {
-      let moveX = offsetX + e.clientX - downX;
-      let moveY = offsetY + e.clientY - downY;
+      const minLeft = -targetLeft + offsetX;
+      const minTop = -targetTop + offsetY;
+      const maxLeft = clientWidth - targetLeft - targetWidth + offsetX;
+      const maxTop = clientHeight - targetTop - targetHeight + offsetY;
 
-      if (!overflow) {
+      const handleMouseMove = (e: MouseEvent) => {
+        let moveX = offsetX + e.clientX - downX;
+        let moveY = offsetY + e.clientY - downY;
+
         moveX = Math.min(Math.max(moveX, minLeft), maxLeft);
         moveY = Math.min(Math.max(moveY, minTop), maxTop);
-        setDragging(true);
-      }
 
-      transformRef.current = {
-        offsetX: moveX,
-        offsetY: moveY,
+        setPosition({ offsetX: moveX, offsetY: moveY });
+        if (targetRef.current) {
+          targetRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
+          setDragging(true);
+        }
       };
 
-      if (targetRef.current) {
-        targetRef.current.style.transform = `translate(${addUnit(moveX)}, ${addUnit(moveY)})`;
-      }
-    };
+      const handleMouseUp = () => {
+        setDragging(false);
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
 
-    const onMouseup = () => {
-      setDragging(false);
-      document.removeEventListener('mousemove', onMousemove);
-      document.removeEventListener('mouseup', onMouseup);
-    };
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    },
+    [position, targetRef],
+  );
 
-    document.addEventListener('mousemove', onMousemove);
-    document.addEventListener('mouseup', onMouseup);
-  };
-
-  const onDraggable = () => {
+  // 添加和移除拖拽事件监听
+  const addDraggableEvents = useCallback(() => {
     if (dragRef.current && targetRef.current) {
-      dragRef.current.addEventListener('mousedown', onMousedown);
+      dragRef.current.addEventListener('mousedown', handleMouseDown);
     }
-  };
+  }, [dragRef, targetRef, handleMouseDown]);
 
-  const offDraggable = () => {
+  const removeDraggableEvents = useCallback(() => {
     if (dragRef.current && targetRef.current) {
-      dragRef.current.removeEventListener('mousedown', onMousedown);
+      dragRef.current.removeEventListener('mousedown', handleMouseDown);
     }
-  };
+  }, [dragRef, targetRef, handleMouseDown]);
 
-  const resetPosition = () => {
-    transformRef.current = {
-      offsetX: 0,
-      offsetY: 0,
-    };
+  // 重置位置
+  const resetPosition = useCallback(() => {
+    setPosition({ offsetX: 0, offsetY: 0 });
     if (targetRef.current) {
       targetRef.current.style.transform = 'none';
     }
-  };
+  }, [targetRef]);
 
+  // 响应draggable属性变化
   useEffect(() => {
     if (draggable) {
-      onDraggable();
+      addDraggableEvents();
     } else {
-      offDraggable();
+      removeDraggableEvents();
     }
 
     return () => {
-      offDraggable();
+      removeDraggableEvents();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [draggable]);
+  }, [draggable, addDraggableEvents, removeDraggableEvents]);
 
   return {
     dragging,
+    position,
     resetPosition,
   };
-};
-
-function addUnit(value?: number | string, defaultUnit = 'px'): string {
-  if (!value) return '';
-  if (typeof value === 'number' || /^\d+$/.test(String(value))) {
-    return `${value}${defaultUnit}`;
-  } else if (typeof value === 'string') {
-    return value;
-  }
-  console.warn('binding value must be a string or number');
-  return '';
 }

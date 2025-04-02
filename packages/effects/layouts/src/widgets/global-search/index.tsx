@@ -6,7 +6,6 @@ import { useState } from 'react';
 
 export function GlobalSearch({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   return (
     <div
       className={className}
@@ -26,12 +25,8 @@ export function GlobalSearch({ className }: { className?: string }) {
       </div>
       <Modal
         draggable={true}
-        isFullscreen={isFullscreen}
         isOpen={isOpen}
         modal={true}
-        onFullscreenChange={(fullscreen) => {
-          setIsFullscreen(!fullscreen);
-        }}
         overlayBlur={2}
         setIsOpen={setIsOpen}
         showFullScreenButton={true}
