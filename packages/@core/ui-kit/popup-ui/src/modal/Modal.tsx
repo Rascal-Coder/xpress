@@ -38,7 +38,6 @@ interface ModalProps {
   draggable?: boolean;
   footer?: React.ReactNode;
   footerClass?: string;
-  fullscreen?: boolean;
   headerClass?: string;
   isFullscreen?: boolean;
   isOpen: boolean;
@@ -66,11 +65,14 @@ interface ModalProps {
 }
 export const Modal = ({
   appendToMain = false,
-  bordered,
+  bordered = true,
   cancelText,
   centered,
   confirmLoading,
   confirmText,
+  draggable,
+  footer = false,
+  isFullscreen = false,
   isOpen,
   modal,
   modalClass,
@@ -82,8 +84,9 @@ export const Modal = ({
   onModalOpened,
   overlayBlur,
   setIsOpen,
-  showCancelButton,
-  showConfirmButton,
+  showCancelButton = true,
+  showConfirmButton = true,
+  showHeader = true,
   zIndex,
   children,
   ...props
@@ -94,25 +97,24 @@ export const Modal = ({
       setIsOpen(true);
     } else {
       const allowClose = onModalBeforeClose ? onModalBeforeClose() : true;
+
       if (allowClose) {
         setIsOpen(false);
       }
     }
   };
   const getAppendTo = useMemo(() => {
-    return appendToMain
-      ? `#${ELEMENT_ID_MAIN_CONTENT}>div:not(.absolute)>div`
-      : undefined;
+    return appendToMain ? `#${ELEMENT_ID_MAIN_CONTENT}` : undefined;
   }, [appendToMain]);
   const { isMobile } = useIsMobile();
 
   const shouldFullscreen = useMemo(() => {
-    return (props.fullscreen && props.showHeader) || isMobile;
-  }, [props.fullscreen, props.showHeader, isMobile]);
+    return (isFullscreen && showHeader) || isMobile;
+  }, [isFullscreen, showHeader, isMobile]);
 
   const shouldDraggable = useMemo(() => {
-    return props.draggable && !shouldFullscreen && props.showHeader;
-  }, [props.draggable, shouldFullscreen, props.showHeader]);
+    return draggable && !shouldFullscreen && showHeader;
+  }, [draggable, shouldFullscreen, showHeader]);
   const dialogRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const { dragging } = useModalDraggable(
@@ -186,10 +188,11 @@ export const Modal = ({
     <DialogContext.Provider value={{ id }}>
       <Dialog modal={false} onOpenChange={onOpenChange} open={isOpen}>
         <DialogContent
-          className={cn('left-0 sm:rounded-[var(--radius)]', modalClass, {
+          className={cn('sm:rounded-[var(--radius)]', modalClass, {
             'border-border border': bordered,
             'duration-300': !dragging,
-            'left-0 !translate-y-0': shouldFullscreen,
+            'fixed inset-0 h-full !max-w-full translate-x-0 translate-y-0 gap-0 rounded-none':
+              shouldFullscreen,
             'shadow-3xl': !bordered,
             'top-1/2 !-translate-y-1/2': centered && !shouldFullscreen,
           })}
@@ -228,7 +231,7 @@ export const Modal = ({
               {
                 'border-b': bordered,
                 'cursor-move select-none': shouldDraggable,
-                hidden: !props.showHeader,
+                hidden: !showHeader,
               },
               props.headerClass,
             )}
@@ -265,6 +268,7 @@ export const Modal = ({
               'relative min-h-40 flex-1 overflow-y-auto p-3',
               props.contentClass,
               {
+                'h-[calc(100vh-8rem)]': shouldFullscreen,
                 'overflow-hidden': props.showLoading,
               },
             )}
@@ -279,10 +283,10 @@ export const Modal = ({
             <XpressIconButton
               className="hover:bg-accent hover:text-accent-foreground text-foreground/80 flex-center absolute right-10 top-3 hidden size-6 rounded-full px-1 text-lg opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none sm:block"
               onClick={() => {
-                handleFullscreen(props.isFullscreen ?? false);
+                handleFullscreen(isFullscreen ?? false);
               }}
             >
-              {props.isFullscreen ? (
+              {isFullscreen ? (
                 <Shrink className="size-3.5" />
               ) : (
                 <Expand className="size-3.5" />
@@ -292,7 +296,7 @@ export const Modal = ({
 
           <DialogFooter
             className={cn(
-              'flex-row items-center justify-end p-2',
+              'box-border flex-row items-center justify-end p-2',
               {
                 'border-t': bordered,
               },
@@ -301,7 +305,7 @@ export const Modal = ({
             ref={footerRef}
           >
             {props.prependFooter}
-            {props.footer || <DefaultFooter />}
+            {footer || <DefaultFooter />}
             {props.appendFooter}
           </DialogFooter>
         </DialogContent>

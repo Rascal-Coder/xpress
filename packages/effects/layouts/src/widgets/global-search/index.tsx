@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 export function GlobalSearch({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   return (
     <div
       className={className}
       onClick={() => {
-        console.warn('GlobalSearch clicked, setting isOpen to true');
         setIsOpen(true);
       }}
     >
@@ -24,7 +24,19 @@ export function GlobalSearch({ className }: { className?: string }) {
           <kbd>K</kbd>
         </span>
       </div>
-      <Modal isOpen={isOpen} modal={true} setIsOpen={setIsOpen}>
+      <Modal
+        draggable={true}
+        isFullscreen={isFullscreen}
+        isOpen={isOpen}
+        modal={true}
+        onFullscreenChange={(fullscreen) => {
+          setIsFullscreen(!fullscreen);
+        }}
+        overlayBlur={10}
+        setIsOpen={setIsOpen}
+        showFullScreenButton={true}
+        title="全局搜索"
+      >
         这是自定义对话框的内容
       </Modal>
     </div>
