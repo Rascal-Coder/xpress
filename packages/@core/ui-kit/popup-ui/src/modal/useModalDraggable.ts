@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 /**
  * Modal拖拽Hook
@@ -12,9 +12,22 @@ export function useModalDraggable(
   dragRef: React.RefObject<HTMLElement>,
   draggable: boolean,
 ) {
+  // 使用ref存储最新位置
+  const positionRef = useRef({ x: 0, y: 0 });
+  // 是否已经拖拽过
+  const hasDraggedRef = useRef(false);
+
+  // 只有拖拽过后才应用保存的位置
+  useEffect(() => {
+    if (targetRef.current && draggable && hasDraggedRef.current) {
+      targetRef.current.style.transform = `translate(${positionRef.current.x}px, ${positionRef.current.y}px)`;
+    }
+  }, [targetRef, draggable]);
+
   const handleMouseDown = useCallback(
     (e: MouseEvent) => {
       if (!targetRef.current) return;
+
       // 阻止事件冒泡
       e.stopPropagation();
 
@@ -42,6 +55,8 @@ export function useModalDraggable(
         }
       }
 
+      let hasMoved = false;
+
       const handleMouseMove = (e: MouseEvent) => {
         if (!targetRef.current) return;
 
@@ -53,6 +68,14 @@ export function useModalDraggable(
         const newX = translateX + moveX;
         const newY = translateY + moveY;
 
+        // 标记已经移动过
+        if (Math.abs(moveX) > 5 || Math.abs(moveY) > 5) {
+          hasMoved = true;
+        }
+
+        // 更新位置引用
+        positionRef.current = { x: newX, y: newY };
+
         // 应用变换
         targetRef.current.style.transform = `translate(${newX}px, ${newY}px)`;
         targetRef.current.style.transition = 'none';
@@ -61,6 +84,11 @@ export function useModalDraggable(
       const handleMouseUp = () => {
         if (targetRef.current) {
           targetRef.current.style.transition = 'transform 0.2s ease-out';
+        }
+
+        // 只有在实际移动后才标记为已拖拽
+        if (hasMoved) {
+          hasDraggedRef.current = true;
         }
 
         document.removeEventListener('mousemove', handleMouseMove);
@@ -75,6 +103,8 @@ export function useModalDraggable(
 
   // 重置位置
   const resetPosition = useCallback(() => {
+    positionRef.current = { x: 0, y: 0 };
+    hasDraggedRef.current = false;
     if (targetRef.current) {
       targetRef.current.style.transform = '';
     }
@@ -108,6 +138,8 @@ export function useModalDraggable(
   }, [draggable, addDraggableEvents, removeDraggableEvents]);
 
   return {
+    getCurrentPosition: () => positionRef.current,
+    hasDragged: () => hasDraggedRef.current,
     resetPosition,
   };
 }
