@@ -33,10 +33,10 @@ interface ModalProps {
   confirmLoading?: boolean;
   confirmText?: string;
   contentClass?: string;
+  customFooter?: React.ReactNode;
   customTitle?: React.ReactNode;
   description?: string;
   draggable?: boolean;
-  footer?: React.ReactNode;
   footerClass?: string;
   headerClass?: string;
   isOpen: boolean;
@@ -68,8 +68,8 @@ export const Modal = ({
   centered,
   confirmLoading,
   confirmText,
+  customFooter = false,
   draggable,
-  footer = false,
   isOpen,
   modal,
   modalClass,
@@ -236,7 +236,7 @@ export const Modal = ({
         >
           <DialogHeader
             className={cn(
-              'px-5 py-4',
+              'px-5 py-2',
               {
                 'border-b': bordered,
                 'cursor-move select-none': shouldDraggable,
@@ -247,20 +247,18 @@ export const Modal = ({
             data-draggable={shouldDraggable}
             ref={headerRef}
           >
-            {props.title && (
-              <DialogTitle className="text-left">
-                {props.customTitle || (
-                  <>
-                    {props.title}
-                    {props.titleTooltip && (
-                      <XpressHelpTooltip trigger-class="pb-1">
-                        {props.titleTooltip}
-                      </XpressHelpTooltip>
-                    )}
-                  </>
-                )}
-              </DialogTitle>
-            )}
+            <DialogTitle className="text-left">
+              {props.customTitle || (
+                <>
+                  {props.title}
+                  {props.titleTooltip && (
+                    <XpressHelpTooltip trigger-class="pb-1">
+                      {props.titleTooltip}
+                    </XpressHelpTooltip>
+                  )}
+                </>
+              )}
+            </DialogTitle>
           </DialogHeader>
           {props.description && (
             <DialogDescription className="ml-1 mt-1 text-xs">
@@ -313,7 +311,7 @@ export const Modal = ({
             ref={footerRef}
           >
             {props.prependFooter}
-            {footer || <DefaultFooter />}
+            {customFooter || <DefaultFooter />}
             {props.appendFooter}
           </DialogFooter>
         </DialogContent>

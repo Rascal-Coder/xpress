@@ -1,11 +1,20 @@
 import { Search } from '@xpress/icons';
 import { Modal } from '@xpress-core/popup-ui';
+import { XpressIcon } from '@xpress-core/shadcn-ui';
 import { isWindowsOs } from '@xpress-core/shared/utils';
 
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+import { SearchPanel } from './SearchPanel';
 
 export function GlobalSearch({ className }: { className?: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  useLayoutEffect(() => {
+    if (isOpen) {
+      searchInputRef.current?.focus();
+    }
+  }, [isOpen]);
   return (
     <div
       className={className}
@@ -24,15 +33,44 @@ export function GlobalSearch({ className }: { className?: string }) {
         </span>
       </div>
       <Modal
+        customFooter={
+          <div className="prose prose-stone dark:prose-invert hidden flex-1 items-center gap-4 px-2 py-2 text-sm md:flex">
+            <span className="inline-flex items-center gap-1 leading-4">
+              <kbd aria-label="Up arrow">
+                <XpressIcon icon="lucide:arrow-up" />
+              </kbd>
+              <kbd aria-label="Down arrow">
+                <XpressIcon icon="lucide:arrow-down" />
+              </kbd>
+            </span>
+            <span className="inline-flex items-center gap-1 leading-4">
+              <kbd aria-label="Enter">enter</kbd>
+              选择
+            </span>
+            <span className="inline-flex items-center gap-1 leading-4">
+              <kbd aria-label="Escape">esc</kbd>
+              关闭
+            </span>
+          </div>
+        }
+        customTitle={
+          <div className="flex items-center">
+            <Search className="text-muted-foreground mr-2 size-4" />
+            <input
+              className="ring-none placeholder:text-muted-foreground w-[80%] rounded-md border border-none bg-transparent p-2 pl-0 text-sm font-normal outline-none ring-0 ring-offset-transparent focus-visible:ring-transparent"
+              placeholder="搜索导航菜单"
+              ref={searchInputRef}
+            />
+          </div>
+        }
         draggable={true}
         isOpen={isOpen}
         modal={true}
+        openAutoFocus={true}
         overlayBlur={2}
         setIsOpen={setIsOpen}
-        showFullScreenButton={true}
-        title="全局搜索"
       >
-        这是自定义对话框的内容
+        <SearchPanel />
       </Modal>
     </div>
   );
