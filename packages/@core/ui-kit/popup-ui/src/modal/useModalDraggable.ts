@@ -1,9 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
-
-interface Position {
-  offsetX: number;
-  offsetY: number;
-}
+import { useCallback, useEffect } from 'react';
 
 /**
  * Modal拖拽Hook
@@ -17,51 +12,57 @@ export function useModalDraggable(
   dragRef: React.RefObject<HTMLElement>,
   draggable: boolean,
 ) {
-  const [position, setPosition] = useState<Position>({
-    offsetX: 0,
-    offsetY: 0,
-  });
-
-  const [dragging, setDragging] = useState(false);
-
   const handleMouseDown = useCallback(
     (e: MouseEvent) => {
       if (!targetRef.current) return;
+      // 阻止事件冒泡
+      e.stopPropagation();
 
-      const downX = e.clientX;
-      const downY = e.clientY;
-      const targetRect = targetRef.current.getBoundingClientRect();
+      // 记录初始鼠标位置
+      const startX = e.clientX;
+      const startY = e.clientY;
 
-      const { offsetX, offsetY } = position;
-      const targetLeft = targetRect.left;
-      const targetTop = targetRect.top;
-      const targetWidth = targetRect.width;
-      const targetHeight = targetRect.height;
-      const docElement = document.documentElement;
-      const clientWidth = docElement.clientWidth;
-      const clientHeight = docElement.clientHeight;
+      // 获取当前transform值
+      const computedStyle = window.getComputedStyle(targetRef.current);
+      const transform = computedStyle.transform || '';
 
-      const minLeft = -targetLeft + offsetX;
-      const minTop = -targetTop + offsetY;
-      const maxLeft = clientWidth - targetLeft - targetWidth + offsetX;
-      const maxTop = clientHeight - targetTop - targetHeight + offsetY;
+      // 提取当前translate值
+      let translateX = 0;
+      let translateY = 0;
+
+      if (transform !== 'none' && transform !== '') {
+        // 提取transform矩阵值
+        const matrix = transform.match(/matrix\(([^)]+)\)/);
+        if (matrix && matrix[1]) {
+          const values = matrix[1].split(', ');
+          if (values.length >= 6) {
+            translateX = Number.parseFloat(values[4] ?? '0') || 0;
+            translateY = Number.parseFloat(values[5] ?? '0') || 0;
+          }
+        }
+      }
 
       const handleMouseMove = (e: MouseEvent) => {
-        let moveX = offsetX + e.clientX - downX;
-        let moveY = offsetY + e.clientY - downY;
+        if (!targetRef.current) return;
 
-        moveX = Math.min(Math.max(moveX, minLeft), maxLeft);
-        moveY = Math.min(Math.max(moveY, minTop), maxTop);
+        // 计算移动距离
+        const moveX = e.clientX - startX;
+        const moveY = e.clientY - startY;
 
-        setPosition({ offsetX: moveX, offsetY: moveY });
-        if (targetRef.current) {
-          targetRef.current.style.transform = `translate(${moveX}px, ${moveY}px)`;
-          setDragging(true);
-        }
+        // 新位置 = 当前translate值 + 移动距离
+        const newX = translateX + moveX;
+        const newY = translateY + moveY;
+
+        // 应用变换
+        targetRef.current.style.transform = `translate(${newX}px, ${newY}px)`;
+        targetRef.current.style.transition = 'none';
       };
 
       const handleMouseUp = () => {
-        setDragging(false);
+        if (targetRef.current) {
+          targetRef.current.style.transition = 'transform 0.2s ease-out';
+        }
+
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
       };
@@ -69,29 +70,29 @@ export function useModalDraggable(
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
     },
-    [position, targetRef],
+    [targetRef],
   );
 
-  // 添加和移除拖拽事件监听
+  // 重置位置
+  const resetPosition = useCallback(() => {
+    if (targetRef.current) {
+      targetRef.current.style.transform = '';
+    }
+  }, [targetRef]);
+
+  // 添加拖拽事件
   const addDraggableEvents = useCallback(() => {
     if (dragRef.current && targetRef.current) {
       dragRef.current.addEventListener('mousedown', handleMouseDown);
     }
   }, [dragRef, targetRef, handleMouseDown]);
 
+  // 移除拖拽事件
   const removeDraggableEvents = useCallback(() => {
     if (dragRef.current && targetRef.current) {
       dragRef.current.removeEventListener('mousedown', handleMouseDown);
     }
   }, [dragRef, targetRef, handleMouseDown]);
-
-  // 重置位置
-  const resetPosition = useCallback(() => {
-    setPosition({ offsetX: 0, offsetY: 0 });
-    if (targetRef.current) {
-      targetRef.current.style.transform = 'none';
-    }
-  }, [targetRef]);
 
   // 响应draggable属性变化
   useEffect(() => {
@@ -107,8 +108,6 @@ export function useModalDraggable(
   }, [draggable, addDraggableEvents, removeDraggableEvents]);
 
   return {
-    dragging,
-    position,
     resetPosition,
   };
 }

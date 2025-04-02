@@ -125,19 +125,11 @@ export const Modal = ({
       setModalRendered(false);
     }
   }, [isOpen]);
-
-  const { dragging } = useModalDraggable(
+  useModalDraggable(
     modalRendered ? dialogRef : { current: null },
     modalRendered ? headerRef : { current: null },
     shouldDraggable ?? false,
   );
-  useEffect(() => {
-    if (dialogRef.current) {
-      dialogRef.current.style.transition = dragging
-        ? 'none'
-        : 'transform 0.2s ease-out';
-    }
-  }, [dragging]);
 
   const handleFullscreen = () => {
     setIsFullscreen(!isFullscreen);
@@ -207,7 +199,6 @@ export const Modal = ({
         <DialogContent
           className={cn('sm:rounded-[var(--radius)]', modalClass, {
             'border-border border': bordered,
-            'duration-300': !dragging,
             'fixed inset-0 h-full !max-w-full translate-x-0 translate-y-0 gap-0 rounded-none':
               shouldFullscreen,
             'shadow-3xl': !bordered,
