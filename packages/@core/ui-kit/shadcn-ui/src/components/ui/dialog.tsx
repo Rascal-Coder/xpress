@@ -79,7 +79,7 @@ const DialogContent = React.forwardRef<
       closeDisabled = false,
       container,
       modal,
-      // onClose,
+      onClose,
       onClosed,
       onOpened,
       open,
@@ -91,10 +91,6 @@ const DialogContent = React.forwardRef<
     },
     ref,
   ) => {
-    // useScrollLock();
-    // React.useEffect(() => {
-    //   console.log('open', modal && open);
-    // }, [open]);
     const position = React.useMemo(
       () => (container ? 'absolute' : 'fixed'),
       [container],
@@ -108,22 +104,30 @@ const DialogContent = React.forwardRef<
       ) {
         if (open) {
           onOpened?.();
-          console.warn('onOpened');
         } else {
           onClosed?.();
-          console.warn('onClosed');
         }
       }
     };
+
     const overlayStyle = {
       ...(zIndex ? { zIndex } : {}),
       backdropFilter:
         overlayBlur && overlayBlur > 0 ? `blur(${overlayBlur}px)` : 'none',
       position,
     } as const;
+
     return (
       <DialogPortal container={container} data-slot="dialog-portal">
-        {modal && open && <DialogOverlay style={overlayStyle} />}
+        {modal && open && (
+          <DialogOverlay
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose?.();
+            }}
+            style={overlayStyle}
+          />
+        )}
         <DialogPrimitive.Content
           className={cn(
             'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 z-popup fixed left-[50%] top-[50%] grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border shadow-lg duration-200 sm:max-w-lg',
@@ -142,7 +146,10 @@ const DialogContent = React.forwardRef<
                 closeClass,
               )}
               disabled={closeDisabled}
-              // onClick={onClose}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose?.();
+              }}
             >
               <X className="h-4 w-4" />
             </DialogPrimitive.Close>

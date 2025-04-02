@@ -92,15 +92,11 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const id = useId();
-  const onOpenChange = (open: boolean) => {
-    if (open) {
-      setIsOpen(true);
-    } else {
-      const allowClose = onModalBeforeClose ? onModalBeforeClose() : true;
 
-      if (allowClose) {
-        setIsOpen(false);
-      }
+  const handleClose = () => {
+    const allowClose = onModalBeforeClose ? onModalBeforeClose() : true;
+    if (allowClose) {
+      setIsOpen(false);
     }
   };
   const getAppendTo = useMemo(() => {
@@ -186,7 +182,7 @@ export const Modal = ({
   };
   return (
     <DialogContext.Provider value={{ id }}>
-      <Dialog modal={false} onOpenChange={onOpenChange} open={isOpen}>
+      <Dialog modal={modal} open={isOpen}>
         <DialogContent
           className={cn('sm:rounded-[var(--radius)]', modalClass, {
             'border-border border': bordered,
@@ -205,6 +201,7 @@ export const Modal = ({
               : undefined
           }
           modal={modal}
+          onClose={handleClose}
           onCloseAutoFocus={(e: Event) => {
             e.preventDefault();
             e.stopPropagation();

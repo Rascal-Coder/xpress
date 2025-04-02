@@ -1,6 +1,6 @@
 import type { Props } from './types';
 
-import { useIsMobile, useScrollLock } from '@xpress-core/hooks';
+import { useIsMobile } from '@xpress-core/hooks';
 import { X } from '@xpress-core/icons';
 import {
   DrawerContext,
@@ -67,7 +67,7 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
     ref,
   ) => {
     const { isMobile } = useIsMobile();
-    const { lock, unlock } = useScrollLock(document.body);
+    // const { lock, unlock } = useScrollLock(document.body);
     const id = useId();
     const wrapperRef = useRef<HTMLDivElement>(null);
     const onOpenChange = (open: boolean) => {
@@ -144,13 +144,13 @@ export const Drawer = forwardRef<HTMLDivElement, Props>(
         });
       }
     }, [showLoading]);
-    useEffect(() => {
-      if (isOpen) {
-        lock();
-      } else {
-        unlock();
-      }
-    }, [isOpen, lock, unlock]);
+    // useEffect(() => {
+    //   if (isOpen) {
+    //     lock();
+    //   } else {
+    //     unlock();
+    //   }
+    // }, [isOpen, lock, unlock]);
     return (
       <DrawerContext.Provider value={{ id }}>
         <Sheet modal={false} onOpenChange={onOpenChange} open={isOpen}>

@@ -32,7 +32,7 @@ export function GlobalSearch({ className }: { className?: string }) {
         onFullscreenChange={(fullscreen) => {
           setIsFullscreen(!fullscreen);
         }}
-        overlayBlur={10}
+        overlayBlur={2}
         setIsOpen={setIsOpen}
         showFullScreenButton={true}
         title="全局搜索"
