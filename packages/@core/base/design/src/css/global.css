@@ -111,6 +111,11 @@
       @apply hidden;
     }
   }
+
+  /* 移除对话框焦点轮廓 */
+  [data-slot='dialog-content'] {
+    @apply focus:outline-none !important;
+  }
 }
 
 @layer components {

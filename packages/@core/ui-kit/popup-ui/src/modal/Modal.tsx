@@ -1,307 +1,323 @@
-import type { KeyboardEvent, MouseEvent } from 'react';
+import { useIsMobile } from '@xpress-core/hooks';
+import { Expand, Shrink } from '@xpress-core/icons';
+import {
+  Dialog,
+  DialogContent,
+  DialogContext,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  VisuallyHidden,
+  XpressButton,
+  XpressHelpTooltip,
+  XpressIconButton,
+  XpressLoading,
+} from '@xpress-core/shadcn-ui';
+import { ELEMENT_ID_MAIN_CONTENT } from '@xpress-core/shared/constants';
+import { cn } from '@xpress-core/shared/utils';
 
-import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
-// Modal属性接口定义
+import { useModalDraggable } from './useModalDraggable';
+
 interface ModalProps {
+  appendFooter?: React.ReactNode;
+  appendToMain?: boolean;
   bordered?: boolean;
+  cancelText?: string;
   centered?: boolean;
   children?: React.ReactNode;
-  className?: string;
   closeOnClickModal?: boolean;
   closeOnPressEscape?: boolean;
   confirmLoading?: boolean;
-  contentClassName?: string;
+  confirmText?: string;
+  contentClass?: string;
+  customFooter?: React.ReactNode;
+  customTitle?: React.ReactNode;
+  description?: string;
   draggable?: boolean;
-  footer?: boolean | React.ReactNode;
-  footerClassName?: string;
-  fullscreen?: boolean;
-  headerClassName?: string;
-  isOpen?: boolean;
-  onCancel?: () => void;
-  onClose: () => void;
-  onConfirm?: () => void;
+  footerClass?: string;
+  headerClass?: string;
+  isOpen: boolean;
+  modal?: boolean;
+  modalClass?: string;
+  onModalBeforeClose?: () => void;
+  onModalCancel?: () => void;
+  onModalClosed?: () => void;
+  onModalConfirm?: () => void;
+  onModalOpened?: () => void;
+  openAutoFocus?: boolean;
+  overlayBlur?: number;
+  prependFooter?: React.ReactNode;
+  setIsOpen: (open: boolean) => void;
   showCancelButton?: boolean;
+  showClose?: boolean;
   showConfirmButton?: boolean;
-  title?: React.ReactNode;
-  width?: string;
+  showFullScreenButton?: boolean;
+  showHeader?: boolean;
+  showLoading?: boolean;
+  title?: string;
+  titleTooltip?: string;
   zIndex?: number;
 }
+export const Modal = ({
+  appendToMain = false,
+  bordered = true,
+  cancelText,
+  centered,
+  confirmLoading,
+  confirmText,
+  customFooter = false,
+  draggable,
+  isOpen,
+  modal,
+  modalClass,
+  onModalBeforeClose,
+  onModalCancel,
+  onModalClosed,
+  onModalConfirm,
+  onModalOpened,
+  overlayBlur,
+  setIsOpen,
+  showCancelButton = true,
+  showConfirmButton = true,
+  showHeader = true,
+  zIndex,
+  children,
+  ...props
+}: ModalProps) => {
+  const id = useId();
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-// 基础Modal组件
-const Modal = forwardRef<{ close: () => void }, ModalProps>(
-  (
-    {
-      bordered = false,
-      centered = false,
-      className = '',
-      closeOnClickModal = true,
-      closeOnPressEscape = true,
-      confirmLoading = false,
-      contentClassName = '',
-      draggable = false,
-      footer,
-      footerClassName = '',
-      fullscreen = false,
-      headerClassName = '',
-      isOpen,
-      onCancel,
-      onClose,
-      onConfirm,
-      showCancelButton = true,
-      showConfirmButton = true,
-      title,
-      width = '520px',
-      zIndex,
-      children,
-    },
-    ref,
-  ) => {
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
-    const [modalRef, setModalRef] = useState<HTMLDivElement | null>(null);
-    const [headerRef, setHeaderRef] = useState<HTMLDivElement | null>(null);
-
-    // 暴露方法给父组件
-    useImperativeHandle(ref, () => ({
-      close: onClose,
-    }));
-
-    // 处理ESC键关闭
-    useEffect(() => {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && closeOnPressEscape && isOpen) {
-          onClose();
-        }
-      };
-
-      document.addEventListener(
-        'keydown',
-        handleKeyDown as unknown as EventListener,
-      );
-      return () => {
-        document.removeEventListener(
-          'keydown',
-          handleKeyDown as unknown as EventListener,
-        );
-      };
-    }, [closeOnPressEscape, isOpen, onClose]);
-
-    // 拖拽功能
-    useEffect(() => {
-      if (!draggable || !headerRef || !modalRef || fullscreen) return;
-
-      let initialX = 0;
-      let initialY = 0;
-      let startX = 0;
-      let startY = 0;
-
-      const onMouseMove = (e: MouseEvent) => {
-        if (isDragging) {
-          const dx = e.clientX - startX;
-          const dy = e.clientY - startY;
-          setPosition({
-            x: initialX + dx,
-            y: initialY + dy,
-          });
-        }
-      };
-
-      const onMouseUp = () => {
-        setIsDragging(false);
-        document.removeEventListener(
-          'mousemove',
-          onMouseMove as unknown as EventListener,
-        );
-        document.removeEventListener(
-          'mouseup',
-          onMouseUp as unknown as EventListener,
-        );
-      };
-
-      const onMouseDown = (e: MouseEvent) => {
-        startX = e.clientX;
-        startY = e.clientY;
-        initialX = position.x;
-        initialY = position.y;
-        setIsDragging(true);
-
-        document.addEventListener(
-          'mousemove',
-          onMouseMove as unknown as EventListener,
-        );
-        document.addEventListener(
-          'mouseup',
-          onMouseUp as unknown as EventListener,
-        );
-      };
-
-      headerRef.addEventListener(
-        'mousedown',
-        onMouseDown as unknown as EventListener,
-      );
-
-      return () => {
-        headerRef.removeEventListener(
-          'mousedown',
-          onMouseDown as unknown as EventListener,
-        );
-        document.removeEventListener(
-          'mousemove',
-          onMouseMove as unknown as EventListener,
-        );
-        document.removeEventListener(
-          'mouseup',
-          onMouseUp as unknown as EventListener,
-        );
-      };
-    }, [draggable, headerRef, modalRef, isDragging, position, fullscreen]);
-
-    // 点击遮罩关闭
-    const handleOverlayClick = (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget && closeOnClickModal) {
-        onClose();
-      }
-    };
-
-    // 如果modal未打开则不渲染
-    if (!isOpen) return null;
-
-    // 计算modal样式
-    const getTransformValue = () => {
-      if (fullscreen) return 'none';
-      if (draggable && !fullscreen)
-        return `translate(${position.x}px, ${position.y}px)`;
-      if (centered && !fullscreen) return 'translateY(-50%)';
-      return 'none';
-    };
-
-    const modalStyle: React.CSSProperties = {
-      height: fullscreen ? '100%' : 'auto',
-      margin: centered && !fullscreen ? '0 auto' : '',
-      maxHeight: fullscreen ? '100%' : '80%',
-      maxWidth: fullscreen ? '100%' : '90%',
-      position: 'relative',
-      top: getTopPosition(),
-      transform: getTransformValue(),
-      transition: isDragging ? 'none' : 'all 0.3s',
-      width: fullscreen ? '100%' : width,
-      zIndex: zIndex || 1000,
-    };
-
-    function getTopPosition() {
-      if (fullscreen) return '0';
-      if (centered && !fullscreen) return '50%';
-      return '10vh';
+  const handleClose = () => {
+    const allowClose = onModalBeforeClose ? onModalBeforeClose() : true;
+    if (allowClose) {
+      setIsOpen(false);
     }
+  };
+  const getAppendTo = useMemo(() => {
+    return appendToMain ? `#${ELEMENT_ID_MAIN_CONTENT}` : undefined;
+  }, [appendToMain]);
+  const { isMobile } = useIsMobile();
 
-    return ReactDOM.createPortal(
-      <div
-        className={`modal-overlay ${isOpen ? 'open' : ''}`}
-        onClick={handleOverlayClick}
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          bottom: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          left: 0,
-          position: 'fixed',
-          right: 0,
-          top: 0,
-          zIndex: (zIndex || 1000) - 1,
-        }}
-      >
-        <div
-          className={`modal-container ${className}`}
-          ref={setModalRef}
-          style={modalStyle}
+  const shouldFullscreen = useMemo(() => {
+    return (isFullscreen && showHeader) || isMobile;
+  }, [isFullscreen, showHeader, isMobile]);
+
+  const shouldDraggable = useMemo(() => {
+    return draggable && !shouldFullscreen && showHeader;
+  }, [draggable, shouldFullscreen, showHeader]);
+
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [modalRendered, setModalRendered] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      // 等待下一帧，确保 Modal 已经渲染到 DOM
+      requestAnimationFrame(() => {
+        if (dialogRef.current) {
+          setModalRendered(true);
+        }
+      });
+    } else {
+      setModalRendered(false);
+    }
+  }, [isOpen]);
+  useModalDraggable(
+    modalRendered ? dialogRef : { current: null },
+    modalRendered ? headerRef : { current: null },
+    shouldDraggable ?? false,
+  );
+
+  const handleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+  const handerOpenAutoFocus = (e: Event) => {
+    if (!props.openAutoFocus) {
+      e.preventDefault();
+    }
+  };
+  const onClosed = () => {
+    if (!isOpen) {
+      onModalClosed?.();
+    }
+  };
+  const onEscapeKeyDown = (e: KeyboardEvent) => {
+    if (!props.closeOnPressEscape) {
+      e.preventDefault();
+    }
+  };
+  const onInteractOutside = (e: Event) => {
+    if (!props.closeOnClickModal) {
+      e.preventDefault();
+    }
+  };
+  const onOpened = () => {
+    if (isOpen) {
+      onModalOpened?.();
+    }
+  };
+
+  const onPointerDownOutside = (e: Event) => {
+    const target = e.target as HTMLElement;
+    if (!props.closeOnClickModal && target?.dataset.dismissableModal !== id) {
+      e.preventDefault();
+    }
+  };
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (props.showLoading && wrapperRef.current) {
+      wrapperRef.current.scrollTo({
+        top: 0,
+      });
+    }
+  }, [props.showLoading]);
+  const DefaultFooter = () => {
+    return (
+      <>
+        {showCancelButton && (
+          <XpressButton onClick={onModalCancel} variant="ghost">
+            {cancelText || '取消'}
+          </XpressButton>
+        )}
+        {showConfirmButton && (
+          <XpressButton loading={confirmLoading} onClick={onModalConfirm}>
+            {confirmText || '确定'}
+          </XpressButton>
+        )}
+      </>
+    );
+  };
+  return (
+    <DialogContext.Provider value={{ id }}>
+      <Dialog modal={modal} open={isOpen}>
+        <DialogContent
+          className={cn('sm:rounded-[var(--radius)]', modalClass, {
+            'border-border border': bordered,
+            'fixed inset-0 h-full !max-w-full translate-x-0 translate-y-0 gap-0 rounded-none':
+              shouldFullscreen,
+            'shadow-3xl': !bordered,
+            'top-1/2 !-translate-y-1/2': centered && !shouldFullscreen,
+          })}
+          closeClass="top-3"
+          container={
+            getAppendTo
+              ? ((document.querySelector(getAppendTo) || undefined) as
+                  | HTMLElement
+                  | undefined)
+              : undefined
+          }
+          modal={modal}
+          onClose={handleClose}
+          onCloseAutoFocus={(e: Event) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onClosed={onClosed}
+          onEscapeKeyDown={onEscapeKeyDown}
+          onFocusOutside={(e: Event) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+          onInteractOutside={onInteractOutside}
+          onOpenAutoFocus={handerOpenAutoFocus}
+          onOpened={onOpened}
+          onPointerDownOutside={onPointerDownOutside}
+          open={isOpen}
+          overlayBlur={overlayBlur}
+          ref={dialogRef}
+          showClose={props.showClose}
+          zIndex={zIndex}
         >
-          {title && (
-            <div
-              className={`modal-header ${headerClassName} ${draggable && !fullscreen ? 'draggable' : ''}`}
-              ref={setHeaderRef}
-              style={{
-                borderBottom: bordered ? '1px solid #e8e8e8' : 'none',
-                cursor: draggable && !fullscreen ? 'move' : 'default',
-                padding: '16px',
-                userSelect: draggable && !fullscreen ? 'none' : 'auto',
-              }}
-            >
-              <h3 className="modal-title">{title}</h3>
-              <button
-                className="modal-close"
-                onClick={onClose}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  position: 'absolute',
-                  right: '16px',
-                  top: '16px',
-                }}
-              >
-                &times;
-              </button>
-            </div>
-          )}
-
-          <div
-            className={`modal-content ${contentClassName}`}
-            style={{
-              flex: '1 1 auto',
-              overflowY: 'auto',
-              padding: '16px',
-            }}
+          <DialogHeader
+            className={cn(
+              'px-5 py-2',
+              {
+                'border-b': bordered,
+                'cursor-move select-none': shouldDraggable,
+                hidden: !showHeader,
+              },
+              props.headerClass,
+            )}
+            data-draggable={shouldDraggable}
+            ref={headerRef}
           >
+            <DialogTitle className="text-left">
+              {props.customTitle || (
+                <>
+                  {props.title}
+                  {props.titleTooltip && (
+                    <XpressHelpTooltip trigger-class="pb-1">
+                      {props.titleTooltip}
+                    </XpressHelpTooltip>
+                  )}
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          {props.description && (
+            <DialogDescription className="ml-1 mt-1 text-xs">
+              {props.description}
+            </DialogDescription>
+          )}
+          {(!props.title || !props.description) && (
+            <VisuallyHidden>
+              {!props.title && <DialogTitle />}
+              {!props.description && <DialogDescription />}
+            </VisuallyHidden>
+          )}
+          <div
+            className={cn(
+              'relative min-h-40 flex-1 overflow-y-auto p-3',
+              props.contentClass,
+              {
+                'h-[calc(100vh-8rem)]': shouldFullscreen,
+                'overflow-hidden': props.showLoading,
+              },
+            )}
+            ref={wrapperRef}
+          >
+            {props.showLoading && (
+              <XpressLoading className="size-full h-auto min-h-full" spinning />
+            )}
             {children}
           </div>
-
-          {footer !== false && (
-            <div
-              className={`modal-footer ${footerClassName}`}
-              style={{
-                borderTop: bordered ? '1px solid #e8e8e8' : 'none',
-                padding: '10px 16px',
-                textAlign: 'right',
-              }}
+          {props.showFullScreenButton && (
+            <XpressIconButton
+              className="hover:bg-accent hover:text-accent-foreground text-foreground/80 flex-center absolute right-10 top-3 hidden size-6 rounded-full px-1 text-lg opacity-70 transition-opacity hover:opacity-100 focus:outline-none disabled:pointer-events-none sm:block"
+              onClick={handleFullscreen}
             >
-              {showCancelButton && (
-                <button
-                  className="modal-cancel-btn"
-                  onClick={onCancel || onClose}
-                  style={{
-                    background: '#fff',
-                    border: '1px solid #d9d9d9',
-                    marginRight: '8px',
-                    padding: '5px 15px',
-                  }}
-                >
-                  取消
-                </button>
+              {isFullscreen ? (
+                <Shrink className="size-3.5" />
+              ) : (
+                <Expand className="size-3.5" />
               )}
-              {showConfirmButton && (
-                <button
-                  className="modal-confirm-btn"
-                  disabled={confirmLoading}
-                  onClick={onConfirm}
-                  style={{
-                    background: '#1890ff',
-                    border: 'none',
-                    color: 'white',
-                    padding: '5px 15px',
-                  }}
-                >
-                  {confirmLoading ? '加载中...' : '确定'}
-                </button>
-              )}
-            </div>
+            </XpressIconButton>
           )}
-        </div>
-      </div>,
-      document.body,
-    );
-  },
-);
+
+          <DialogFooter
+            className={cn(
+              'box-border flex-row items-center justify-end p-2',
+              {
+                'border-t': bordered,
+              },
+              props.footerClass,
+            )}
+            ref={footerRef}
+          >
+            {props.prependFooter}
+            {customFooter || <DefaultFooter />}
+            {props.appendFooter}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </DialogContext.Provider>
+  );
+};
+
 Modal.displayName = 'Modal';
-export default Modal;

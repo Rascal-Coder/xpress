@@ -8,16 +8,19 @@ export default function Login() {
   const [_isLoading, setIsLoading] = useState(false);
   const authLogin = async () => {
     setIsLoading(true);
-    const res = await fetch('https://xpress-murex.vercel.app/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await fetch(
+      'https://xpress-backend.ras-cal.cc/api/auth/login',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: 'xpress',
+          password: '123456',
+        }),
       },
-      body: JSON.stringify({
-        username: 'xpress',
-        password: '123456',
-      }),
-    });
+    );
     const {
       data: { accessToken },
     } = await res.json();

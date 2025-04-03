@@ -81,7 +81,9 @@ const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
         return <Fullscreen className="mr-1" key={name} />;
       }
       case 'global-search': {
-        return <GlobalSearch className="mr-1 sm:mr-4" key={name} />;
+        return (
+          <GlobalSearch className="mr-1 sm:mr-4" key={name} router={router} />
+        );
       }
       case 'language-toggle': {
         return <LanguageToggle className="mr-1" key={name} />;
