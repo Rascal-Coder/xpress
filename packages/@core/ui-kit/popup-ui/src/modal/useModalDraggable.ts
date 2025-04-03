@@ -28,8 +28,9 @@ export function useModalDraggable(
     (e: MouseEvent) => {
       if (!targetRef.current) return;
 
-      // 阻止事件冒泡
+      // 阻止事件冒泡和默认行为
       e.stopPropagation();
+      e.preventDefault();
 
       // 记录初始鼠标位置
       const startX = e.clientX;

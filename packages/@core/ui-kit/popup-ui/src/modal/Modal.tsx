@@ -66,6 +66,7 @@ export const Modal = ({
   bordered = true,
   cancelText,
   centered,
+  closeOnPressEscape = true,
   confirmLoading,
   confirmText,
   customFooter = false,
@@ -145,7 +146,7 @@ export const Modal = ({
     }
   };
   const onEscapeKeyDown = (e: KeyboardEvent) => {
-    if (!props.closeOnPressEscape) {
+    if (!closeOnPressEscape) {
       e.preventDefault();
     }
   };

@@ -1,4 +1,3 @@
-import { useScrollLock } from '@xpress-core/hooks';
 import { cn } from '@xpress-core/shared/utils';
 
 import * as SheetPrimitive from '@radix-ui/react-dialog';
@@ -86,7 +85,7 @@ const SheetContent = React.forwardRef<
     },
     ref,
   ) => {
-    useScrollLock();
+    // useScrollLock();
     const position = React.useMemo(
       () => (container ? 'absolute' : 'fixed'),
       [container],
