@@ -1,0 +1,1 @@
+import{r,j as n}from"../jse/index-index-DxwOQjQu.js";import{B as s}from"./Component-D5fS_NGj.js";function a(){const[t,o]=r.useState(0);return n.jsx(s,{onClick:()=>o(t+1),children:t})}export{a as default};
