@@ -13,7 +13,6 @@ import {
   Preferences,
   Reload,
   ThemeToggle,
-  UserDropdown,
 } from '../../widgets';
 
 interface HeaderProps {
@@ -29,9 +28,13 @@ interface HeaderProps {
    * 路由
    */
   router: Router;
+  /**
+   * 用户下拉菜单
+   */
+  userDropdown: React.ReactNode;
 }
 const REFERENCE_VALUE = 50;
-const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
+const Header = ({ menu, showHeaderNav, router, userDropdown }: HeaderProps) => {
   const { preferences, preferencesButtonPosition } = usePreferencesContext();
 
   const rightSlots = useMemo(() => {
@@ -98,7 +101,7 @@ const Header = ({ menu, showHeaderNav, router }: HeaderProps) => {
         return <ThemeToggle className="mr-1" key={name} />;
       }
       case 'user-dropdown': {
-        return <UserDropdown key={name} />;
+        return <div key={name}>{userDropdown}</div>;
       }
       default: {
         return null;

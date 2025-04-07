@@ -1,8 +1,24 @@
-import { BasicLayout } from '@xpress/layouts';
+import { BasicLayout, UserDropdown } from '@xpress/layouts';
 
 import router from '#/router';
 
 function Layout() {
-  return <BasicLayout router={router} />;
+  // const menus = [
+  // {
+  //   handler: () => {
+  //     openWindow('https://github.com/Rascal-Coder/xpress', {
+  //       target: '_blank',
+  //     });
+  //   },
+  //   icon: MdiGithub,
+  //   text: 'GitHub',
+  // },
+  // ];
+  return (
+    <BasicLayout
+      router={router}
+      userDropdown={<UserDropdown menus={[]} tagText="Pro" text="Ann" />}
+    />
+  );
 }
 export default Layout;

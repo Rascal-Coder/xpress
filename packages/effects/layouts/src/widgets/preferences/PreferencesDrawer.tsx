@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 import { PreferencesAppearance } from './modules/appearance';
 import { PreferencesLayout } from './modules/layout';
+import { PreferencesShortcutKey } from './modules/shortcutkey';
 
 const CopyButton = () => {
   return (
@@ -83,12 +84,7 @@ export const PreferencesDrawer = (props: Props) => {
         return <PreferencesLayout />;
       }
       case 'shortcutkey': {
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium">快捷键设置</h3>
-            <p>在这里配置键盘快捷键</p>
-          </div>
-        );
+        return <PreferencesShortcutKey />;
       }
     }
   };

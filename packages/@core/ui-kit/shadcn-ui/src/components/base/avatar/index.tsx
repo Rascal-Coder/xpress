@@ -8,15 +8,15 @@ interface Props extends AvatarProps {
   alt?: string;
   dot?: boolean;
   dotClass?: string;
-  rootClass?: string;
+  // rootClass?: string;
   src?: string;
 }
 
 export const XpressAvatar = ({
   alt = 'avatar',
+  className,
   dot = false,
   dotClass = 'bg-green-500',
-  rootClass,
   src,
   ...props
 }: Props) => {
@@ -24,7 +24,7 @@ export const XpressAvatar = ({
     <div
       className={cn(
         'relative flex w-8 flex-shrink-0 items-center rounded-none bg-transparent',
-        rootClass,
+        className,
       )}
     >
       <Avatar {...props} className="size-full">

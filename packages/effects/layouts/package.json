@@ -35,6 +35,7 @@
     "react-activation": "^0.13.0",
     "react-colorful": "catalog:",
     "react-copy-to-clipboard": "catalog:",
+    "react-hotkeys-hook": "^4.6.1",
     "react-router": "catalog:",
     "react-router-dom": "catalog:"
   },

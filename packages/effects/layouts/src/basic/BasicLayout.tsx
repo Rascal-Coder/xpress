@@ -16,7 +16,13 @@ import { Tabbar } from './tabbar';
 import { useExtraMenu } from './use-extra-menu';
 import { useMixedMenu } from './use-mixed-menu';
 
-function BasicLayout({ router }: { router: Router }) {
+function BasicLayout({
+  router,
+  userDropdown,
+}: {
+  router: Router;
+  userDropdown: React.ReactNode;
+}) {
   const {
     preferences,
     updatePreferences,
@@ -129,6 +135,7 @@ function BasicLayout({ router }: { router: Router }) {
             }
             router={router}
             showHeaderNav={showHeaderNav}
+            userDropdown={userDropdown}
           ></Header>
         ),
         // 页脚

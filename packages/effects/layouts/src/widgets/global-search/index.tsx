@@ -5,6 +5,7 @@ import { XpressIcon } from '@xpress-core/shadcn-ui';
 import { isWindowsOs } from '@xpress-core/shared/utils';
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 import { SearchPanel } from './SearchPanel';
 
@@ -35,6 +36,12 @@ export function GlobalSearch({
       setSearchQuery('');
     }
   };
+
+  // 添加快捷键监听
+  useHotkeys('ctrl+k,command+k', (e) => {
+    e.preventDefault();
+    handleSetIsOpen(true);
+  });
 
   useEffect(() => {
     // 按照搜索词过滤路由
