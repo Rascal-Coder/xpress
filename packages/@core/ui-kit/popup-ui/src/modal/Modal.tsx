@@ -28,6 +28,7 @@ interface ModalProps {
   cancelText?: string;
   centered?: boolean;
   children?: React.ReactNode;
+  closeClass?: string;
   closeOnClickModal?: boolean;
   closeOnPressEscape?: boolean;
   confirmLoading?: boolean;
@@ -205,7 +206,7 @@ export const Modal = ({
             'shadow-3xl': !bordered,
             'top-1/2 !-translate-y-1/2': centered && !shouldFullscreen,
           })}
-          closeClass="top-3"
+          closeClass={props.closeClass}
           container={
             getAppendTo
               ? ((document.querySelector(getAppendTo) || undefined) as

@@ -21,6 +21,8 @@ interface AppPreferences {
   authPageLayout: AuthPageLayoutType;
   /** 检查更新轮询时间 */
   checkUpdatesInterval: number;
+  /** 检查更新地址 */
+  checkUpdateUrl: string;
   /** 是否开启灰色模式 */
   colorGrayMode: boolean;
   /** 是否开启色弱模式 */

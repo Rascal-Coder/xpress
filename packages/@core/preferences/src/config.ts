@@ -5,6 +5,7 @@ const defaultPreferences: Preferences = {
     // accessMode: 'frontend',
     authPageLayout: 'panel-right',
     checkUpdatesInterval: 1,
+    checkUpdateUrl: '/',
     colorGrayMode: false,
     colorWeakMode: false,
     compact: false,

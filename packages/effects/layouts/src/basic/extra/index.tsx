@@ -4,10 +4,11 @@ import { XpressButton } from '@xpress-core/shadcn-ui';
 
 import { useState } from 'react';
 
+import { CheckUpdates } from '../../widgets/check-updates';
 import { PreferencesDrawer } from '../../widgets/preferences/PreferencesDrawer';
 
 export const Extra = () => {
-  const { preferencesButtonPosition } = usePreferencesContext();
+  const { preferencesButtonPosition, preferences } = usePreferencesContext();
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
@@ -22,6 +23,12 @@ export const Extra = () => {
           </XpressButton>
           <PreferencesDrawer isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
+      )}
+      {preferences.app.enableCheckUpdates && (
+        <CheckUpdates
+          checkUpdatesInterval={preferences.app.checkUpdatesInterval}
+          checkUpdateUrl={preferences.app.checkUpdateUrl}
+        />
       )}
     </>
   );
