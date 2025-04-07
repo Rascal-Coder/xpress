@@ -1,5 +1,8 @@
 import type { Icon } from '@xpress-core/typings';
 
+import { LogOut } from '@xpress-core/icons';
+import { Modal as LogoutModal } from '@xpress-core/popup-ui';
+import { usePreferencesContext } from '@xpress-core/preferences';
 import {
   Badge,
   DropdownMenu,
@@ -7,29 +10,69 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
   XpressAvatar,
   XpressIcon,
 } from '@xpress-core/shadcn-ui';
+import { isWindowsOs } from '@xpress-core/shared/utils';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 
 export function UserDropdown({
   text,
   tagText,
   menus,
+  onLogout,
 }: {
   menus: {
     handler: () => void;
     icon: Icon;
     text: string;
   }[];
+  onLogout: () => void;
   tagText: string;
   text: string;
 }) {
   const [openPopover, setOpenPopover] = useState(false);
+  const altView = useMemo(() => (isWindowsOs() ? 'Alt' : '⌥'), []);
+  const { globalLogoutShortcutKey } = usePreferencesContext();
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+  const handleLogout = () => {
+    setOpenPopover(false);
+    setIsLogoutOpen(true);
+  };
+  const handleSubmitLogout = () => {
+    setIsLogoutOpen(false);
+    onLogout();
+  };
+  // 添加快捷键监听
+  useHotkeys('alt+q', (e) => {
+    e.preventDefault();
+    if (globalLogoutShortcutKey) {
+      handleLogout();
+    }
+  });
   return (
     <>
+      <LogoutModal
+        cancelText="取消"
+        centered
+        closeClass="top-1"
+        confirmText="确认"
+        contentClass="px-8 min-h-10"
+        footerClass="border-none mb-3 mr-3"
+        headerClass="border-none pt-3"
+        isOpen={isLogoutOpen}
+        modal={true}
+        onModalCancel={() => setIsLogoutOpen(false)}
+        onModalConfirm={handleSubmitLogout}
+        setIsOpen={setIsLogoutOpen}
+        title="提示"
+      >
+        是否退出登录？
+      </LogoutModal>
       <DropdownMenu onOpenChange={setOpenPopover} open={openPopover}>
         <DropdownMenuTrigger>
           <div className="hover:bg-accent ml-1 mr-2 cursor-pointer rounded-full p-1.5">
@@ -73,6 +116,15 @@ export function UserDropdown({
               {menu.text}
             </DropdownMenuItem>
           ))}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="mx-1 flex cursor-pointer items-center rounded-sm py-1 leading-8"
+            onClick={handleLogout}
+          >
+            <LogOut className="mr-2 size-4"></LogOut>
+            退出登录
+            <DropdownMenuShortcut>{altView} Q</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

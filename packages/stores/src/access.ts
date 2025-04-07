@@ -6,6 +6,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 type AccessToken = null | string;
 interface AccessStoreActions {
+  reset: () => void;
   setAccessCodes: (codes: string[]) => void;
   setAccessMenus: (menus: MenuRecordRaw[]) => void;
   setAccessRoutes: (routes: RouteConfig[]) => void;
@@ -59,6 +60,7 @@ export const useAccessStore = create<AccessStore>()(
     persist(
       (set) => ({
         ...initialState,
+        reset: () => set(initialState),
         setAccessCodes: (codes: string[]) => set({ accessCodes: codes }),
         setAccessMenus: (menus: MenuRecordRaw[]) => set({ accessMenus: menus }),
         setAccessRoutes: (routes: RouteConfig[]) =>

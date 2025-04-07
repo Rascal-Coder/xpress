@@ -1,5 +1,6 @@
 import { Search } from '@xpress/icons';
 import { Modal } from '@xpress-core/popup-ui';
+import { usePreferencesContext } from '@xpress-core/preferences';
 import { type RouteConfig, type Router, useRouter } from '@xpress-core/router';
 import { XpressIcon } from '@xpress-core/shadcn-ui';
 import { isWindowsOs } from '@xpress-core/shared/utils';
@@ -27,7 +28,7 @@ export function GlobalSearch({
     useState<RouteConfig[]>(allRoutes);
 
   const searchInputRef = useRef<HTMLInputElement>(null);
-
+  const { globalSearchShortcutKey } = usePreferencesContext();
   // 处理Modal打开关闭
   const handleSetIsOpen = (open: boolean) => {
     setIsOpen(open);
@@ -38,9 +39,11 @@ export function GlobalSearch({
   };
 
   // 添加快捷键监听
-  useHotkeys('ctrl+k,command+k', (e) => {
+  useHotkeys('ctrl+k', (e) => {
     e.preventDefault();
-    handleSetIsOpen(true);
+    if (globalSearchShortcutKey) {
+      handleSetIsOpen(true);
+    }
   });
 
   useEffect(() => {

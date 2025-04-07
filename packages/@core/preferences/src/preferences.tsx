@@ -382,11 +382,6 @@ export function usePreferencesContext() {
     return enable && globalLogout;
   }, [shortcutKeysPreferences]);
 
-  const globalLockScreenShortcutKey = useMemo(() => {
-    const { enable, globalLockScreen } = shortcutKeysPreferences;
-    return enable && globalLockScreen;
-  }, [shortcutKeysPreferences]);
-
   /**
    * @zh_CN 偏好设置按钮位置
    */
@@ -437,7 +432,6 @@ export function usePreferencesContext() {
     authPanelRight,
     contentIsMaximize,
     diffPreference,
-    globalLockScreenShortcutKey,
     globalLogoutShortcutKey,
     globalSearchShortcutKey,
     isDark,

@@ -589,9 +589,15 @@ importers:
       '@xpress-core/shadcn-ui':
         specifier: workspace:*
         version: link:../../packages/@core/ui-kit/shadcn-ui
+      '@xpress-core/shared':
+        specifier: workspace:*
+        version: link:../../packages/@core/base/shared
       '@xpress/components':
         specifier: workspace:*
         version: link:../../packages/components
+      '@xpress/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@xpress/layouts':
         specifier: workspace:*
         version: link:../../packages/effects/layouts

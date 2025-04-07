@@ -14,14 +14,15 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@loadable/component": "catalog:",
     "@types/styled-components": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
     "@xpress-core/react-menu": "workspace:*",
     "@xpress-core/router": "workspace:*",
     "@xpress-core/shadcn-ui": "workspace:*",
+    "@xpress-core/shared": "workspace:*",
     "@xpress/components": "workspace:*",
+    "@xpress/icons": "workspace:*",
     "@xpress/layouts": "workspace:*",
     "@xpress/stores": "workspace:*",
     "@xpress/styles": "workspace:*",

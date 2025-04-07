@@ -36,10 +36,17 @@ interface AccessState {
   userRoles: string[];
 }
 interface UserStoreActions {
+  reset: () => void;
   setUserInfo: (userInfo: BasicUserInfo | null) => void;
 }
+const initialState: AccessState = {
+  userInfo: null,
+  userRoles: [],
+};
 export const useUserStore = create<AccessState & UserStoreActions>()(
   devtools((set) => ({
+    ...initialState,
+    reset: () => set(initialState),
     setUserInfo: (userInfo: BasicUserInfo | null) => {
       // 设置用户信息
       set({ userInfo });
@@ -47,7 +54,5 @@ export const useUserStore = create<AccessState & UserStoreActions>()(
       const roles = userInfo?.roles ?? [];
       set({ userRoles: roles });
     },
-    userInfo: null,
-    userRoles: [],
   })),
 );
