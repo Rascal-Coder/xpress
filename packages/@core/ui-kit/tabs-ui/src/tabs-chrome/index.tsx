@@ -2,7 +2,7 @@ import { Pin, X } from '@xpress-core/icons';
 import { XpressContextMenu, XpressIcon } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { type MouseEvent } from 'react';
 
 import { DraggableTabs } from '../components/DraggableTabs';
@@ -18,7 +18,36 @@ interface TabsChromeProps extends TabsProps {
   onSort?: (oldIndex: number, newIndex: number) => void;
   unpin?: (tab: TabDefinition) => void;
 }
-
+// 标签页背景SVG组件
+const TabBackground = memo(({ isActive }: { isActive?: boolean }) => {
+  return (
+    <>
+      <svg
+        className={cn(
+          'absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150',
+          isActive &&
+            'tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
+        )}
+        height="7"
+        width="7"
+      >
+        <path d="M 0 7 A 7 7 0 0 0 7 0 L 7 7 Z" />
+      </svg>
+      <svg
+        className={cn(
+          'absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150',
+          isActive &&
+            'tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
+        )}
+        height="7"
+        width="7"
+      >
+        <path d="M 0 0 A 7 7 0 0 0 7 7 L 0 7 Z" />
+      </svg>
+    </>
+  );
+});
+TabBackground.displayName = 'TabBackground';
 export function TabsChrome({
   active,
   contentClass = 'xpress-tabs-content',
@@ -82,36 +111,6 @@ export function TabsChrome({
     onClick?.(tab);
   }
 
-  // 标签页背景SVG组件
-  const TabBackground = ({ isActive }: { isActive?: boolean }) => {
-    return (
-      <>
-        <svg
-          className={cn(
-            'absolute bottom-0 left-[-1px] fill-transparent transition-all duration-150',
-            isActive &&
-              'tabs-chrome__background-before group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
-          )}
-          height="7"
-          width="7"
-        >
-          <path d="M 0 7 A 7 7 0 0 0 7 0 L 7 7 Z" />
-        </svg>
-        <svg
-          className={cn(
-            'absolute bottom-0 right-[-1px] fill-transparent transition-all duration-150',
-            isActive &&
-              'tabs-chrome__background-after group-[.is-active]:fill-primary/15 dark:group-[.is-active]:fill-accent',
-          )}
-          height="7"
-          width="7"
-        >
-          <path d="M 0 0 A 7 7 0 0 0 7 7 L 0 7 Z" />
-        </svg>
-      </>
-    );
-  };
-
   // 渲染标签页内容
   const renderTabContent = (tab: TabConfig) => {
     if (!tab) return null;
@@ -129,7 +128,7 @@ export function TabsChrome({
                 'group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent',
             )}
           ></div>
-          <TabBackground isActive={isActiveTab} />
+          <TabBackground isActive={isActiveTab} key={tab.key} />
         </div>
 
         {/* 右侧关闭或固定图标 */}
@@ -158,7 +157,7 @@ export function TabsChrome({
         {/* 标签主体内容 */}
         <div
           className={cn(
-            'tabs-chrome__item-main z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
+            'tabs-chrome__item-main mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
             isActiveTab &&
               'group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground',
           )}
@@ -197,7 +196,7 @@ export function TabsChrome({
       activeId={activeId}
       activeTab={activeTab}
       className={cn(
-        'tabs-chrome !flex h-full w-max overflow-hidden pr-6',
+        'tabs-chrome !flex h-full w-max gap-[2px] overflow-hidden pr-6',
         contentClass,
       )}
       draggable={props.draggable}
@@ -212,7 +211,7 @@ export function TabsChrome({
         <SortableTab
           active={active}
           contentClass={cn(
-            'tabs-chrome__item translate-all group relative -mr-3 flex h-full select-none items-center',
+            'tabs-chrome__item  translate-all group gap-[7px] relative -mr-3 flex h-full select-none items-center',
           )}
           index={i}
           key={tab.key}
@@ -234,14 +233,24 @@ export function TabsChrome({
             }}
           >
             {/* 展示标签内容 */}
-            <div className="relative size-full px-1">
+            <div className="group relative size-full px-1">
               {i !== 0 && tab.key !== active && (
                 <div className="tabs-chrome__divider bg-border absolute left-[var(--gap)] top-1/2 z-0 h-4 w-[1px] translate-y-[-50%] transition-all"></div>
               )}
-
-              <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
-                <div className="tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150"></div>
-                <TabBackground isActive={tab.key === active} />
+              <div
+                className={cn(
+                  'tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150',
+                  tab.key !== active && 'group-hover:pb-[2px]',
+                )}
+              >
+                <div
+                  className={cn(
+                    'tabs-chrome__background-content group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150',
+                    tab.key !== active &&
+                      'group-hover:bg-accent group-hover:rounded-sm',
+                  )}
+                ></div>
+                <TabBackground isActive={tab.key === active} key={tab.key} />
               </div>
 
               <div className="tabs-chrome__extra absolute right-[var(--gap)] top-1/2 z-[3] size-4 translate-y-[-50%]">
@@ -266,7 +275,7 @@ export function TabsChrome({
                 )}
               </div>
 
-              <div className="tabs-chrome__item-main group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground z-[2] mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150">
+              <div className="tabs-chrome__item-main group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground mx-[calc(var(--gap)*2)] my-0 flex h-full !cursor-pointer items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150">
                 {showIcon && (
                   <XpressIcon
                     className="mr-1 flex size-4 items-center overflow-hidden"

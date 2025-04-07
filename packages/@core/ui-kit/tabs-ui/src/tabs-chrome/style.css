@@ -1,5 +1,5 @@
 .tabs-chrome {
-  &__item:not(.dragging) {
+  &__item {
     @apply cursor-pointer;
 
     &:hover:not(.is-active) {
@@ -17,7 +17,7 @@
         @apply pb-[2px];
 
         &-content {
-          @apply bg-accent mx-[2px] rounded-md;
+          @apply bg-accent hover:bg-accent mx-[2px] rounded-md;
         }
       }
     }

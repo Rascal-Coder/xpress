@@ -44,7 +44,6 @@ export function SortableTab({
     tab.affixTab || isDraggingDisabled
       ? { disabled: true, id: tab.key }
       : { id: tab.key };
-  // console.log('styleType', styleType);
 
   const {
     attributes,
