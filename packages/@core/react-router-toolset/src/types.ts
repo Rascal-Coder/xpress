@@ -1,7 +1,6 @@
 import type { Icon } from '@xpress-core/typings';
 import type { ComponentType } from 'react';
 
-import type { Router } from './router';
 /**
  * 权限模式
  * backend 后端权限模式
@@ -158,7 +157,7 @@ interface GenerateMenuAndRoutesOptions {
   layoutMap?: ComponentRecordType;
   pageMap?: ComponentRecordType;
   roles?: string[];
-  router: Router;
+  // router: Router;
   routes: RouteConfig[];
 }
 

@@ -4,7 +4,6 @@ import {
   type AccessModeType,
   type ComponentRecordType,
   generateAccessible,
-  Router,
 } from '@xpress-core/router';
 
 import { basicRoutes, routes } from './routes';
@@ -22,7 +21,7 @@ const layoutMap: ComponentRecordType = {
 const generateAccessRoutes = async (mode: AccessModeType) => {
   let _routes = [];
   _routes = mode === 'backend' ? basicRoutes : routes;
-  const router = new Router(routes);
+  // const router = new Router(routes);
 
   return await generateAccessible(mode, {
     fetchMenuListAsync: async () => {
@@ -33,7 +32,7 @@ const generateAccessRoutes = async (mode: AccessModeType) => {
     forbiddenComponent,
     layoutMap,
     pageMap,
-    router,
+    // router,
     routes: _routes,
   });
 };

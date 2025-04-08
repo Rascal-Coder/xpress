@@ -1,4 +1,4 @@
-import { X } from '@xpress-core/icons';
+import { Frown, Smile, X } from '@xpress-core/icons';
 import { type RouteConfig, useNavigate } from '@xpress-core/router';
 import {
   ScrollArea,
@@ -105,11 +105,6 @@ export const SearchPanel = ({
           }
           break;
         }
-        case 'Escape': {
-          e.preventDefault();
-          setIsOpen(false);
-          break;
-        }
       }
     };
 
@@ -156,14 +151,6 @@ export const SearchPanel = ({
                     <XpressIcon fallback icon={route.meta?.icon}></XpressIcon>
                     <span>{route.meta?.title}</span>
                   </div>
-                  {/* <button
-                    className="hover:bg-accent"
-                    onClick={(e: React.MouseEvent) =>
-                      removeHistoryItem(route.pathname, e)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </button> */}
                   <XpressIconButton
                     className="hover:bg-accent h-6 w-6 hover:opacity-100"
                     onClick={(e: React.MouseEvent) =>
@@ -178,7 +165,7 @@ export const SearchPanel = ({
           </ScrollArea>
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="mb-4 text-5xl">😊</div>
+            <Smile className="mb-4 h-12 w-12" />
             <div className="text-muted-foreground text-center">
               输入你要搜索的导航
             </div>
@@ -192,7 +179,7 @@ export const SearchPanel = ({
   if (searchQuery && routes.length === 0) {
     return (
       <div className="flex h-[300px] flex-col items-center justify-center p-2">
-        <div className="mb-4 text-5xl">😔</div>
+        <Frown className="mb-4 h-12 w-12" />
         <div className="text-muted-foreground text-center">
           没有找到你想要的
         </div>

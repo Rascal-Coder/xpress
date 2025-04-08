@@ -30,7 +30,7 @@ export function useModalDraggable(
 
       // 阻止事件冒泡和默认行为
       e.stopPropagation();
-      e.preventDefault();
+      // e.preventDefault();
 
       // 记录初始鼠标位置
       const startX = e.clientX;

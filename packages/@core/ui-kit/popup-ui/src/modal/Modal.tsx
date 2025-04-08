@@ -147,7 +147,9 @@ export const Modal = ({
     }
   };
   const onEscapeKeyDown = (e: KeyboardEvent) => {
-    if (!closeOnPressEscape) {
+    if (closeOnPressEscape) {
+      handleClose();
+    } else {
       e.preventDefault();
     }
   };
