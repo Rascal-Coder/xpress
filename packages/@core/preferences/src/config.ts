@@ -61,9 +61,7 @@ const defaultPreferences: Preferences = {
   },
   shortcutKeys: {
     enable: true,
-    globalLockScreen: true,
     globalLogout: true,
-    globalPreferences: true,
     globalSearch: true,
   },
   sidebar: {
