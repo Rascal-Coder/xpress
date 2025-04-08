@@ -14,6 +14,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.0.1",
     "@types/styled-components": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
@@ -32,9 +33,11 @@
     "react-activation": "^0.13.0",
     "react-dom": "catalog:",
     "react-helmet-async": "catalog:",
+    "react-hook-form": "^7.55.0",
     "react-router-dom": "catalog:",
     "react-toastify": "catalog:",
     "styled-components": "catalog:",
+    "zod": "^3.24.2",
     "zustand": "catalog:"
   },
   "devDependencies": {
