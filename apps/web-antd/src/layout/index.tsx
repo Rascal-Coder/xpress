@@ -1,9 +1,11 @@
 import { CircleHelp, MdiGithub } from '@xpress/icons';
 import { BasicLayout, UserDropdown } from '@xpress/layouts';
-import { resetAllStores } from '@xpress/stores';
+import { resetAllStores, useAccessStore } from '@xpress/stores';
 import { openWindow } from '@xpress-core/shared/utils';
 
-import router from '#/router';
+import { useEffect } from 'react';
+
+import router, { generateMenuItems } from '#/router';
 
 function Layout() {
   const menus = [
@@ -34,6 +36,16 @@ function Layout() {
     }
     resetAllStores();
   };
+  const initMenuItems = () => {
+    if (!useAccessStore.getState().accessToken) {
+      return;
+    }
+    const { menuItems } = generateMenuItems(router.routes);
+    useAccessStore.getState().setAccessMenus(menuItems);
+  };
+  useEffect(() => {
+    initMenuItems();
+  }, []);
   return (
     <BasicLayout
       router={router}

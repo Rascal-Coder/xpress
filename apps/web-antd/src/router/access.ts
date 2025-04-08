@@ -21,8 +21,6 @@ const layoutMap: ComponentRecordType = {
 const generateAccessRoutes = async (mode: AccessModeType) => {
   let _routes = [];
   _routes = mode === 'backend' ? basicRoutes : routes;
-  // const router = new Router(routes);
-
   return await generateAccessible(mode, {
     fetchMenuListAsync: async () => {
       const res = await fetch('http://localhost:5320/api/menu/all');
@@ -32,7 +30,6 @@ const generateAccessRoutes = async (mode: AccessModeType) => {
     forbiddenComponent,
     layoutMap,
     pageMap,
-    // router,
     routes: _routes,
   });
 };

@@ -1,5 +1,4 @@
 import { AuthGuard, Loading, Progress } from '@xpress/components';
-import { useAccessStore } from '@xpress/stores';
 import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { AnimatePresence } from 'framer-motion';
@@ -8,19 +7,19 @@ import { AliveScope } from 'react-activation';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Bounce, ToastContainer } from 'react-toastify';
 
-import router, { generateMenuItems, useRouter, useRoutes } from '#/router';
+import router, { useRouter, useRoutes } from '#/router';
 
 function App() {
-  const { curRoute, reactRoutes, routes } = useRouter(router);
+  const { curRoute, reactRoutes } = useRouter(router);
   const element = useRoutes(reactRoutes);
 
   const { isDark, preferences } = usePreferencesContext();
-  const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
+  // const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const { menuItems } = generateMenuItems(routes);
-    setAccessMenus(menuItems);
-  }, [routes, setAccessMenus]);
+  // useEffect(() => {
+  //   const { menuItems } = generateMenuItems(routes);
+  //   setAccessMenus(menuItems);
+  // }, [routes, setAccessMenus]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
