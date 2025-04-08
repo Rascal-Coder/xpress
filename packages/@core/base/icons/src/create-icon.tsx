@@ -1,4 +1,3 @@
-'use client';
 import type { IconProps } from '@iconify/react';
 import type { ForwardRefRenderFunction } from 'react';
 

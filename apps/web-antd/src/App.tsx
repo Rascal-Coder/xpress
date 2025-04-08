@@ -31,12 +31,18 @@ function App() {
   if (import.meta.env.VITE_SHOW_GLOBAL_LOADING && isLoading) {
     return <Loading isDark={isDark} title={preferences.app.name} />;
   }
-
+  const logo = '/images/logo.svg';
   return (
     <AliveScope>
       <HelmetProvider>
         <Helmet>
           <title>{curRoute?.meta?.title}</title>
+          <link
+            data-rh="true"
+            href={logo}
+            rel="icon"
+            type="image/x-icon"
+          ></link>
         </Helmet>
         <Progress />
         <ToastContainer

@@ -14,7 +14,7 @@
     "#/*": "./src/*"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "catalog:",
     "@types/styled-components": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
@@ -30,14 +30,14 @@
     "framer-motion": "^12.4.2",
     "immer": "catalog:",
     "react": "catalog:",
-    "react-activation": "^0.13.0",
+    "react-activation": "catalog:",
     "react-dom": "catalog:",
     "react-helmet-async": "catalog:",
-    "react-hook-form": "^7.55.0",
+    "react-hook-form": "catalog:",
     "react-router-dom": "catalog:",
     "react-toastify": "catalog:",
     "styled-components": "catalog:",
-    "zod": "^3.24.2",
+    "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {

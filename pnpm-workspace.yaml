@@ -10,61 +10,70 @@ packages:
   - scripts/*
   - playground
 catalog:
-  '@changesets/git': ^3.0.1
-  '@clack/prompts': ^0.8.1
-  '@commitlint/cli': ^19.5.0
-  '@commitlint/config-conventional': ^19.5.0
-  '@ctrl/tinycolor': ^4.1.0
-  '@eslint/js': ^9.15.0
-  '@faker-js/faker': ^9.2.0
-  '@iconify/json': ^2.2.273
-  '@iconify/react': ^5.0.2
-  '@iconify/tailwind': ^1.1.3
-  '@internationalized/number': ^3.6.0
-  '@jspm/generator': ^2.4.1
-  '@loadable/component': ^5.16.4
-  '@manypkg/get-packages': ^2.2.2
-  '@pnpm/workspace.read-manifest': ^2.2.1
-  '@radix-ui/react-avatar': ^1.1.2
-  '@radix-ui/react-dialog': ^1.1.6
-  '@radix-ui/react-hover-card': ^1.1.2
-  '@radix-ui/react-popover': ^1.1.2
-  '@radix-ui/react-scroll-area': ^1.2.1
-  '@radix-ui/react-separator': ^1.1.2
-  '@radix-ui/react-slot': ^1.1.0
-  '@radix-ui/react-switch': ^1.1.3
-  '@radix-ui/react-tabs': ^1.1.3
-  '@radix-ui/react-toggle': ^1.1.2
-  '@radix-ui/react-toggle-group': ^1.1.2
-  '@radix-ui/react-tooltip': ^1.1.4
-  '@radix-ui/react-visually-hidden': ^1.1.2
-  '@react-router/dev': ^7.1.1
-  '@react-router/node': ^7.1.1
-  '@react-spring/web': ^9.7.5
-  '@stylistic/stylelint-plugin': ^3.1.1
-  '@tailwindcss/nesting': 0.0.0-insiders.565cd3e
-  '@tailwindcss/typography': ^0.5.15
-  '@tanstack/react-router': ^1.92.6
-  '@tanstack/router-devtools': ^1.92.11
-  '@testing-library/react': ^16.1.0
-  '@types/archiver': ^6.0.3
-  '@types/eslint': ^9.6.1
-  '@types/html-minifier-terser': ^7.0.2
-  '@types/jsonwebtoken': ^9.0.7
-  '@types/loadable__component': ^5.13.9
-  '@types/lodash.clonedeep': ^4.5.9
-  '@types/lodash.get': ^4.4.9
-  '@types/lodash.uniqueid': ^4.0.9
-  '@types/node': ^22.9.0
-  '@types/nprogress': ^0.2.3
-  '@types/postcss-import': ^14.0.3
-  '@types/react': ^18.3.12
-  '@types/react-dom': ^18.3.1
-  '@types/react-transition-group': ^4.4.11
-  '@types/styled-components': ^5.1.34
-  '@typescript-eslint/eslint-plugin': ^8.14.0
-  '@typescript-eslint/parser': ^8.14.0
-  '@vitejs/plugin-react': ^4.3.3
+  "@changesets/git": ^3.0.1
+  "@clack/prompts": ^0.8.1
+  "@commitlint/cli": ^19.5.0
+  "@commitlint/config-conventional": ^19.5.0
+  "@ctrl/tinycolor": ^4.1.0
+  "@dnd-kit/core": ^6.3.1
+  "@dnd-kit/sortable": ^10.0.0
+  "@dnd-kit/utilities": ^3.2.2
+  "@eslint/js": ^9.15.0
+  "@faker-js/faker": ^9.2.0
+  "@hookform/resolvers": ^5.0.1
+  "@iconify/json": ^2.2.273
+  "@iconify/react": ^5.0.2
+  "@iconify/tailwind": ^1.1.3
+  "@internationalized/number": ^3.6.0
+  "@jspm/generator": ^2.4.1
+  "@loadable/component": ^5.16.4
+  "@manypkg/get-packages": ^2.2.2
+  "@pnpm/workspace.read-manifest": ^2.2.1
+  "@radix-ui/react-avatar": ^1.1.2
+  "@radix-ui/react-checkbox": ^1.1.4
+  "@radix-ui/react-context-menu": ^2.2.6
+  "@radix-ui/react-dialog": ^1.1.6
+  "@radix-ui/react-dropdown-menu": ^2.1.6
+  "@radix-ui/react-hover-card": ^1.1.2
+  "@radix-ui/react-label": ^2.1.2
+  "@radix-ui/react-popover": ^1.1.2
+  "@radix-ui/react-scroll-area": ^1.2.1
+  "@radix-ui/react-select": ^2.1.6
+  "@radix-ui/react-separator": ^1.1.2
+  "@radix-ui/react-slot": ^1.1.0
+  "@radix-ui/react-switch": ^1.1.3
+  "@radix-ui/react-tabs": ^1.1.3
+  "@radix-ui/react-toggle": ^1.1.2
+  "@radix-ui/react-toggle-group": ^1.1.2
+  "@radix-ui/react-tooltip": ^1.1.4
+  "@radix-ui/react-visually-hidden": ^1.1.2
+  "@react-router/dev": ^7.1.1
+  "@react-router/node": ^7.1.1
+  "@react-spring/web": ^9.7.5
+  "@stylistic/stylelint-plugin": ^3.1.1
+  "@tailwindcss/nesting": 0.0.0-insiders.565cd3e
+  "@tailwindcss/typography": ^0.5.15
+  "@tanstack/react-router": ^1.92.6
+  "@tanstack/router-devtools": ^1.92.11
+  "@testing-library/react": ^16.1.0
+  "@types/archiver": ^6.0.3
+  "@types/eslint": ^9.6.1
+  "@types/html-minifier-terser": ^7.0.2
+  "@types/jsonwebtoken": ^9.0.7
+  "@types/loadable__component": ^5.13.9
+  "@types/lodash.clonedeep": ^4.5.9
+  "@types/lodash.get": ^4.4.9
+  "@types/lodash.uniqueid": ^4.0.9
+  "@types/node": ^22.9.0
+  "@types/nprogress": ^0.2.3
+  "@types/postcss-import": ^14.0.3
+  "@types/react": ^18.3.12
+  "@types/react-dom": ^18.3.1
+  "@types/react-transition-group": ^4.4.11
+  "@types/styled-components": ^5.1.34
+  "@typescript-eslint/eslint-plugin": ^8.14.0
+  "@typescript-eslint/parser": ^8.14.0
+  "@vitejs/plugin-react": ^4.3.3
   ahooks: ^3.8.4
   archiver: ^7.0.1
   autoprefixer: ^10.4.17
@@ -74,6 +83,7 @@ catalog:
   circular-dependency-scanner: ^2.3.0
   class-variance-authority: ^0.7.0
   clsx: ^2.1.1
+  code-inspector-plugin: ^0.20.7
   commitlint-plugin-function-rules: ^4.0.1
   consola: ^3.2.3
   cross-env: ^7.0.3
@@ -135,10 +145,13 @@ catalog:
   prettier-plugin-tailwindcss: ^0.6.8
   publint: ^0.2.12
   react: ^18.3.1
+  react-activation: ^0.13.0
   react-colorful: ^5.6.1
   react-copy-to-clipboard: ^5.1.0
   react-dom: ^18.3.1
   react-helmet-async: ^2.0.5
+  react-hook-form: ^7.55.0
+  react-hotkeys-hook: ^4.6.1
   react-router: ^7.1.1
   react-router-dom: ^7.1.5
   react-toastify: ^11.0.3
@@ -172,4 +185,5 @@ catalog:
   vite-tsconfig-paths: ^5.1.4
   vitepress: ^1.5.0
   vitest: ^2.1.6
+  zod: ^3.24.2
   zustand: ^5.0.3
