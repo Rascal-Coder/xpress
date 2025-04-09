@@ -1,8 +1,7 @@
-import { AuthGuard, Loading, Progress } from '@xpress/components';
+import { AuthGuard, Progress } from '@xpress/components';
 import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { AliveScope } from 'react-activation';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Bounce, ToastContainer } from 'react-toastify';
@@ -13,19 +12,8 @@ function App() {
   const { curRoute, reactRoutes } = useRouter(router);
   const element = useRoutes(reactRoutes);
 
-  const { isDark, preferences } = usePreferencesContext();
-  const [isLoading, setIsLoading] = useState(true);
+  const { isDark } = usePreferencesContext();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (import.meta.env.VITE_SHOW_GLOBAL_LOADING && isLoading) {
-    return <Loading isDark={isDark} title={preferences.app.name} />;
-  }
   const logo = '/images/logo.svg';
   return (
     <AliveScope>

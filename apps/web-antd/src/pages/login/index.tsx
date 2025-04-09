@@ -10,39 +10,39 @@ import { useState } from 'react';
 import Form from '#/components/MForm/src';
 import { baseUrl } from '#/constants/baseurl';
 
-// 初始化存储管理器
-const storageManager = new StorageManager({ prefix: 'login' });
-// 定义登录表单的schema
-const schema: RJSFSchema = {
-  type: 'object',
-  required: ['username', 'password'],
-  properties: {
-    username: {
-      type: 'string',
-      title: '用户名',
-      minLength: 1,
-    },
-    password: {
-      type: 'string',
-      title: '密码',
-      minLength: 1,
-    },
-    remember: {
-      type: 'boolean',
-      title: '记住密码',
-      default: false,
-    },
-  },
-};
-
-// 获取本地存储的用户凭据
-const formData = {
-  username: storageManager.getItem<string>('remember_username', '') || '',
-  password: storageManager.getItem<string>('remember_password', '') || '',
-  remember: !!storageManager.getItem('remember_username'),
-};
-
 export default function Login() {
+  // 初始化存储管理器
+  const storageManager = new StorageManager({ prefix: 'login' });
+
+  // 定义登录表单的schema
+  const schema: RJSFSchema = {
+    type: 'object',
+    required: ['username', 'password'],
+    properties: {
+      username: {
+        type: 'string',
+        title: '用户名',
+        minLength: 1,
+      },
+      password: {
+        type: 'string',
+        title: '密码',
+        minLength: 1,
+      },
+      remember: {
+        type: 'boolean',
+        title: '记住密码',
+        default: false,
+      },
+    },
+  };
+  // 获取本地存储的用户凭据
+  const formData = {
+    username: storageManager.getItem<string>('remember_username', '') || '',
+    password: storageManager.getItem<string>('remember_password', '') || '',
+    remember: !!storageManager.getItem('remember_username'),
+  };
+
   const setAccessToken = useAccessStore((state) => state.setAccessToken);
   const [isLoading, setIsLoading] = useState(false);
 

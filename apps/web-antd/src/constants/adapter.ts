@@ -1,8 +1,30 @@
 import { createTheme } from '@mui/material';
 
-import { convertThemeColorsToHex } from '#/utils/color';
+// const themeConfig = {};
 
-const themeConfig = {
+// const convertedTheme = convertThemeColorsToHex(themeConfig);
+export const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: 'calc(var(--radius) - 4px)',
+            '& fieldset': {
+              borderColor: 'hsl(var(--border))', // 设置输入框边框颜色
+            },
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 'calc(var(--radius) - 4px)', // 设置按钮的圆角
+        },
+      },
+    },
+  },
   palette: {
     common: {
       black: 'hsl(var(--foreground))',
@@ -68,11 +90,4 @@ const themeConfig = {
       activatedOpacity: 0.12,
     },
   },
-  cssVariables: {
-    cssVarPrefix: 'xpress-mui',
-    disableCssColorScheme: true,
-  },
-};
-
-const convertedTheme = convertThemeColorsToHex(themeConfig);
-export const theme = createTheme(convertedTheme);
+});

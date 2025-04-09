@@ -34,7 +34,6 @@
     "@xpress/layouts": "workspace:*",
     "@xpress/stores": "workspace:*",
     "@xpress/styles": "workspace:*",
-    "color": "^5.0.0",
     "framer-motion": "^12.4.2",
     "immer": "catalog:",
     "react": "catalog:",
