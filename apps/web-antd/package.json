@@ -14,7 +14,14 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@hookform/resolvers": "catalog:",
+    "@mui/icons-material": "^7.0.1",
+    "@mui/material": "^7.0.1",
+    "@rjsf/core": "^5.24.8",
+    "@rjsf/utils": "^5.24.8",
+    "@rjsf/validator-ajv8": "^5.24.8",
     "@types/styled-components": "catalog:",
     "@xpress-core/layout-ui": "workspace:*",
     "@xpress-core/preferences": "workspace:*",
@@ -27,6 +34,7 @@
     "@xpress/layouts": "workspace:*",
     "@xpress/stores": "workspace:*",
     "@xpress/styles": "workspace:*",
+    "color": "^5.0.0",
     "framer-motion": "^12.4.2",
     "immer": "catalog:",
     "react": "catalog:",

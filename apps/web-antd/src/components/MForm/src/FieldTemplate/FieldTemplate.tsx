@@ -1,0 +1,86 @@
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
+import {
+  type FieldTemplateProps,
+  type FormContextType,
+  getTemplate,
+  getUiOptions,
+  type RJSFSchema,
+  type StrictRJSFSchema,
+} from '@rjsf/utils';
+
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: FieldTemplateProps<T, S, F>) {
+  const {
+    id,
+    children,
+    classNames,
+    style,
+    disabled,
+    displayLabel,
+    hidden,
+    label,
+    onDropPropertyClick,
+    onKeyChange,
+    readonly,
+    required,
+    rawErrors = [],
+    errors,
+    help,
+    description,
+    rawDescription,
+    schema,
+    uiSchema,
+    registry,
+  } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<
+    'WrapIfAdditionalTemplate',
+    T,
+    S,
+    F
+  >('WrapIfAdditionalTemplate', registry, uiOptions);
+
+  if (hidden) {
+    return <div style={{ display: 'none' }}>{children}</div>;
+  }
+  return (
+    <WrapIfAdditionalTemplate
+      classNames={classNames}
+      disabled={disabled}
+      id={id}
+      label={label}
+      onDropPropertyClick={onDropPropertyClick}
+      onKeyChange={onKeyChange}
+      readonly={readonly}
+      registry={registry}
+      required={required}
+      schema={schema}
+      style={style}
+      uiSchema={uiSchema}
+    >
+      <FormControl
+        error={rawErrors.length > 0}
+        fullWidth={true}
+        required={required}
+      >
+        {children}
+        {displayLabel && rawDescription ? (
+          <Typography color="textSecondary" variant="caption">
+            {description}
+          </Typography>
+        ) : null}
+        {errors}
+        {help}
+      </FormControl>
+    </WrapIfAdditionalTemplate>
+  );
+}

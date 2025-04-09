@@ -6,6 +6,8 @@ import {
   generateAccessible,
 } from '@xpress-core/router';
 
+import { baseUrl } from '#/constants/baseurl';
+
 import { basicRoutes, routes } from './routes';
 
 const forbiddenComponent = () => import('#/pages/noAccess');
@@ -23,7 +25,7 @@ const generateAccessRoutes = async (mode: AccessModeType) => {
   _routes = mode === 'backend' ? basicRoutes : routes;
   return await generateAccessible(mode, {
     fetchMenuListAsync: async () => {
-      const res = await fetch('http://localhost:5320/api/menu/all');
+      const res = await fetch(`${baseUrl}/api/menu/all`);
       const { data } = await res.json();
       return data;
     },

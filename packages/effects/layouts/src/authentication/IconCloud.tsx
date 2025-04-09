@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type React from 'react';
 
 import { useEffect, useRef, useState } from 'react';
@@ -321,6 +322,7 @@ export function IconCloud({ icons, images }: IconCloudProps) {
         animationFrameRef.current = undefined;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [icons, images, iconPositions]);
 
   // 单独处理鼠标交互的effect

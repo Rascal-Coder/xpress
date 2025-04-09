@@ -5,6 +5,7 @@ import { openWindow } from '@xpress-core/shared/utils';
 
 import { useEffect } from 'react';
 
+import { baseUrl } from '#/constants/baseurl';
 import router, { generateMenuItems } from '#/router';
 
 function Layout() {
@@ -30,7 +31,7 @@ function Layout() {
   ];
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:5320/api/auth/logout');
+      await fetch(`${baseUrl}/api/auth/logout`);
     } catch {
       // 不做任何处理
     }
