@@ -14,12 +14,7 @@ function App() {
   const element = useRoutes(reactRoutes);
 
   const { isDark, preferences } = usePreferencesContext();
-  // const setAccessMenus = useAccessStore((state) => state.setAccessMenus);
   const [isLoading, setIsLoading] = useState(true);
-  // useEffect(() => {
-  //   const { menuItems } = generateMenuItems(routes);
-  //   setAccessMenus(menuItems);
-  // }, [routes, setAccessMenus]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

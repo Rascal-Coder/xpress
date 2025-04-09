@@ -130,7 +130,7 @@ export default function Login() {
                             ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive'
                             : 'border-input focus-visible:border-primary focus-visible:ring-primary'
                         }`}
-                        placeholder="请输入用户名"
+                        placeholder="请输入用户名/xpress"
                         {...field}
                       />
                     </FormControl>
@@ -156,7 +156,7 @@ export default function Login() {
                             ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive'
                             : 'border-input focus-visible:border-primary focus-visible:ring-primary'
                         }`}
-                        placeholder="请输入密码"
+                        placeholder="请输入密码/123456"
                         type="password"
                         {...field}
                       />
