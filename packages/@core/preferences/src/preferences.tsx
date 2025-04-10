@@ -16,7 +16,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 
@@ -27,7 +26,7 @@ const STORAGE_KEY = 'preferences';
 const STORAGE_KEY_LOCALE = `${STORAGE_KEY}-locale`;
 const STORAGE_KEY_THEME = `${STORAGE_KEY}-theme`;
 
-class PreferenceManager {
+export class PreferenceManager {
   private initialPreferences: Preferences = defaultPreferences;
   private isInitialized: boolean = false;
   private state: Preferences = this.loadPreferences();
@@ -139,44 +138,55 @@ const PreferencesContext = createContext<null | PreferencesContextType>(null);
 // Provider组件
 interface PreferencesProviderProps {
   children: React.ReactNode;
-  options: InitialOptions;
+  initialPreferences: Preferences;
+  preferenceManager: PreferenceManager;
 }
 
+// const getInitialState = (initialPreferences: Preferences) => {
+//   updateCSSVariables(initialPreferences);
+//   return initialPreferences;
+// };
 export function PreferencesProvider({
-  options,
+  initialPreferences,
+  // options,
+  preferenceManager,
   children,
 }: PreferencesProviderProps) {
-  const preferenceManager = useRef(new PreferenceManager());
-  // 初始化
-  const getInitialState = () => {
-    const initialPreferences =
-      preferenceManager.current.initPreferences(options);
-    updateCSSVariables(initialPreferences);
-    return initialPreferences;
-  };
+  // const preferenceManager = useRef(new PreferenceManager());
+  // // 初始化
+  // const getInitialState = () => {
+  //   const initialPreferences =
+  //     preferenceManager.current.initPreferences(options);
+  //   updateCSSVariables(initialPreferences);
+  //   return initialPreferences;
+  // };
 
-  const [preferences, setPreferences] = useState<Preferences>(getInitialState);
+  const [preferences, setPreferences] =
+    useState<Preferences>(initialPreferences);
 
-  const updatePreferences = useCallback((updates: DeepPartial<Preferences>) => {
-    setPreferences((prev) => {
-      const mergedState = merge({}, updates, prev);
-      preferenceManager.current.handleUpdates(updates, mergedState);
-      preferenceManager.current.savePreferences(mergedState);
-      return mergedState;
-    });
-  }, []);
+  const updatePreferences = useCallback(
+    (updates: DeepPartial<Preferences>) => {
+      setPreferences((prev) => {
+        const mergedState = merge({}, updates, prev);
+        preferenceManager.handleUpdates(updates, mergedState);
+        preferenceManager.savePreferences(mergedState);
+        return mergedState;
+      });
+    },
+    [preferenceManager],
+  );
 
   const resetPreferences = useCallback(() => {
     setPreferences(defaultPreferences);
-    preferenceManager.current.savePreferences(defaultPreferences);
+    preferenceManager.savePreferences(defaultPreferences);
     [STORAGE_KEY, STORAGE_KEY_THEME, STORAGE_KEY_LOCALE].forEach(() => {
-      preferenceManager.current.clearCache();
+      preferenceManager.clearCache();
     });
   }, []);
 
   const clearCache = useCallback(() => {
-    preferenceManager.current.clearCache();
-  }, []);
+    preferenceManager.clearCache();
+  }, [preferenceManager]);
 
   const getInitialPreferences = useCallback(() => {
     return defaultPreferences;

@@ -18,8 +18,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { viteArchiverPlugin } from './archiver';
 import { viteExtraAppConfigPlugin } from './extra-app-config';
 import { viteImportMapPlugin } from './importmap';
-
-// import { viteInjectAppLoadingPlugin } from './inject-app-loading';
+import { viteInjectAppLoadingPlugin } from './inject-app-loading';
 import { viteMetadataPlugin } from './inject-metadata';
 import { viteNitroMockPlugin } from './nitro-mock';
 import { vitePrintPlugin } from './print';
@@ -70,7 +69,7 @@ async function loadApplicationPlugins(
 ): Promise<PluginOption[]> {
   // 单独取，否则commonOptions拿不到
   const isBuild = options.isBuild;
-  // const env = options.env;
+  const env = options.env;
 
   const {
     archiver,
@@ -81,6 +80,7 @@ async function loadApplicationPlugins(
     html,
     importmap,
     importmapOptions,
+    injectAppLoading,
     nitroMock,
     nitroMockOptions,
     print,
@@ -110,6 +110,10 @@ async function loadApplicationPlugins(
       plugins: async () => {
         return [await viteNitroMockPlugin(nitroMockOptions)];
       },
+    },
+    {
+      condition: injectAppLoading,
+      plugins: async () => [await viteInjectAppLoadingPlugin(!!isBuild, env)],
     },
     {
       condition: print,
