@@ -5,6 +5,7 @@ import { cn } from '@xpress-core/shared/utils';
 
 import { useDebounceFn, useSize } from 'ahooks';
 import React, {
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -22,6 +23,16 @@ import { menuReducer } from './menuReducer';
 interface Props extends MenuProps {
   setSliceIndex: React.Dispatch<React.SetStateAction<number>>;
   sliceIndex: number;
+}
+
+// 抽离纯计算函数以减少重新计算
+function calcMenuItemWidth(menuItem: HTMLElement) {
+  const computedStyle = getComputedStyle(menuItem);
+  const marginLeft = Number.parseInt(computedStyle.marginLeft, 10);
+  const marginRight = Number.parseInt(computedStyle.marginRight, 10);
+  const result = menuItem.offsetWidth + marginLeft + marginRight || 0;
+
+  return result;
 }
 
 /**
@@ -45,7 +56,7 @@ interface Props extends MenuProps {
  *
  * @returns React 组件
  */
-export default function Menu(props: Props) {
+function MenuComponent(props: Props) {
   const {
     accordion = true,
     collapse = false,
@@ -78,16 +89,23 @@ export default function Menu(props: Props) {
   );
 
   const [calcWidth, setCalcWidth] = useState<number[]>([]);
-  useEffect(() => {
-    const calcWidth: number[] = [];
-    if (menuRef.current) {
-      const childrenArray = [...menuRef.current.children] as HTMLElement[];
-      childrenArray.forEach((item) => {
-        calcWidth.push(calcMenuItemWidth(item));
-      });
-      setCalcWidth(calcWidth);
-    }
+
+  // 使用useCallback优化calcWidth的计算
+  const updateCalcWidth = useCallback(() => {
+    if (!menuRef.current) return;
+
+    const childrenArray = [...menuRef.current.children] as HTMLElement[];
+    const newCalcWidth = childrenArray.map((item) => calcMenuItemWidth(item));
+    setCalcWidth(newCalcWidth);
   }, []);
+
+  // 只在组件挂载和依赖项变化时计算一次宽度
+  useEffect(() => {
+    if (mode === 'horizontal') {
+      updateCalcWidth();
+    }
+  }, [mode, updateCalcWidth, children]);
+
   /**
    * 判断菜单是否需要弹出显示
    */
@@ -182,25 +200,11 @@ export default function Menu(props: Props) {
   });
 
   /**
-   * 计算菜单项的实际宽度，包括外边距
-   * @param menuItem - 菜单项 DOM 元素
-   * @returns 菜单项的总宽度（包括外边距）
-   */
-  function calcMenuItemWidth(menuItem: HTMLElement) {
-    const computedStyle = getComputedStyle(menuItem);
-    const marginLeft = Number.parseInt(computedStyle.marginLeft, 10);
-    const marginRight = Number.parseInt(computedStyle.marginRight, 10);
-    const result = menuItem.offsetWidth + marginLeft + marginRight || 0;
-
-    return result;
-  }
-
-  /**
    * 计算水平模式下需要移入更多菜单的切片索引
    * @returns 切片索引，-1 表示不需要更多菜单
    */
-  const calcSliceIndex = () => {
-    if (!menuRef.current) {
+  const calcSliceIndex = useCallback(() => {
+    if (!menuRef.current || calcWidth.length === 0) {
       return -1;
     }
     // 菜单的当前宽度
@@ -220,25 +224,26 @@ export default function Menu(props: Props) {
     });
 
     return sliceIndex === calcWidth.length ? -1 : sliceIndex;
-  };
+  }, [calcWidth]);
 
+  // 只在水平模式下监听尺寸变化
   const size = useSize(mode === 'horizontal' ? menuRef.current : null);
   const isFirstTimeRenderRef = useRef(true);
 
   /**
    * 更新切片索引，用于处理水平模式下的响应式布局
    */
-  const updateSliceIndex = () => {
+  const updateSliceIndex = useCallback(() => {
     setSliceIndex(-1);
     requestAnimationFrame(() => {
       setSliceIndex(() => calcSliceIndex());
     });
-  };
+  }, [calcSliceIndex, setSliceIndex]);
 
   /**
    * 处理窗口大小变化，更新菜单布局
    */
-  const handleResize = () => {
+  const handleResize = useCallback(() => {
     if (sliceIndex === calcSliceIndex()) {
       return;
     }
@@ -251,7 +256,7 @@ export default function Menu(props: Props) {
         setSliceIndex(calcSliceIndex());
       });
     }
-  };
+  }, [sliceIndex, calcSliceIndex, updateSliceIndex, setSliceIndex]);
 
   const { run: debouncedHandleResize } = useDebounceFn(handleResize, {
     wait: 200,
@@ -277,6 +282,7 @@ export default function Menu(props: Props) {
       debouncedHandleResize();
     }
   }, [size, mode, debouncedHandleResize]);
+
   /**
    * 创建菜单上下文值
    */
@@ -304,27 +310,31 @@ export default function Menu(props: Props) {
     items,
   ]);
 
-  useEffect(() => {
-    menuRef.current;
-  }, []);
+  // 移除无用的副作用
+  // useEffect(() => {
+  //   menuRef.current;
+  // }, []);
+
+  const menuClassName = useMemo(() => {
+    return cn(
+      theme,
+      b(),
+      is(mode, true),
+      is(theme, true),
+      is('rounded', rounded),
+      is('collapse', collapse),
+      is('menu-align', mode === 'horizontal'),
+    );
+  }, [b, collapse, is, mode, rounded, theme]);
+
   return (
     <MenuContext.Provider value={menuProviderValue}>
-      <ul
-        className={cn(
-          theme,
-          b(),
-          is(mode, true),
-          is(theme, true),
-          is('rounded', rounded),
-          is('collapse', collapse),
-          is('menu-align', mode === 'horizontal'),
-        )}
-        ref={menuRef}
-        role="menu"
-        style={menuStyle}
-      >
+      <ul className={menuClassName} ref={menuRef} role="menu" style={menuStyle}>
         {children}
       </ul>
     </MenuContext.Provider>
   );
 }
+
+// 使用memo包装组件以避免不必要的重渲染
+export default memo(MenuComponent);

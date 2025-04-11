@@ -6,7 +6,11 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { defaultPreferences } from '../src/config';
-import { PreferencesProvider, usePreferencesContext } from '../src/preferences';
+import {
+  PreferenceManager,
+  PreferencesProvider,
+  usePreferencesContext,
+} from '../src/preferences';
 
 const mockOptions = {
   namespace: 'test',
@@ -18,9 +22,21 @@ const mockOptions = {
 };
 
 describe('preferencesProvider', () => {
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <PreferencesProvider options={mockOptions}>{children}</PreferencesProvider>
-  );
+  let preferenceManager: PreferenceManager;
+  let initialPreferences: typeof defaultPreferences;
+
+  const wrapper = ({ children }: { children: ReactNode }) => {
+    preferenceManager = new PreferenceManager();
+    initialPreferences = preferenceManager.initPreferences(mockOptions);
+    return (
+      <PreferencesProvider
+        initialPreferences={initialPreferences}
+        preferenceManager={preferenceManager}
+      >
+        {children}
+      </PreferencesProvider>
+    );
+  };
 
   beforeEach(() => {
     vi.stubGlobal(
@@ -87,9 +103,7 @@ describe('preferencesProvider', () => {
   it('should handle mobile layout correctly', async () => {
     const { result } = renderHook(() => usePreferencesContext(), { wrapper });
 
-    // 等待状态更新
     await act(async () => {
-      // 触发一次更新
       result.current.updatePreferences({
         app: { isMobile: true },
       });

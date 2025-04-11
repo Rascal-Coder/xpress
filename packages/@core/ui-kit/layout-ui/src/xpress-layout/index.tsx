@@ -13,7 +13,7 @@ import { XpressIconButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useEventListener, useThrottleFn } from 'ahooks';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   LayoutContent,
@@ -25,6 +25,18 @@ import {
 import { useLayout } from '../hooks';
 import { useLayoutContext } from './context';
 import { LayoutProvider } from './LayoutProvider';
+
+// 抽离一些计算函数以减少不必要的重新计算
+const calculateSideCollapseWidth = (
+  sidebarCollapseShowTitle: boolean,
+  isSidebarMixedNav: boolean,
+  sidebarMixedWidth: number,
+  sideCollapseWidth: number,
+) => {
+  return sidebarCollapseShowTitle || isSidebarMixedNav
+    ? sidebarMixedWidth
+    : sideCollapseWidth;
+};
 
 const XpressLayoutInner: FC<XpressLayoutProps> = ({
   components,
@@ -90,13 +102,17 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   } = useLayout({ isMobile, layout });
 
   const [mouseY, setMouseY] = useState(0);
-  useEventListener(
-    'mousemove',
-    (e) => {
+
+  // 优化:使用useThrottleFn避免过多的事件处理
+  const { run: handleMouseMove } = useThrottleFn(
+    (e: MouseEvent) => {
       setMouseY(e.clientY);
     },
-    { target: contentRef },
+    { wait: 50 },
   );
+
+  useEventListener('mousemove', handleMouseMove, { target: contentRef });
+
   /**
    * 顶栏是否自动隐藏
    */
@@ -117,12 +133,12 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   }, [headerVisible, headerHidden, tabbarEnable, tabbarHeight, headerHeight]);
 
   const getSideCollapseWidth = useMemo(() => {
-    const collapseWidth =
-      sidebarCollapseShowTitle || isSidebarMixedNav
-        ? sidebarMixedWidth
-        : sideCollapseWidth;
-
-    return collapseWidth;
+    return calculateSideCollapseWidth(
+      sidebarCollapseShowTitle,
+      isSidebarMixedNav,
+      sidebarMixedWidth,
+      sideCollapseWidth,
+    );
   }, [
     sidebarCollapseShowTitle,
     isSidebarMixedNav,
@@ -145,30 +161,18 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   }, [isMixedNav, isMobile, headerHeight]);
 
   /**
-   * 动态获取侧边宽度
+   * 动态获取侧边宽度 - 性能优化版本
    */
   const getSidebarWidth = useMemo(() => {
-    let width = 0;
+    // 快速返回0的条件
+    if (sidebarHidden) return 0;
+    if (!sidebarEnable || (sidebarHidden && !isSidebarMixedNav && !isMixedNav))
+      return 0;
 
-    if (sidebarHidden) {
-      return width;
-    }
-
-    if (
-      !sidebarEnable ||
-      (sidebarHidden && !isSidebarMixedNav && !isMixedNav)
-    ) {
-      return width;
-    }
-
-    if (isSidebarMixedNav && !isMobile) {
-      width = sidebarMixedWidth;
-    } else if (sidebarCollapse) {
-      width = isMobile ? 0 : getSideCollapseWidth;
-    } else {
-      width = sidebarWidth;
-    }
-    return width;
+    // 计算实际宽度
+    if (isSidebarMixedNav && !isMobile) return sidebarMixedWidth;
+    if (sidebarCollapse) return isMobile ? 0 : getSideCollapseWidth;
+    return sidebarWidth;
   }, [
     sidebarHidden,
     sidebarEnable,
@@ -669,6 +673,9 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
   );
 };
 
+// 使用memo包装组件避免不必要的重渲染
+const MemoizedXpressLayoutInner = memo(XpressLayoutInner);
+
 const XpressLayout: FC<XpressLayoutProps> = (props) => {
   return (
     <LayoutProvider
@@ -684,7 +691,7 @@ const XpressLayout: FC<XpressLayoutProps> = (props) => {
       sidebarExtraCollapse={props.sidebarExtraCollapse ?? false}
       sidebarExtraVisible={props.sidebarExtraVisible ?? false}
     >
-      <XpressLayoutInner {...props} />
+      <MemoizedXpressLayoutInner {...props} />
     </LayoutProvider>
   );
 };

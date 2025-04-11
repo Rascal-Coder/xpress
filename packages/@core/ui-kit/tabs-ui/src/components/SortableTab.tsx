@@ -6,7 +6,7 @@ import { cn } from '@xpress-core/shared/utils';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { type MouseEvent, useMemo } from 'react';
+import { memo, type MouseEvent, useMemo } from 'react';
 
 import AnimationWrap from '../AnimationWrap';
 
@@ -23,11 +23,7 @@ interface SortableTabProps {
   transition?: any;
 }
 
-/**
- * 可排序的标签页组件
- * 封装了@dnd-kit/sortable的useSortable hook
- */
-export function SortableTab({
+function SortableTabBase({
   active,
   contentClass,
   index,
@@ -40,10 +36,11 @@ export function SortableTab({
   children,
 }: SortableTabProps) {
   // 固定标签页不能拖拽
-  const sortableConfig =
-    tab.affixTab || isDraggingDisabled
+  const sortableConfig = useMemo(() => {
+    return tab.affixTab || isDraggingDisabled
       ? { disabled: true, id: tab.key }
       : { id: tab.key };
+  }, [tab.affixTab, isDraggingDisabled, tab.key]);
 
   const {
     attributes,
@@ -54,18 +51,22 @@ export function SortableTab({
     transition: sortableTransition,
   } = useSortable(sortableConfig);
 
-  const style: React.CSSProperties = {
-    cursor: isDragging ? 'grabbing' : 'default',
-    transform: CSS.Transform.toString(
-      transform && { ...transform, scaleX: 1, y: 0 },
-    ),
-    transition: isDragging ? 'none' : sortableTransition,
-    zIndex: isDragging ? 2 : 1,
-  };
+  const style: React.CSSProperties = useMemo(() => {
+    return {
+      cursor: isDragging ? 'grabbing' : 'default',
+      transform: CSS.Transform.toString(
+        transform && { ...transform, scaleX: 1, y: 0 },
+      ),
+      transition: isDragging ? 'none' : sortableTransition,
+      zIndex: isDragging ? 2 : 1,
+    };
+  }, [isDragging, transform, sortableTransition]);
 
   // 只对非固定标签页应用拖拽监听器
-  const dragAttributes =
-    tab.affixTab || isDraggingDisabled ? {} : { ...listeners };
+  const dragAttributes = useMemo(() => {
+    return tab.affixTab || isDraggingDisabled ? {} : { ...listeners };
+  }, [tab.affixTab, isDraggingDisabled, listeners]);
+
   const className = useMemo(() => {
     const baseClass =
       'translate-all group relative flex cursor-pointer select-none';
@@ -93,6 +94,15 @@ export function SortableTab({
     tab.affixTab,
     tab.key,
   ]);
+
+  const handleTabClick = useMemo(() => {
+    return () => onTabClick(tab);
+  }, [onTabClick, tab]);
+
+  const handleMouseDown = useMemo(() => {
+    return (e: MouseEvent<HTMLDivElement>) => onMouseDown(e, tab);
+  }, [onMouseDown, tab]);
+
   return (
     <AnimationWrap
       className={className}
@@ -105,10 +115,23 @@ export function SortableTab({
       {...transition}
       {...attributes}
       {...dragAttributes}
-      onClick={() => onTabClick(tab)}
-      onMouseDown={(e) => onMouseDown(e, tab)}
+      onClick={handleTabClick}
+      onMouseDown={handleMouseDown}
     >
       {children}
     </AnimationWrap>
   );
 }
+
+export const SortableTab = memo(SortableTabBase, (prevProps, nextProps) => {
+  // 自定义比较函数，仅在必要时重新渲染
+  return (
+    prevProps.active === nextProps.active &&
+    prevProps.tab.key === nextProps.tab.key &&
+    prevProps.index === nextProps.index &&
+    prevProps.isDraggingDisabled === nextProps.isDraggingDisabled &&
+    prevProps.styleType === nextProps.styleType
+  );
+});
+
+SortableTab.displayName = 'SortableTab';

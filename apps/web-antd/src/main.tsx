@@ -5,7 +5,13 @@ import {
   updateCSSVariables,
 } from '@xpress-core/preferences';
 
-import { overridesPreferences } from './preferences';
+import { scan } from 'react-scan';
+
+import { overridesPreferences } from './preferences'; // must be imported before React and React DOM
+
+scan({
+  enabled: import.meta.env.DEV, // 仅在开发环境启用
+});
 
 async function initPreferencesAndCSS(
   preferenceManager: PreferenceManager,
