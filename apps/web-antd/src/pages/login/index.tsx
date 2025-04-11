@@ -2,7 +2,7 @@ import type { RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 
 import { Authentication } from '@xpress/layouts';
 import { useAccessStore } from '@xpress/stores';
-import { StorageManager } from '@xpress-core/shared/cache';
+import { StorageManager } from '@xpress/utils';
 
 import validator from '@rjsf/validator-ajv8';
 import { useState } from 'react';

@@ -45,7 +45,7 @@ type LayoutHeaderModeType = 'auto' | 'auto-scroll' | 'fixed' | 'static';
  * modal 弹窗模式
  * page 页面模式
  */
-type LoginExpiredModeType = 'modal' | 'page';
+// type LoginExpiredModeType = 'modal' | 'page';
 
 /**
  * 面包屑样式
@@ -264,7 +264,6 @@ export type {
   ContentCompactType,
   LayoutHeaderModeType,
   LayoutType,
-  LoginExpiredModeType,
   NavigationStyleType,
   PageTransitionType,
   PreferencesButtonPositionType,

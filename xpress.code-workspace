@@ -97,6 +97,10 @@
       "path": "packages/effects/layouts",
     },
     {
+      "name": "@xpress/request",
+      "path": "packages/effects/request",
+    },
+    {
       "name": "@xpress/icons",
       "path": "packages/icons",
     },

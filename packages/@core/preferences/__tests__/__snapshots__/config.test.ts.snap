@@ -18,7 +18,6 @@ exports[`defaultPreferences immutability test > should not modify the config obj
     "isMobile": false,
     "layout": "sidebar-nav",
     "locale": "zh-CN",
-    "loginExpiredMode": "page",
     "name": "Xpress Admin",
     "preferencesButtonPosition": "auto",
     "watermark": false,

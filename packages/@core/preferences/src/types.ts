@@ -6,7 +6,6 @@ import type {
   DeepPartial,
   LayoutHeaderModeType,
   LayoutType,
-  LoginExpiredModeType,
   NavigationStyleType,
   PageTransitionType,
   PreferencesButtonPositionType,
@@ -49,8 +48,6 @@ interface AppPreferences {
   layout: LayoutType;
   /** 支持的语言 */
   locale: SupportedLanguagesType;
-  /** 登录过期模式 */
-  loginExpiredMode: LoginExpiredModeType;
   /** 应用名 */
   name: string;
   /** 偏好设置按钮位置 */

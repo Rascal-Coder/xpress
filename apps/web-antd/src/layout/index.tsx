@@ -1,7 +1,7 @@
 import { CircleHelp, MdiGithub } from '@xpress/icons';
 import { BasicLayout, UserDropdown } from '@xpress/layouts';
 import { resetAllStores, useAccessStore } from '@xpress/stores';
-import { openWindow } from '@xpress-core/shared/utils';
+import { openWindow } from '@xpress/utils';
 
 import { useEffect } from 'react';
 
