@@ -73,8 +73,12 @@ export function UserDropdown({
       >
         是否退出登录？
       </LogoutModal>
-      <DropdownMenu onOpenChange={setOpenPopover} open={openPopover}>
-        <DropdownMenuTrigger>
+      <DropdownMenu
+        modal={true}
+        onOpenChange={setOpenPopover}
+        open={openPopover}
+      >
+        <DropdownMenuTrigger asChild>
           <div className="hover:bg-accent ml-1 mr-2 cursor-pointer rounded-full p-1.5">
             <div className="hover:text-accent-foreground flex-center">
               <XpressAvatar
@@ -85,7 +89,11 @@ export function UserDropdown({
             </div>
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mr-2 min-w-[240px] p-0 pb-1">
+        <DropdownMenuContent
+          align="end"
+          className="mr-2 min-w-[240px] p-0 pb-1"
+          sideOffset={5}
+        >
           <DropdownMenuLabel className="flex items-center p-3">
             <XpressAvatar
               className="size-12"

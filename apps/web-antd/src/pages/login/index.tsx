@@ -7,8 +7,8 @@ import { StorageManager } from '@xpress/utils';
 import validator from '@rjsf/validator-ajv8';
 import { useState } from 'react';
 
+import { loginApi } from '#/api';
 import Form from '#/components/MForm/src';
-import { baseUrl } from '#/constants/baseurl';
 
 export default function Login() {
   // 初始化存储管理器
@@ -99,19 +99,11 @@ export default function Login() {
     setIsLoading(true);
     const formValues = e.formData;
     try {
-      const res = await fetch(`${baseUrl}/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          username: formValues.username,
-          password: formValues.password,
-        }),
+      const res = await loginApi({
+        username: formValues.username,
+        password: formValues.password,
       });
-      const {
-        data: { accessToken },
-      } = await res.json();
+      const { accessToken } = res;
       if (accessToken) {
         setAccessToken(accessToken);
 

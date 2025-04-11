@@ -9,9 +9,11 @@ import { scan } from 'react-scan';
 
 import { overridesPreferences } from './preferences'; // must be imported before React and React DOM
 
-scan({
-  enabled: import.meta.env.DEV, // 仅在开发环境启用
-});
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
+  scan({
+    enabled: true,
+  });
+}
 
 async function initPreferencesAndCSS(
   preferenceManager: PreferenceManager,
