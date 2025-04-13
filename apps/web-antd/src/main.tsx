@@ -5,15 +5,7 @@ import {
   updateCSSVariables,
 } from '@xpress-core/preferences';
 
-import { scan } from 'react-scan';
-
 import { overridesPreferences } from './preferences'; // must be imported before React and React DOM
-
-if (typeof window !== 'undefined' && import.meta.env.DEV) {
-  scan({
-    enabled: true,
-  });
-}
 
 async function initPreferencesAndCSS(
   preferenceManager: PreferenceManager,

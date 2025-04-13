@@ -1,6 +1,6 @@
 import type { RouteConfig } from '@xpress-core/router';
 
-const DEFAULT_HOME_PATH = '/home';
+const DEFAULT_HOME_PATH = '/home/analysis';
 export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',

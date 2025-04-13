@@ -41,7 +41,6 @@
     "react-dom": "catalog:",
     "react-helmet-async": "catalog:",
     "react-router-dom": "catalog:",
-    "react-scan": "^0.3.3",
     "react-toastify": "catalog:",
     "zustand": "catalog:"
   },
