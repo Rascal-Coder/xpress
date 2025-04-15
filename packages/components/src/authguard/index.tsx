@@ -1,3 +1,8 @@
+import {
+  CORE_ROUTE_NAMES,
+  DEFAULT_HOME_PATH,
+  LOGIN_PATH,
+} from '@xpress/constants';
 import { useAccessStore, useUserStore } from '@xpress/stores';
 import { type Router, useRouter } from '@xpress-core/router';
 import { useLocation, useNavigate, useSearchParams } from '@xpress-core/router';
@@ -8,10 +13,6 @@ interface AuthGuardProps {
   children: ReactNode;
   router: Router;
 }
-
-const DEFAULT_HOME_PATH = '/home';
-const LOGIN_PATH = '/login';
-const CORE_ROUTE_NAMES = new Set(['/login', '/register']);
 
 export function AuthGuard({ router, children }: AuthGuardProps) {
   const { curRoute } = useRouter(router);

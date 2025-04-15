@@ -10,7 +10,7 @@ import { baseUrl } from '#/constants/baseurl';
 
 import { basicRoutes, routes } from './routes';
 
-const forbiddenComponent = () => import('#/pages/noAccess');
+const forbiddenComponent = () => import('#/pages/not-access');
 
 const pageMap: ComponentRecordType = import.meta.glob<{
   default: ComponentType;

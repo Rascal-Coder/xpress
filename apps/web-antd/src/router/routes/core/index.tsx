@@ -1,6 +1,7 @@
 import type { RouteConfig } from '@xpress-core/router';
 
-const DEFAULT_HOME_PATH = '/home/analysis';
+import { DEFAULT_HOME_PATH } from '@xpress/constants';
+
 export const constantRoutes: RouteConfig[] = [
   {
     path: '/login',
@@ -41,7 +42,7 @@ export const rootRoutes: RouteConfig[] = [
 export const fallBackRoutes: RouteConfig[] = [
   {
     path: '/no-access',
-    component: () => import('#/pages/noAccess'),
+    component: () => import('#/pages/not-access'),
     isConstant: true,
     meta: {
       title: '出错了',
@@ -52,7 +53,7 @@ export const fallBackRoutes: RouteConfig[] = [
   },
   {
     path: '/not-found',
-    component: () => import('#/pages/notFound'),
+    component: () => import('#/pages/not-found'),
     isConstant: true,
     meta: {
       title: '页面不存在',
@@ -63,7 +64,7 @@ export const fallBackRoutes: RouteConfig[] = [
   },
   {
     path: '*',
-    component: () => import('#/pages/notFound'),
+    component: () => import('#/pages/not-found'),
     isConstant: true,
     meta: {
       title: '页面不存在',

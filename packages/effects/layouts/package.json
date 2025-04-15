@@ -30,7 +30,7 @@
     "@xpress-core/typings": "workspace:*",
     "@xpress/icons": "workspace:*",
     "@xpress/stores": "workspace:*",
-    "framer-motion": "^12.4.2",
+    "framer-motion": "catalog:",
     "react": "catalog:",
     "react-activation": "catalog:",
     "react-colorful": "catalog:",

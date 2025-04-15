@@ -74,7 +74,7 @@ export function UserDropdown({
         是否退出登录？
       </LogoutModal>
       <DropdownMenu
-        modal={true}
+        modal={false}
         onOpenChange={setOpenPopover}
         open={openPopover}
       >

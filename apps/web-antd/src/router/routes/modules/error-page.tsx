@@ -11,7 +11,7 @@ const routes: RouteConfig[] = [
     children: [
       {
         path: '403',
-        component: () => import('#/pages/noAccess'),
+        component: () => import('#/pages/not-access'),
         meta: {
           title: '403',
           order: 10_000,
@@ -19,10 +19,24 @@ const routes: RouteConfig[] = [
       },
       {
         path: '404',
-        component: () => import('#/pages/notFound'),
+        component: () => import('#/pages/not-found'),
         meta: {
           title: '404',
           order: 10_001,
+        },
+      },
+      {
+        path: '500',
+        component: () => import('#/pages/server-error'),
+        meta: {
+          title: '500',
+        },
+      },
+      {
+        path: 'offline',
+        component: () => import('#/pages/offline'),
+        meta: {
+          title: '离线',
         },
       },
     ],

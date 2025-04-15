@@ -11,8 +11,17 @@ const SvgCardIcon = createIconifyIcon('svg:card');
 const SvgBellIcon = createIconifyIcon('svg:bell');
 const SvgCakeIcon = createIconifyIcon('svg:cake');
 const SvgAntdvLogoIcon = createIconifyIcon('svg:antdv-logo');
+const Svg403Icon = createIconifyIcon('svg:403');
+const Svg404Icon = createIconifyIcon('svg:404');
+const Svg500Icon = createIconifyIcon('svg:500');
+const SvgComingSoonIcon = createIconifyIcon('svg:coming-soon');
+const SvgOfflineIcon = createIconifyIcon('svg:offline');
+const SvgWarningIcon = createIconifyIcon('svg:warning');
 
 export {
+  Svg403Icon,
+  Svg404Icon,
+  Svg500Icon,
   SvgAntdvLogoIcon,
   SvgAvatar1Icon,
   SvgAvatar2Icon,
@@ -21,5 +30,8 @@ export {
   SvgBellIcon,
   SvgCakeIcon,
   SvgCardIcon,
+  SvgComingSoonIcon,
   SvgDownloadIcon,
+  SvgOfflineIcon,
+  SvgWarningIcon,
 };

@@ -15,12 +15,12 @@
   },
   "dependencies": {
     "@xpress-core/router": "workspace:*",
+    "@xpress/constants": "workspace:*",
     "@xpress/stores": "workspace:*",
-    "framer-motion": "^12.4.7",
+    "framer-motion": "catalog:",
     "nprogress": "catalog:",
     "react": "catalog:",
-    "react-router-dom": "catalog:",
-    "styled-components": "catalog:"
+    "react-router-dom": "catalog:"
   },
   "devDependencies": {
     "@types/nprogress": "catalog:",

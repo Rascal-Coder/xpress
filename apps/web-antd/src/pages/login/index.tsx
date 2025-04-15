@@ -158,7 +158,6 @@ export default function Login() {
             uiSchema={uiSchema}
             validator={validator}
           />
-          {/* <Button variant="contained">Hello world</Button> */}
           {/* 其他登录方式 */}
           <div className="mt-6">
             <div className="mt-4 flex items-center justify-between">

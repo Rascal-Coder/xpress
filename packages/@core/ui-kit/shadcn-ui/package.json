@@ -46,7 +46,7 @@
     "@xpress-core/icons": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "class-variance-authority": "catalog:",
-    "framer-motion": "^12.4.2",
+    "framer-motion": "catalog:",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

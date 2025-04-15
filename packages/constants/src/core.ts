@@ -1,13 +1,8 @@
 /**
- * @zh_CN 登录页面 url 地址
- */
-export const LOGIN_PATH = '/auth/login';
-
-/**
  * @zh_CN 默认首页地址
  */
-export const DEFAULT_HOME_PATH = '/analytics';
 
+export const DEFAULT_HOME_PATH = '/home/analysis';
 export interface LanguageOption {
   label: string;
   value: 'en-US' | 'zh-CN';
@@ -26,3 +21,12 @@ export const SUPPORT_LANGUAGES: LanguageOption[] = [
     value: 'en-US',
   },
 ];
+
+/**
+ * @zh_CN 登录页面 url 地址
+ */
+export const LOGIN_PATH = '/login';
+/**
+ * @zh_CN 核心路由名称
+ */
+export const CORE_ROUTE_NAMES = new Set(['/login', '/register']);

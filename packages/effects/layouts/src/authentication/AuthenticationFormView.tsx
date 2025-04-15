@@ -12,7 +12,7 @@ export const AuthenticationFormView = ({
   return (
     <div
       className={cn(
-        'flex-col-center dark:bg-background-deep bg-background relative px-6 py-10 lg:flex-initial lg:px-8',
+        'flex-col-center dark:bg-background-deep bg-background relative px-6 py-10 lg:flex-1 lg:px-8',
         className,
       )}
     >

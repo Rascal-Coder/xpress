@@ -93,6 +93,10 @@
       "path": "packages/constants",
     },
     {
+      "name": "@xpress/common-ui",
+      "path": "packages/effects/common-ui",
+    },
+    {
       "name": "@xpress/layouts",
       "path": "packages/effects/layouts",
     },

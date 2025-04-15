@@ -10,9 +10,19 @@ function Content({ router }: { router: Router }) {
   const fullPath = useFullPath();
   const { refreshing } = useTabbar();
   return keepAlive ? (
-    <KeepAlive cacheKey={fullPath}>{refreshing ? null : <Outlet />}</KeepAlive>
+    <KeepAlive cacheKey={fullPath}>
+      {refreshing ? null : (
+        <div className="relative h-full">
+          <Outlet />
+        </div>
+      )}
+    </KeepAlive>
   ) : (
-    !refreshing && <Outlet />
+    !refreshing && (
+      <div className="relative h-full">
+        <Outlet />
+      </div>
+    )
   );
 }
 export default Content;

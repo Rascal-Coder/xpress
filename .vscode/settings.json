@@ -226,5 +226,8 @@
     "tailwind.config.mjs": "postcss.*"
   },
   "typescript.tsdk": "node_modules/typescript/lib", // 指定TypeScript SDK的路径
-  "oxc.enable": false // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
+  "oxc.enable": false,
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  } // 禁用OXC（一个JavaScript/TypeScript的替代解析器）
 }

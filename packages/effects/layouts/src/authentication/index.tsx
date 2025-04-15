@@ -103,7 +103,7 @@ export const Authentication = ({
       </div>
       {/* 右侧表单 */}
       <AuthenticationFormView
-        className="min-h-full w-[34%] flex-1"
+        className="min-h-full w-full flex-1 md:w-[50%] lg:w-[34%]"
         copyright={<Copyright {...preferences.copyright} />}
       >
         {children}

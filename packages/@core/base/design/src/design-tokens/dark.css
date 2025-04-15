@@ -2,6 +2,7 @@
 .dark[data-theme='custom'],
 .dark[data-theme='default'] {
   /* Default background color of <body />...etc */
+
   --background: 222.34deg 10.43% 12.27%;
 
   /* 主体区域背景色 */
