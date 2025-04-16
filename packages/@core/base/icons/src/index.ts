@@ -1,8 +1,6 @@
-'use client';
 export * from './create-icon';
 
 export * from './lucide';
-
 export type {
   IconifyIcon as IconifyIconStructure,
   IconifyIconProps,

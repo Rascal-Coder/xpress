@@ -4,11 +4,7 @@ import {
   LOGIN_PATH,
 } from '@xpress/constants';
 import { useAccessStore, useUserStore } from '@xpress/stores';
-import {
-  useFullPath as getFullPath,
-  type Router,
-  useRouter,
-} from '@xpress-core/router';
+import { type Router, useFullPath, useRouter } from '@xpress-core/router';
 import { useLocation, useNavigate, useSearchParams } from '@xpress-core/router';
 
 import { type ReactNode, useEffect } from 'react';
@@ -25,7 +21,7 @@ export function AuthGuard({ router, children }: AuthGuardProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-
+  const fullPath = useFullPath();
   useEffect(() => {
     // 基本路由，这些路由不需要进入权限拦截
     if (CORE_ROUTE_NAMES.has(location.pathname)) {
@@ -49,7 +45,6 @@ export function AuthGuard({ router, children }: AuthGuardProps) {
 
       // 如果不在登录页且需要权限，则重定向到登录页
       if (location.pathname !== LOGIN_PATH) {
-        const fullPath = getFullPath();
         const redirectPath =
           fullPath === DEFAULT_HOME_PATH
             ? LOGIN_PATH

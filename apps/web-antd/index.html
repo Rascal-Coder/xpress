@@ -11,6 +11,16 @@
       as="image"
       type="image/svg+xml"
     />
+    <script>
+      // 仅在生产环境添加预加载链接
+      if (window._XPRESS_ADMIN_PRO_APP_CONF_) {
+        const link = document.createElement('link');
+        link.rel = 'modulepreload';
+        link.href = '/_app.config.js';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }
+    </script>
   </head>
   <body>
     <script type="module" src="/src/main.tsx"></script>

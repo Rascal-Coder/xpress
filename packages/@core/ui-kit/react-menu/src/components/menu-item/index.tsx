@@ -111,11 +111,13 @@ function MenuItem(props: Props) {
           {rootMenu.props.mode !== 'horizontal' && (
             <MenuBadge className="right-2" {...props}></MenuBadge>
           )}
-          <XpressIcon
-            className={nsMenu.e('icon')}
-            fallback
-            icon={menuIcon}
-          ></XpressIcon>
+          <div className="min-w-5">
+            <XpressIcon
+              className={nsMenu.e('icon')}
+              fallback
+              icon={menuIcon}
+            ></XpressIcon>
+          </div>
           {title}
         </div>
       )}

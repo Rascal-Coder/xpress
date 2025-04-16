@@ -6,6 +6,7 @@ const routes: RouteConfig[] = [
     meta: {
       title: '概览',
       badgeType: 'dot',
+      icon: 'lucide:layout-dashboard',
     },
     defaultPath: 'analysis',
     children: [
@@ -13,10 +14,11 @@ const routes: RouteConfig[] = [
         path: 'analysis',
         component: () => import('#/pages/dashboard/analysis'),
         meta: {
-          menuVisibleWithForbidden: true,
+          // menuVisibleWithForbidden: true,
           title: '分析页',
-          permission: ['homeIndex'],
+          // permission: ['homeIndex'],
           affixTab: true,
+          icon: 'lucide:area-chart',
           // affixTabOrder: 2,
         },
       },
@@ -25,9 +27,9 @@ const routes: RouteConfig[] = [
         component: () => import('#/pages/dashboard/workbench'),
         meta: {
           title: '工作台',
-          keepAlive: true,
-          affixTab: true,
-          affixTabOrder: 1,
+          icon: 'carbon:workspace',
+          // keepAlive: true,
+          // affixTab: true,
         },
       },
     ],

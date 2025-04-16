@@ -94,11 +94,14 @@ function SubMenuContent({
       onMouseDown={(e) => ripple.create(e as unknown as MouseEvent, 'dark')}
     >
       {!isMenuMore && (
-        <XpressIcon
-          className={cn(nsMenu.e('icon'))}
-          fallback
-          icon={icon}
-        ></XpressIcon>
+        // 使用div包裹，解决图标未加载时，菜单项布局偏移问题
+        <div className="min-w-5">
+          <XpressIcon
+            className={cn(nsMenu.e('icon'))}
+            fallback
+            icon={icon}
+          ></XpressIcon>
+        </div>
       )}
       {!hiddenTitle && <div className={cn(e('title'))}>{title}</div>}
       {!isMenuMore && showArrowIcon && (

@@ -480,7 +480,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     handleMouseMove();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [headerMode, mouseY]);
-
+  const [lastHeaderStateChange, setLastHeaderStateChange] = useState(0);
   // 处理滚动相关的header隐藏逻辑
   const checkHeaderIsHidden = useThrottleFn(
     (isScrollingUp: boolean, isScrollingDown: boolean, topArrived: boolean) => {
@@ -492,14 +492,22 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         setHeaderIsHidden(false);
         return;
       }
+      const now = Date.now();
+      const stateChangeDelay = 300; // 状态变化最小间隔时间(ms)
+
+      if (now - lastHeaderStateChange < stateChangeDelay) {
+        return; // 如果距离上次状态变化时间不足，则不改变状态
+      }
 
       if (isScrollingUp) {
         setHeaderIsHidden(false);
+        setLastHeaderStateChange(now);
       } else if (isScrollingDown) {
         setHeaderIsHidden(true);
+        setLastHeaderStateChange(now);
       }
     },
-    { wait: 300 },
+    { wait: 100 },
   );
 
   useEffect(() => {
@@ -578,7 +586,6 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         isMobile={isMobile}
         logo={showHeaderLogo ? logo : undefined}
         show={true}
-        // sidebarWidth={getSidebarWidth}
         theme={headerTheme}
         toggleButton={
           showHeaderToggleButton && (

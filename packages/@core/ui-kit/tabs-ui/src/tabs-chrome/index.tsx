@@ -92,7 +92,6 @@ const TabContent = memo(
 
     return (
       <div className="relative size-full px-1">
-        {/* 标签分隔线 - 仅在非激活状态显示 */}
         <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
           <div
             className={cn(
@@ -124,16 +123,19 @@ const TabContent = memo(
         {/* 标签主体内容 */}
         <div
           className={cn(
-            'tabs-chrome__item-main mx-[calc(var(--gap)*2)] my-0 flex h-full items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
+            'tabs-chrome__item-main mx-[calc(var(--gap)*2)] my-0 flex h-full cursor-pointer items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
             isActiveTab &&
               'group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground',
           )}
         >
           {showIcon && (
-            <XpressIcon
-              className="mr-1 flex size-4 items-center overflow-hidden"
-              icon={tab.icon}
-            />
+            <div className="mr-1 size-4 overflow-hidden">
+              <XpressIcon
+                className="flex size-full items-center"
+                fallback
+                icon={tab.icon}
+              />
+            </div>
           )}
 
           <span className="flex-1 overflow-hidden whitespace-nowrap text-sm">

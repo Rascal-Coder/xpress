@@ -34,6 +34,7 @@ export const Authentication = ({
   toolbarList?: string[];
 }) => {
   const { isDark, preferences } = usePreferencesContext();
+  // TODO: 使用本地的图标png
   const slugs = [
     'typescript',
     'javascript',

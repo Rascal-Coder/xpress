@@ -27,6 +27,7 @@ const XpressIcon: React.FC<IconProps> = ({ fallback, icon, ...rest }) => {
     const IconComponent = icon as React.ComponentType<
       React.SVGProps<SVGSVGElement>
     >;
+
     return <IconComponent {...(rest as React.SVGProps<SVGSVGElement>)} />;
   }
 
