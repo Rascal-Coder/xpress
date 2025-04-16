@@ -109,6 +109,7 @@ export const useTabbarFn = ({ router }: { router: Router }) => {
     if (!currentPath?.defaultPath) {
       addTab(currentTab, preferences);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matched]);
 

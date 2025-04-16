@@ -8,7 +8,7 @@ import {
   TabsView,
 } from '@xpress-core/tabs-ui';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useTabbarFn } from './useTabbar';
 
@@ -25,6 +25,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
     createContextMenus,
     currentTab,
   } = useTabbarFn({ router });
+
   const toggleMaximize = () => {
     updatePreferences({
       header: {
@@ -35,27 +36,51 @@ export const Tabbar = ({ router }: { router: Router }) => {
       },
     });
   };
-  const [menus, setMenus] = useState<IContextMenuItem[]>([]);
+
+  // 使用 useMemo 初始化 menus
+  const initialMenus = useMemo(
+    () => (currentTab ? createContextMenus(currentTab) : []),
+    [currentTab, createContextMenus],
+  );
+
+  const [menus, setMenus] = useState<IContextMenuItem[]>(initialMenus);
+
+  const getContextMenus = useCallback(() => {
+    return currentTab ? createContextMenus(currentTab) : menus;
+  }, [currentTab, createContextMenus, menus]);
+
   const handleOpenChange = (tab: TabDefinition) => {
-    setMenus(createContextMenus(tab));
+    if (tab) {
+      const menus = createContextMenus(tab);
+      setMenus(menus);
+    }
   };
+
   const [moreMenus, setMoreMenus] = useState<IContextMenuItem[]>([]);
+
   useEffect(() => {
-    const menus = createContextMenus(currentTab).map((item) => {
-      return {
+    if (currentTab) {
+      const menus = createContextMenus(currentTab);
+      setMenus(menus);
+    }
+  }, [currentTab, createContextMenus]);
+
+  useEffect(() => {
+    if (currentTab) {
+      const updatedMenus = createContextMenus(currentTab).map((item) => ({
         ...item,
         label: item.text,
         value: item.key,
-      };
-    });
-    setMoreMenus(menus);
+      }));
+      setMoreMenus(updatedMenus);
+    }
   }, [createContextMenus, currentTab]);
 
   return (
     <>
       <TabsView
         active={currentActive}
-        contextMenus={() => menus}
+        contextMenus={getContextMenus}
         draggable={preferences.tabbar.draggable}
         middleClickToClose={preferences.tabbar.middleClickToClose}
         onClick={handleTabClick}

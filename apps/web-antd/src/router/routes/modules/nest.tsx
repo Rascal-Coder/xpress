@@ -3,9 +3,9 @@ import type { RouteConfig } from '@xpress-core/router';
 const routes: RouteConfig[] = [
   {
     path: 'nest',
-    component: () => import('#/pages/nest'),
+    // component: () => import('#/pages/nest'),
     meta: {
-      title: '嵌套路由',
+      title: '嵌套菜单',
     },
     defaultPath: 'nest1',
     children: [
@@ -19,7 +19,7 @@ const routes: RouteConfig[] = [
       },
       {
         path: 'nest2',
-        component: () => import('#/pages/nest/nest2'),
+        // component: () => import('#/pages/nest/nest2'),
         meta: {
           title: '菜单2',
         },
@@ -35,7 +35,7 @@ const routes: RouteConfig[] = [
           },
           {
             path: 'nest2-2',
-            component: () => import('#/pages/nest/nest2/nest2-2'),
+            // component: () => import('#/pages/nest/nest2/nest2-2'),
             meta: {
               title: '菜单2-2',
             },

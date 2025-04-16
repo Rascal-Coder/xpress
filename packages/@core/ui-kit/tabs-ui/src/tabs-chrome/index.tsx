@@ -92,10 +92,10 @@ const TabContent = memo(
 
     return (
       <div className="relative size-full px-1">
-        <div className="tabs-chrome__background absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
+        <div className="tabs-chrome__background pointer-events-none absolute z-[-1] size-full px-[calc(var(--gap)-1px)] py-0 transition-opacity duration-150">
           <div
             className={cn(
-              'tabs-chrome__background-content h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150',
+              'tabs-chrome__background-content pointer-events-none h-full rounded-tl-[var(--gap)] rounded-tr-[var(--gap)] duration-150',
               isActiveTab &&
                 'group-[.is-active]:bg-primary/15 dark:group-[.is-active]:bg-accent',
             )}
@@ -123,7 +123,7 @@ const TabContent = memo(
         {/* 标签主体内容 */}
         <div
           className={cn(
-            'tabs-chrome__item-main mx-[calc(var(--gap)*2)] my-0 flex h-full cursor-pointer items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
+            'tabs-chrome__item-main relative z-[1] mx-[calc(var(--gap)*2)] my-0 flex h-full cursor-pointer items-center overflow-hidden rounded-tl-[5px] rounded-tr-[5px] pl-2 pr-4 duration-150',
             isActiveTab &&
               'group-[.is-active]:text-primary dark:group-[.is-active]:text-accent-foreground text-accent-foreground',
           )}
@@ -246,11 +246,35 @@ export const TabsChrome = memo(
       );
     }, [activeTab, activeId, active, tabView, onClose, unpin, showIcon]);
 
-    const handleOpenChange = useCallback(
-      (tab: TabDefinition) => {
-        onOpenChange?.(tab);
+    // 渲染标签内容
+    const renderTabContent = useCallback(
+      (tab: EnhancedTabConfig) => {
+        return (
+          <XpressContextMenu
+            handlerData={tab}
+            itemClass="pr-6"
+            menus={contextMenus}
+            modal={false}
+            onOpenChange={(open) => {
+              if (open) {
+                onOpenChange?.(tab);
+              }
+            }}
+          >
+            <div className="relative z-[2] size-full">
+              <TabContent
+                active={active || ''}
+                onClose={onClose}
+                showIcon={showIcon}
+                tab={tab}
+                tabView={tabView}
+                unpin={unpin}
+              />
+            </div>
+          </XpressContextMenu>
+        );
       },
-      [onOpenChange],
+      [active, contextMenus, onClose, onOpenChange, showIcon, tabView, unpin],
     );
 
     return (
@@ -273,7 +297,7 @@ export const TabsChrome = memo(
           <SortableTab
             active={active}
             contentClass={cn(
-              'tabs-chrome__item  translate-all group gap-[7px] relative -mr-3 flex h-full select-none items-center',
+              'tabs-chrome__item translate-all group gap-[7px] relative -mr-3 flex h-full select-none items-center',
             )}
             index={i}
             key={tab.key}
@@ -283,31 +307,11 @@ export const TabsChrome = memo(
             tab={tab}
             transition={transition}
           >
-            <XpressContextMenu
-              handlerData={tab}
-              itemClass="pr-6"
-              menus={contextMenus}
-              modal={false}
-              onOpenChange={(open) => {
-                if (open) {
-                  handleOpenChange(tab);
-                }
-              }}
-            >
-              <TabContent
-                active={active || ''}
-                onClose={onClose}
-                showIcon={showIcon}
-                tab={tab}
-                tabView={tabView}
-                unpin={unpin}
-              />
-            </XpressContextMenu>
+            {renderTabContent(tab)}
           </SortableTab>
         ))}
       </DraggableTabs>
     );
   },
 );
-
 TabsChrome.displayName = 'TabsChrome';
