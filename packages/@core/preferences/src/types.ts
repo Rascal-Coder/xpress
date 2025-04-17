@@ -192,6 +192,8 @@ interface ThemePreferences {
   colorSuccess: string;
   /** 警告色 */
   colorWarning: string;
+  /** 是否开启切换主题动画 */
+  enableThemeAnimation: boolean;
   /** 当前主题 */
   mode: ThemeModeType;
   /** 圆角 */

@@ -87,6 +87,7 @@ exports[`defaultPreferences immutability test > should not modify the config obj
     "wheelable": true,
   },
   "theme": {
+    "enableThemeAnimation": true,
     "builtinType": "default",
     "colorDestructive": "hsl(348 100% 61%)",
     "colorPrimary": "hsl(212 100% 45%)",

@@ -1,3 +1,4 @@
+import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressButton } from '@xpress-core/shadcn-ui';
 
 import { motion } from 'framer-motion';
@@ -17,7 +18,7 @@ const ThemeButtonComponent = ({
   const theme = useMemo(() => {
     return isDark ? 'dark' : 'light';
   }, [isDark]);
-
+  const { preferences } = usePreferencesContext();
   const [isAnimatingToDark, setIsAnimatingToDark] = useState(isDark);
 
   const variant = useMemo(() => {
@@ -37,7 +38,10 @@ const ThemeButtonComponent = ({
       // @ts-expect-error startViewTransition 是实验性 API，尚未在 TypeScript 中定义
       document.startViewTransition &&
       !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+    if (!preferences.theme.enableThemeAnimation) {
+      handleChange(!isDark);
+      return;
+    }
     if (!isAppearanceTransition || !event) {
       handleChange(!isDark);
       return;
