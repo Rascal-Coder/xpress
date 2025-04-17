@@ -80,7 +80,7 @@ type TabsStyleType = 'brisk' | 'card' | 'chrome' | 'plain';
 /**
  * 页面切换动画
  */
-type PageTransitionType = 'fade' | 'fade-down' | 'fade-slide' | 'fade-up';
+type PageTransitionType = 'bottom' | 'fade' | 'left' | 'right' | 'top';
 
 /**
  * 页面切换动画

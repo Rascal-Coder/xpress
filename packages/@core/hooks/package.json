@@ -31,7 +31,8 @@
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "ahooks": "catalog:",
-    "react": "catalog:"
+    "react": "catalog:",
+    "watermark-js-plus": "^1.5.9"
   },
   "devDependencies": {
     "@types/react": "catalog:"

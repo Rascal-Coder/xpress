@@ -99,8 +99,7 @@ exports[`defaultPreferences immutability test > should not modify the config obj
   },
   "transition": {
     "enable": true,
-    "loading": true,
-    "name": "fade-slide",
+    "name": "left",
     "progress": true,
   },
   "widget": {

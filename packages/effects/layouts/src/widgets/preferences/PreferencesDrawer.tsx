@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 
 import { PreferencesAppearance } from './modules/appearance';
+import { PreferencesGeneral } from './modules/general';
 import { PreferencesLayout } from './modules/layout';
 import { PreferencesShortcutKey } from './modules/shortcutkey';
 
@@ -73,12 +74,7 @@ export const PreferencesDrawer = (props: Props) => {
         return <PreferencesAppearance />;
       }
       case 'general': {
-        return (
-          <div className="p-4">
-            <h3 className="text-lg font-medium">通用设置</h3>
-            <p>在这里配置语言、自动更新等通用设置</p>
-          </div>
-        );
+        return <PreferencesGeneral />;
       }
       case 'layout': {
         return <PreferencesLayout />;

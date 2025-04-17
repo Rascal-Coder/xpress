@@ -100,8 +100,7 @@ const defaultPreferences: Preferences = {
   },
   transition: {
     enable: true,
-    loading: true,
-    name: 'fade-slide',
+    name: 'left',
     progress: true,
   },
   widget: {

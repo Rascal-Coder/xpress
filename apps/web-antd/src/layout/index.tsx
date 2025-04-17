@@ -2,6 +2,8 @@ import { CircleHelp, MdiGithub } from '@xpress/icons';
 import { BasicLayout, UserDropdown } from '@xpress/layouts';
 import { resetAllStores, useAccessStore } from '@xpress/stores';
 import { openWindow } from '@xpress/utils';
+import { useWatermark } from '@xpress-core/hooks';
+import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { useEffect } from 'react';
 
@@ -9,6 +11,21 @@ import { baseUrl } from '#/constants/baseurl';
 import router, { generateMenuItems } from '#/router';
 
 function Layout() {
+  const { preferences } = usePreferencesContext();
+  const { updateWatermark, destroyWatermark } = useWatermark();
+  useEffect(() => {
+    if (preferences.app.watermark) {
+      updateWatermark({
+        content: preferences.app.name,
+      });
+    } else {
+      destroyWatermark();
+    }
+    return () => {
+      destroyWatermark();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preferences.app.watermark]);
   const menus = [
     {
       handler: () => {

@@ -45,6 +45,8 @@ export const Tabbar = ({ router }: { router: Router }) => {
 
   const [menus, setMenus] = useState<IContextMenuItem[]>(initialMenus);
 
+  const [moreMenus, setMoreMenus] = useState<IContextMenuItem[]>([]);
+
   const getContextMenus = useCallback(() => {
     return currentTab ? createContextMenus(currentTab) : menus;
   }, [currentTab, createContextMenus, menus]);
@@ -56,17 +58,10 @@ export const Tabbar = ({ router }: { router: Router }) => {
     }
   };
 
-  const [moreMenus, setMoreMenus] = useState<IContextMenuItem[]>([]);
-
   useEffect(() => {
     if (currentTab) {
       const menus = createContextMenus(currentTab);
       setMenus(menus);
-    }
-  }, [currentTab, createContextMenus]);
-
-  useEffect(() => {
-    if (currentTab) {
       const updatedMenus = createContextMenus(currentTab).map((item) => ({
         ...item,
         label: item.text,
@@ -74,7 +69,7 @@ export const Tabbar = ({ router }: { router: Router }) => {
       }));
       setMoreMenus(updatedMenus);
     }
-  }, [createContextMenus, currentTab]);
+  }, [currentTab, createContextMenus]);
 
   return (
     <>

@@ -1,3 +1,4 @@
+export * from './useAnimation';
 export * from './useBreakpoints';
 export * from './useControlledState';
 export * from './useCssVar';
@@ -10,4 +11,5 @@ export * from './useNamespace';
 export * from './usePresseHold';
 export * from './useScrollLock';
 export * from './useShow';
+export * from './useWatermark';
 export * from 'ahooks';

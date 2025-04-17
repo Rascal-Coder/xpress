@@ -28,7 +28,7 @@ const routes: RouteConfig[] = [
         meta: {
           title: '工作台',
           icon: 'carbon:workspace',
-          // keepAlive: true,
+          keepAlive: true,
           // affixTab: true,
         },
       },
