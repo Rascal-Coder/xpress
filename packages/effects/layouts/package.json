@@ -37,7 +37,8 @@
     "react-copy-to-clipboard": "catalog:",
     "react-hotkeys-hook": "catalog:",
     "react-router": "catalog:",
-    "react-router-dom": "catalog:"
+    "react-router-dom": "catalog:",
+    "version-polling": "^1.3.3"
   },
   "devDependencies": {
     "@types/react": "catalog:"

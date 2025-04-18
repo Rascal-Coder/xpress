@@ -57,6 +57,14 @@ export const Theme = () => {
         </div>
       ))}
       <SwitchItem
+        checked={preferences.theme.enableThemeAnimation}
+        onChange={(checked) =>
+          updatePreferences({ theme: { enableThemeAnimation: checked } })
+        }
+      >
+        开启主题切换动画
+      </SwitchItem>
+      <SwitchItem
         checked={preferences.theme.semiDarkSidebar}
         className="mt-6"
         disabled={theme === 'dark'}

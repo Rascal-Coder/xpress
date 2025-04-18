@@ -15,8 +15,10 @@ async function checkVersion() {
       cache: 'no-cache',
       method: 'HEAD',
     });
-    const newEtag = res.headers.get('etag');
-
+    const newEtag = res.headers.get('etag') || res.headers.get('last-modified');
+    if (!newEtag) {
+      return;
+    }
     // 首次运行时不提示更新
     if (!oldEtag) {
       oldEtag = newEtag;

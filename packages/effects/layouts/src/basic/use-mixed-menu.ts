@@ -134,7 +134,7 @@ export function useMixedMenu(router: Router) {
     const currentPath =
       (curRoute?.meta?.activePath as string) ?? curRoute?.pathname;
     calcSideMenus(currentPath);
-    if (rootMenuPath) {
+    if (rootMenuPath && preferences.app.layout === 'mixed-nav') {
       defaultSubMap.set(rootMenuPath, currentPath);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -26,8 +26,8 @@ export const Extra = () => {
       )}
       {preferences.app.enableCheckUpdates && (
         <CheckUpdates
-          checkUpdatesInterval={preferences.app.checkUpdatesInterval}
-          checkUpdateUrl={preferences.app.checkUpdateUrl}
+        // checkUpdatesInterval={preferences.app.checkUpdatesInterval}
+        // checkUpdateUrl={preferences.app.checkUpdateUrl}
         />
       )}
     </>
