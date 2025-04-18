@@ -32,11 +32,11 @@ export const CheckUpdates = ({
     workerRef.current.addEventListener('message', handleWorkerMessage);
 
     // 启动检查
-    workerRef.current.postMessage({
-      type: 'start',
-      interval: checkUpdatesInterval,
-      url: checkUpdateUrl,
-    });
+    // workerRef.current.postMessage({
+    //   type: 'start',
+    //   interval: checkUpdatesInterval,
+    //   url: checkUpdateUrl,
+    // });
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
