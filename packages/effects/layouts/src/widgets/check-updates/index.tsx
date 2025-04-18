@@ -77,9 +77,9 @@ export const CheckUpdates = ({
       onModalCancel={() => setIsModalOpen(false)}
       onModalConfirm={handleConfirm}
       setIsOpen={setIsModalOpen}
-      title="版本更新"
+      title="新版本可用"
     >
-      <div className="p-4">检测到新版本，是否立即更新？</div>
+      <div className="p-4">点击刷新以获取最新版本</div>
     </Modal>
   );
 };
