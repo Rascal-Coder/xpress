@@ -1,123 +1,85 @@
-import { Modal as UpdateNoticeModal } from '@xpress-core/popup-ui';
+import { Modal } from '@xpress-core/popup-ui';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-interface Props {
-  // 轮训时间，分钟
+interface CheckUpdatesProps {
+  /** 轮询时间，单位：分钟，默认1分钟 */
   checkUpdatesInterval?: number;
-  // 检查更新的地址
+  /** 检查更新的地址 */
   checkUpdateUrl?: string;
 }
 
 export const CheckUpdates = ({
   checkUpdatesInterval = 1,
   checkUpdateUrl = '/',
-}: Props) => {
-  const [currentVersionTag, setCurrentVersionTag] = useState('');
-  const [lastVersionTag, setLastVersionTag] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
-  const isCheckingUpdates = useRef(false);
-  const stop = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-    }
-  };
+}: CheckUpdatesProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const workerRef = useRef<null | Worker>(null);
 
-  const handleNotice = (versionTag: string) => {
-    setCurrentVersionTag(versionTag);
-    setIsOpen(true);
-  };
-  const getVersionTag = async () => {
-    try {
-      if (
-        location.hostname === 'localhost' ||
-        location.hostname === '127.0.0.1'
-      ) {
-        return null;
+  const handleWorkerMessage = useCallback((e: MessageEvent) => {
+    if (e.data.type === 'version-update') {
+      setIsModalOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    // 创建 Worker 实例
+    workerRef.current = new Worker(
+      new URL('versionChecker.worker.ts', import.meta.url),
+    );
+
+    // 添加消息监听
+    workerRef.current.addEventListener('message', handleWorkerMessage);
+
+    // 启动检查
+    workerRef.current.postMessage({
+      type: 'start',
+      interval: checkUpdatesInterval,
+      url: checkUpdateUrl,
+    });
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        workerRef.current?.postMessage({ type: 'stop' });
+      } else {
+        workerRef.current?.postMessage({
+          type: 'start',
+          interval: checkUpdatesInterval,
+          url: checkUpdateUrl,
+        });
       }
-      const response = await fetch(checkUpdateUrl, {
-        cache: 'no-cache',
-        method: 'HEAD',
-      });
+    };
 
-      return (
-        response.headers.get('etag') || response.headers.get('last-modified')
-      );
-    } catch (error) {
-      console.error('Failed to fetch version tag', error);
-      return null;
-    }
-  };
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
-  const checkForUpdates = async () => {
-    const versionTag = await getVersionTag();
-    if (!versionTag) return;
-
-    if (!lastVersionTag) {
-      setLastVersionTag(versionTag);
-      return;
-    }
-
-    if (lastVersionTag !== versionTag) {
-      stop();
-      handleNotice(versionTag);
-    }
-  };
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (workerRef.current) {
+        workerRef.current.postMessage({ type: 'stop' });
+        workerRef.current.removeEventListener('message', handleWorkerMessage);
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
+    };
+  }, [checkUpdatesInterval, checkUpdateUrl, handleWorkerMessage]);
 
   const handleConfirm = () => {
-    setLastVersionTag(currentVersionTag);
+    setIsModalOpen(false);
     window.location.reload();
   };
 
-  const start = () => {
-    if (checkUpdatesInterval <= 0) return;
-    timerRef.current = setInterval(
-      checkForUpdates,
-      checkUpdatesInterval * 60 * 1000,
-    );
-  };
-
-  const handleVisibilityChange = () => {
-    if (document.hidden) {
-      stop();
-    } else {
-      if (!isCheckingUpdates.current) {
-        isCheckingUpdates.current = true;
-        checkForUpdates().finally(() => {
-          isCheckingUpdates.current = false;
-          start();
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    start();
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      stop();
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
-    <UpdateNoticeModal
+    <Modal
       cancelText="取消"
-      centered
-      closeClass="top-1"
       confirmText="刷新"
-      contentClass="px-8 min-h-10"
-      footerClass="border-none mb-3 mr-3"
-      headerClass="border-none pt-3"
-      isOpen={isOpen}
-      modal={true}
-      onModalCancel={() => setIsOpen(false)}
+      isOpen={isModalOpen}
+      onModalCancel={() => setIsModalOpen(false)}
       onModalConfirm={handleConfirm}
-      setIsOpen={setIsOpen}
-      title="新版本可用"
+      setIsOpen={setIsModalOpen}
+      title="版本更新"
     >
-      点击刷新以获取最新版本
-    </UpdateNoticeModal>
+      <div className="p-4">检测到新版本，是否立即更新？</div>
+    </Modal>
   );
 };

@@ -310,11 +310,6 @@ function MenuComponent(props: Props) {
     items,
   ]);
 
-  // 移除无用的副作用
-  // useEffect(() => {
-  //   menuRef.current;
-  // }, []);
-
   const menuClassName = useMemo(() => {
     return cn(
       theme,
