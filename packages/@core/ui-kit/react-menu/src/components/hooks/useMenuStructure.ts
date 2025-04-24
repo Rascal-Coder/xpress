@@ -34,6 +34,17 @@ export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
       return menuChildren.map((child) => createSubMenuView(child));
     }
 
+    // 获取父级路径数组（剔除最后一个部分）
+    function getParentPathsArray(path?: string): string[] {
+      if (!path) return [];
+      // 先按/分割，过滤空字符串，只保留前面的部分，然后为每个路径段添加/前缀
+      const parts = path.split('/').filter(Boolean);
+      // 移除最后一个元素，为前面的部分添加/前缀
+      return parts.length > 1
+        ? parts.slice(0, -1).map((part) => `/${part}`)
+        : [];
+    }
+
     function handleChild(
       child: React.ReactElement,
       parentPath: string,
@@ -50,8 +61,18 @@ export function useMenuStructure(props: UseMenuStructureProps): MenuStructure {
         ? [...parentPaths, path] // 包含当前路径
         : [path]; // 如果是根节点，只包含自身
       if (isSubMenu) {
+        const parentPathsArray = getParentPathsArray(defaultActive);
+
+        // 检查两个数组是否有重叠的元素，且currentParentPaths长度不超过parentPathsArray长度
+        const hasOverlap =
+          parentPathsArray.some((path) =>
+            currentParentPaths.some((currentPath) =>
+              currentPath.includes(path),
+            ),
+          ) && currentParentPaths.length <= parentPathsArray.length;
+
         subMenus[path] = {
-          active: currentParentPaths.includes(defaultActive),
+          active: hasOverlap,
           handleClick: handleSubMenuClick,
           handleMouseleave: () => {},
           mouseInChild,

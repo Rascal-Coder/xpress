@@ -48,14 +48,10 @@ function SubMenu({
   const opened = useMemo(() => {
     return rootMenu?.openedMenus.includes(path);
   }, [path, rootMenu?.openedMenus]);
-
-  const active = useMemo(() => {
-    const hasActiveItem = Object.values(rootMenu.items).some(
-      (item) => item.parentPaths.includes(path) && item.active,
-    );
-    const hasActiveSubMenu = currentSubMenu?.active;
-    return hasActiveItem || hasActiveSubMenu;
-  }, [currentSubMenu?.active, path, rootMenu.items]);
+  const active = useMemo(
+    () => currentSubMenu?.active,
+    [currentSubMenu?.active],
+  );
 
   const currentLevel = useMemo(() => {
     return parentPaths.length;
@@ -171,31 +167,61 @@ function SubMenu({
     }
   }, [isMobile]);
   return (
-    <li
-      className={cn(
-        b(),
-        is('opened', opened),
-        is('active', active),
-        is('disabled', disabled),
-        className,
-      )}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => handleMouseleave()}
-      ref={subMenuRef}
-    >
-      {/* mode === 'horizontal' || (mode === 'vertical' && collapse) */}
-      {rootMenu.isMenuPopup ? (
-        <XpressHoverCard
-          contentClass={cn(
-            rootMenu.theme,
-            nsMenu.e('popup-container'),
-            is(rootMenu.theme, true),
-            opened ? '' : 'hidden',
-          )}
-          contentProps={contentProps}
-          open={isHovering}
-          openDelay={0}
-          trigger={
+    <>
+      <li
+        className={cn(
+          b(),
+          is('opened', opened),
+          is('active', active),
+          is('disabled', disabled),
+          className,
+        )}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={() => handleMouseleave()}
+        ref={subMenuRef}
+      >
+        {/* mode === 'horizontal' || (mode === 'vertical' && collapse) */}
+        {rootMenu.isMenuPopup ? (
+          <XpressHoverCard
+            contentClass={cn(
+              rootMenu.theme,
+              nsMenu.e('popup-container'),
+              is(rootMenu.theme, true),
+              opened ? '' : 'hidden',
+            )}
+            contentProps={contentProps}
+            open={isHovering}
+            openDelay={0}
+            trigger={
+              <SubMenuContent
+                className={cn(is('active', active))}
+                icon={menuIcon}
+                isHovering={isHovering}
+                isMenuMore={isSubMenuMore}
+                isTopLevelMenuSubMenu={isFirstLevel}
+                level={currentLevel}
+                menuItemClick={handleClick}
+                path={path}
+                title={title}
+              />
+            }
+          >
+            <div
+              className={cn(nsMenu.e('popup'), nsMenu.is(mode, true))}
+              onFocus={(e) => handleMouseEnter(e, 100)}
+              onMouseEnter={(e) => handleMouseEnter(e, 100)}
+              onMouseLeave={() => handleMouseleave()}
+            >
+              <ul
+                className={cn(nsMenu.b(), is('rounded', rounded))}
+                style={subMenuStyle}
+              >
+                {children}
+              </ul>
+            </div>
+          </XpressHoverCard>
+        ) : (
+          <>
             <SubMenuContent
               className={cn(is('active', active))}
               icon={menuIcon}
@@ -206,49 +232,21 @@ function SubMenu({
               menuItemClick={handleClick}
               path={path}
               title={title}
-            />
-          }
-        >
-          <div
-            className={cn(nsMenu.e('popup'), nsMenu.is(mode, true))}
-            onFocus={(e) => handleMouseEnter(e, 100)}
-            onMouseEnter={(e) => handleMouseEnter(e, 100)}
-            onMouseLeave={() => handleMouseleave()}
-          >
-            <ul
-              className={cn(nsMenu.b(), is('rounded', rounded))}
-              style={subMenuStyle}
             >
-              {children}
-            </ul>
-          </div>
-        </XpressHoverCard>
-      ) : (
-        <>
-          <SubMenuContent
-            className={cn(is('active', active))}
-            icon={menuIcon}
-            isHovering={isHovering}
-            isMenuMore={isSubMenuMore}
-            isTopLevelMenuSubMenu={isFirstLevel}
-            level={currentLevel}
-            menuItemClick={handleClick}
-            path={path}
-            title={title}
-          >
-            {content}
-          </SubMenuContent>
-          <CollapseTransition show={opened}>
-            <ul
-              className={cn(nsMenu.b(), is('rounded', rounded))}
-              style={subMenuStyle}
-            >
-              {children}
-            </ul>
-          </CollapseTransition>
-        </>
-      )}
-    </li>
+              {content}
+            </SubMenuContent>
+            <CollapseTransition show={opened}>
+              <ul
+                className={cn(nsMenu.b(), is('rounded', rounded))}
+                style={subMenuStyle}
+              >
+                {children}
+              </ul>
+            </CollapseTransition>
+          </>
+        )}
+      </li>
+    </>
   );
 }
 

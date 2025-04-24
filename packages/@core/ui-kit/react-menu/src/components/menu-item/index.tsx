@@ -1,6 +1,7 @@
 import type { MenuItemProps } from '../types';
 
 import { useNamespace } from '@xpress-core/hooks';
+import { usePreferencesContext } from '@xpress-core/preferences';
 import { XpressIcon, XpressTooltip } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
@@ -24,7 +25,7 @@ function MenuItem(props: Props) {
   const active = useMemo(() => {
     return rootMenu?.activePath === path;
   }, [rootMenu?.activePath, path]);
-
+  const { isDark } = usePreferencesContext();
   const menuIcon = useMemo(() => {
     return active ? activeIcon || icon : icon;
   }, [active, activeIcon, icon]);
@@ -57,7 +58,6 @@ function MenuItem(props: Props) {
     isTopLevelMenuItem,
     title,
   ]);
-
   /**
    * 菜单项点击事件
    */
@@ -84,7 +84,9 @@ function MenuItem(props: Props) {
         className,
       )}
       onClick={handleClick}
-      onMouseDown={(e) => ripple.create(e as unknown as MouseEvent, 'dark')}
+      onMouseDown={(e) =>
+        ripple.create(e as unknown as MouseEvent, isDark ? 'dark' : 'light')
+      }
       role="menuitem"
     >
       {showTooltip ? (

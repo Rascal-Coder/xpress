@@ -398,7 +398,6 @@ $namespace: xpress;
   fill: var(--menu-item-color);
   //  div[data-state='open'] >
   &.is-active {
-    .#{$namespace}-sub-menu-content,
     > .#{$namespace}-sub-menu-content {
       // font-weight: 500;
       color: var(--menu-submenu-active-color);

@@ -181,7 +181,6 @@ function MenuComponent(props: Props) {
       if (!path || !parentPaths) {
         return;
       }
-
       onSelect?.(path, parentPaths);
     },
     [mode, collapse, onSelect],
