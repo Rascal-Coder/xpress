@@ -8,7 +8,7 @@ import {
   useLayoutHeaderStyle,
   useShow,
 } from '@xpress-core/hooks';
-import { Menu } from '@xpress-core/icons';
+import { PanelLeft } from '@xpress-core/icons';
 import { XpressIconButton } from '@xpress-core/shadcn-ui';
 import { cn } from '@xpress-core/shared/utils';
 
@@ -590,10 +590,10 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
         toggleButton={
           showHeaderToggleButton && (
             <XpressIconButton
-              className="my-0 ml-2 mr-1 rounded-md"
+              className="border-border my-0 ml-2 mr-1 rounded-md border"
               onClick={handleHeaderToggle}
             >
-              <Menu className="size-4" />
+              <PanelLeft className="size-4" />
             </XpressIconButton>
           )
         }
