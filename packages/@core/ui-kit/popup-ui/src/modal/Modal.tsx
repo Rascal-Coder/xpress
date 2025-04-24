@@ -1,4 +1,4 @@
-import { useIsMobile } from '@xpress-core/hooks';
+// import { useIsMobile } from '@xpress-core/hooks';
 import { Expand, Shrink } from '@xpress-core/icons';
 import {
   Dialog,
@@ -101,11 +101,11 @@ export const Modal = ({
   const getAppendTo = useMemo(() => {
     return appendToMain ? `#${ELEMENT_ID_MAIN_CONTENT}` : undefined;
   }, [appendToMain]);
-  const { isMobile } = useIsMobile();
+  // const { isMobile } = useIsMobile();
 
   const shouldFullscreen = useMemo(() => {
-    return (isFullscreen && showHeader) || isMobile;
-  }, [isFullscreen, showHeader, isMobile]);
+    return isFullscreen && showHeader;
+  }, [isFullscreen, showHeader]);
 
   const shouldDraggable = useMemo(() => {
     return draggable && !shouldFullscreen && showHeader;

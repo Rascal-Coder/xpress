@@ -105,7 +105,11 @@ export function useMixedMenu(router: Router) {
    * @param parentsPath 父级路径
    */
   const handleMenuOpen = (key: string, parentsPath: string[]) => {
-    if (parentsPath.length <= 1 && preferences.sidebar.autoActivateChild) {
+    if (
+      parentsPath.length <= 1 &&
+      preferences.sidebar.autoActivateChild &&
+      preferences.app.layout === 'mixed-nav'
+    ) {
       navigate(
         defaultSubMap.has(key) ? (defaultSubMap.get(key) as string) : key,
       );

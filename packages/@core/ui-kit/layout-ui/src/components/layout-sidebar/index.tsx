@@ -47,6 +47,7 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   logo,
   marginTop = 0,
   mixedWidth = 70,
+  openMaskMenu,
   paddingTop = 0,
   show = true,
   showCollapseButton = true,
@@ -246,31 +247,32 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   return (
     <>
       {hiddenSidebarNode}
-      {domVisible && (
-        <aside
-          className={`fixed left-0 top-0 h-full transition-all duration-200 ${theme} ${
-            isSidebarMixed
-              ? 'bg-sidebar-deep'
-              : 'bg-sidebar border-border border-r'
-          }`}
-          onMouseEnter={handleMouseenter}
-          onMouseLeave={handleMouseleave}
-          style={style}
-        >
-          {fixedButtonNode}
-          {logoNode}
-          <XpressScrollbar
-            shadow={true}
-            shadowBorder={true}
-            style={contentStyle}
+      {domVisible ||
+        (openMaskMenu && (
+          <aside
+            className={`fixed left-0 top-0 h-full transition-all duration-200 ${theme} ${
+              isSidebarMixed
+                ? 'bg-sidebar-deep'
+                : 'bg-sidebar border-border border-r'
+            }`}
+            onMouseEnter={handleMouseenter}
+            onMouseLeave={handleMouseleave}
+            style={style}
           >
-            {children}
-          </XpressScrollbar>
-          <div style={collapseStyle} />
-          {collapseButtonNode}
-          {mixedSidebarNode}
-        </aside>
-      )}
+            {fixedButtonNode}
+            {logoNode}
+            <XpressScrollbar
+              shadow={true}
+              shadowBorder={true}
+              style={contentStyle}
+            >
+              {children}
+            </XpressScrollbar>
+            <div style={collapseStyle} />
+            {collapseButtonNode}
+            {mixedSidebarNode}
+          </aside>
+        ))}
     </>
   );
 };

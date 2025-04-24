@@ -524,12 +524,15 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollY, headerMode]);
-
+  const openMaskMenu = useRef(false);
   /**
    * 处理遮罩点击事件
    */
   const handleClickMask = () => {
     setSidebarCollapse(true);
+    if (isMobile) {
+      openMaskMenu.current = !openMaskMenu.current;
+    }
   };
 
   /**
@@ -537,6 +540,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
    */
   const handleHeaderToggle = () => {
     if (isMobile) {
+      openMaskMenu.current = !openMaskMenu.current;
       setSidebarCollapse(false);
     } else {
       onToggleSidebar?.();
@@ -566,6 +570,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
       logo={logo}
       marginTop={sidebarMarginTop}
       mixedWidth={sidebarMixedWidth}
+      openMaskMenu={openMaskMenu.current}
       show={showSidebar}
       showLogo={showLogo}
       theme={sidebarTheme}

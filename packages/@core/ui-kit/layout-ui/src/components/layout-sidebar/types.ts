@@ -29,6 +29,8 @@ export interface LayoutSidebarProps {
   marginTop?: number;
   /** 混合模式下的宽度 */
   mixedWidth?: number;
+  /** 是否打开蒙版菜单 */
+  openMaskMenu: boolean;
   /** 上内边距 */
   paddingTop?: number;
   /** 是否显示 */
