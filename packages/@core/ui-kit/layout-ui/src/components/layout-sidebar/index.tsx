@@ -247,32 +247,31 @@ const LayoutSidebar: FC<LayoutSidebarProps> = ({
   return (
     <>
       {hiddenSidebarNode}
-      {domVisible ||
-        (openMaskMenu && (
-          <aside
-            className={`fixed left-0 top-0 h-full transition-all duration-200 ${theme} ${
-              isSidebarMixed
-                ? 'bg-sidebar-deep'
-                : 'bg-sidebar border-border border-r'
-            }`}
-            onMouseEnter={handleMouseenter}
-            onMouseLeave={handleMouseleave}
-            style={style}
+      {
+        <aside
+          className={`fixed left-0 top-0 h-full transition-all duration-200 ${theme} ${
+            isSidebarMixed
+              ? 'bg-sidebar-deep'
+              : 'bg-sidebar border-border border-r'
+          } ${domVisible || openMaskMenu ? '' : 'hidden'}`}
+          onMouseEnter={handleMouseenter}
+          onMouseLeave={handleMouseleave}
+          style={style}
+        >
+          {fixedButtonNode}
+          {logoNode}
+          <XpressScrollbar
+            shadow={true}
+            shadowBorder={true}
+            style={contentStyle}
           >
-            {fixedButtonNode}
-            {logoNode}
-            <XpressScrollbar
-              shadow={true}
-              shadowBorder={true}
-              style={contentStyle}
-            >
-              {children}
-            </XpressScrollbar>
-            <div style={collapseStyle} />
-            {collapseButtonNode}
-            {mixedSidebarNode}
-          </aside>
-        ))}
+            {children}
+          </XpressScrollbar>
+          <div style={collapseStyle} />
+          {collapseButtonNode}
+          {mixedSidebarNode}
+        </aside>
+      }
     </>
   );
 };

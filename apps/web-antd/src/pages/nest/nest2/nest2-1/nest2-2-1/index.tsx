@@ -1,14 +1,43 @@
 import { XpressPage } from '@xpress/common-ui';
-import { SvgComingSoonIcon } from '@xpress/icons';
+import { Card, CardContent } from '@xpress-core/shadcn-ui';
 
 import React from 'react';
 
 const Nest2_2_1: React.FC = () => {
   return (
     <XpressPage autoContentHeight={true}>
-      <div className="flex size-full flex-col items-center justify-center duration-300">
-        <SvgComingSoonIcon className="h-1/4 w-1/4" />
-        <div className="flex-col-center mt-4 text-2xl">菜单2-2-1</div>
+      <div className="flex size-full flex-col items-start p-8">
+        <Card className="w-full border-none bg-[#0EA5E9]/10">
+          <CardContent className="p-8">
+            <div className="text-lg font-medium">/nest</div>
+            <div className="mt-4">
+              <Card className="w-full border-none bg-[#8B5CF6]/20">
+                <CardContent className="p-8">
+                  <div className="text-lg font-medium">菜单2</div>
+                  <div className="mt-4">
+                    <Card className="w-full border-none bg-[#F472B6]/20">
+                      <CardContent className="p-8">
+                        <div className="text-lg font-medium">菜单2-2</div>
+                        <div className="mt-4">
+                          <Card className="border-none bg-[#EC4899] text-white">
+                            <CardContent className="p-8">
+                              <h1 className="text-2xl font-medium">
+                                菜单2-2-1
+                              </h1>
+                              <div className="mt-2 text-sm opacity-70">
+                                /nest/nest2/nest2-2/nest2-2-1
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </XpressPage>
   );

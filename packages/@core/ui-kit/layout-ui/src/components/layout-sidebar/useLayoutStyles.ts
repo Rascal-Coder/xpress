@@ -1,3 +1,6 @@
+import { useIsMobile } from '@xpress-core/hooks';
+import { usePreferencesContext } from '@xpress-core/preferences';
+
 import { useMemo } from 'react';
 
 interface LayoutStylesOptions {
@@ -37,9 +40,22 @@ export function useLayoutStyles({
   width = 200,
   zIndex = 0,
 }: LayoutStylesOptions) {
-  const safeWidth = width ?? 200;
   const safeHeaderHeight = headerHeight ?? 48;
-
+  const { isMobile } = useIsMobile();
+  const { preferences } = usePreferencesContext();
+  const _width = useMemo(() => {
+    if (isMobile) {
+      return preferences.sidebar.width;
+    }
+    return width;
+  }, [isMobile, preferences.sidebar.width, width]);
+  const marginLeft = useMemo(() => {
+    if (isMobile) {
+      return 0;
+    }
+    return show ? 0 : `-${_width}px`;
+  }, [isMobile, show, _width]);
+  const safeWidth = _width ?? 200;
   // 基础宽度计算逻辑
   const baseWidthStyle = useMemo(() => {
     const getWidthValue = (isHiddenDom: boolean): string => {
@@ -51,26 +67,25 @@ export function useLayoutStyles({
 
     return (isHiddenDom: boolean) => {
       const widthValue = getWidthValue(isHiddenDom);
-
       return {
         ...(widthValue === '0px' ? { overflow: 'hidden' } : {}),
         flex: `0 0 ${widthValue}`,
-        marginLeft: show ? 0 : `-${widthValue}`,
+        marginLeft,
         maxWidth: widthValue,
         minWidth: widthValue,
         width: widthValue,
       };
     };
   }, [
+    expandOnHovering,
+    expandOnHover,
     safeWidth,
     isSidebarMixed,
     fixedExtra,
     extraVisible,
     extraWidth,
-    expandOnHovering,
-    expandOnHover,
     collapseWidth,
-    show,
+    marginLeft,
   ]);
 
   // 隐藏侧边栏样式

@@ -42,17 +42,17 @@ export function AuthGuard({ router, children }: AuthGuardProps) {
       if (curRoute?.meta?.ignoreAccess) {
         return;
       }
-
       // 如果不在登录页且需要权限，则重定向到登录页
       if (location.pathname !== LOGIN_PATH) {
         const redirectPath =
-          fullPath === DEFAULT_HOME_PATH
-            ? LOGIN_PATH
+          fullPath === '/'
+            ? `${LOGIN_PATH}?redirect=${encodeURIComponent(DEFAULT_HOME_PATH)}`
             : `${LOGIN_PATH}?redirect=${encodeURIComponent(fullPath)}`;
 
         navigate(redirectPath, { replace: true });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     token,
     location.pathname,

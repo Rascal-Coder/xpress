@@ -539,6 +539,7 @@ const XpressLayoutInner: FC<XpressLayoutProps> = ({
    * 处理头部切换按钮点击事件
    */
   const handleHeaderToggle = () => {
+    openMaskMenu.current = false;
     if (isMobile) {
       openMaskMenu.current = !openMaskMenu.current;
       setSidebarCollapse(false);
