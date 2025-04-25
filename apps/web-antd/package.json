@@ -44,6 +44,7 @@
     "react-helmet-async": "catalog:",
     "react-router-dom": "catalog:",
     "react-toastify": "catalog:",
+    "recharts": "^2.15.3",
     "zustand": "catalog:"
   },
   "devDependencies": {
