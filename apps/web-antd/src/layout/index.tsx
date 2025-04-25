@@ -69,10 +69,12 @@ function Layout() {
       router={router}
       userDropdown={
         <UserDropdown
+          avatarSrc="/images/avatar.png"
+          description="rascal-coder@163.com"
           menus={menus}
           onLogout={handleLogout}
           tagText="Pro"
-          text="Ann"
+          text="Rascal-Coder"
         />
       }
     />

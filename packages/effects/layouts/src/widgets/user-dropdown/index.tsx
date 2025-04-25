@@ -25,7 +25,11 @@ export function UserDropdown({
   tagText,
   menus,
   onLogout,
+  avatarSrc,
+  description,
 }: {
+  avatarSrc: string;
+  description: string;
   menus: {
     handler: () => void;
     icon: Icon;
@@ -81,11 +85,7 @@ export function UserDropdown({
         <DropdownMenuTrigger asChild>
           <div className="hover:bg-accent ml-1 mr-2 cursor-pointer rounded-full p-1.5">
             <div className="hover:text-accent-foreground flex-center">
-              <XpressAvatar
-                className="size-8"
-                dot
-                src="https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp"
-              />
+              <XpressAvatar className="size-8" dot src={avatarSrc} />
             </div>
           </div>
         </DropdownMenuTrigger>
@@ -99,7 +99,7 @@ export function UserDropdown({
               className="size-12"
               dot
               dotClass="bottom-0 right-1 border-2 size-4 bg-green-500"
-              src="https://unpkg.com/@vbenjs/static-source@0.1.7/source/avatar-v1.webp"
+              src={avatarSrc}
             />
             <div className="ml-2 w-full">
               <div className="text-foreground mb-1 flex items-center text-sm font-medium">
@@ -109,7 +109,7 @@ export function UserDropdown({
                 )}
               </div>
               <div className="text-muted-foreground text-xs font-normal">
-                ann.vben@gmail.com
+                {description}
               </div>
             </div>
           </DropdownMenuLabel>

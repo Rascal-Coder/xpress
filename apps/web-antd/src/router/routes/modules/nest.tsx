@@ -14,7 +14,7 @@ const routes: RouteConfig[] = [
         component: () => import('#/pages/nest/nest1'),
         meta: {
           title: '菜单1',
-          keepAlive: true,
+          // keepAlive: true,
         },
       },
       {
@@ -30,7 +30,7 @@ const routes: RouteConfig[] = [
             component: () => import('#/pages/nest/nest2/nest2-1'),
             meta: {
               title: '菜单2-1',
-              keepAlive: true,
+              // keepAlive: true,
             },
           },
           {
@@ -46,7 +46,7 @@ const routes: RouteConfig[] = [
                 component: () => import('#/pages/nest/nest2/nest2-1/nest2-2-1'),
                 meta: {
                   title: '菜单2-2-1',
-                  keepAlive: true,
+                  // keepAlive: true,
                 },
               },
               {
@@ -54,7 +54,7 @@ const routes: RouteConfig[] = [
                 component: () => import('#/pages/nest/nest2/nest2-2/nest2-2-2'),
                 meta: {
                   title: '菜单2-2-2',
-                  keepAlive: true,
+                  // keepAlive: true,
                 },
               },
             ],

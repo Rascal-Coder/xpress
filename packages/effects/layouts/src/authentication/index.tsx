@@ -10,6 +10,16 @@ import { Toolbar } from './Toolbar';
 
 import './style.css';
 
+// 定义SVG模块的类型
+type SvgModule = {
+  default: string;
+};
+
+// 导入所有SVG图标
+const iconModules = import.meta.glob<SvgModule>('./icons/*.svg', {
+  eager: true,
+});
+
 // 使用React.memo包装IconCloud组件的使用
 const MemoizedIconCloud = React.memo(({ images }: { images: string[] }) => (
   <IconCloud images={images} />
@@ -34,7 +44,7 @@ export const Authentication = ({
   toolbarList?: string[];
 }) => {
   const { isDark, preferences } = usePreferencesContext();
-  // TODO: 使用本地的图标png
+
   const slugs = [
     'typescript',
     'javascript',
@@ -64,21 +74,24 @@ export const Authentication = ({
     'sonarqube',
     'figma',
   ];
-  const images = slugs.map(
-    (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`,
-  );
 
+  const localImages = slugs
+    .map((slug) => {
+      const module = iconModules[`./icons/${slug}.svg`];
+      return module?.default;
+    })
+    .filter(Boolean) as string[];
   const leftContent = React.useMemo(() => {
     return (
       <>
-        {customSlugs || <MemoizedIconCloud images={images} />}
+        {customSlugs || <MemoizedIconCloud images={localImages} />}
         <div className="text-1xl text-foreground mt-6 font-sans lg:text-2xl">
           {pageTitle}
         </div>
         <div className="dark:text-muted-foreground mt-2">{pageDescription}</div>
       </>
     );
-  }, [customSlugs, images, pageTitle, pageDescription]);
+  }, [customSlugs, localImages, pageTitle, pageDescription]);
 
   return (
     <div
