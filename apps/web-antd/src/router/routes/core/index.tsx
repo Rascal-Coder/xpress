@@ -14,17 +14,6 @@ export const constantRoutes: RouteConfig[] = [
       hideInTab: true,
     },
   },
-  {
-    path: '/register',
-    component: () => import('#/pages/register'),
-    isConstant: true,
-    meta: {
-      title: '注册页',
-      hideInBreadcrumb: true,
-      hideInMenu: true,
-      hideInTab: true,
-    },
-  },
 ];
 
 export const rootRoutes: RouteConfig[] = [
