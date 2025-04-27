@@ -7,11 +7,14 @@ import {
 
 import { ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
 import { theme } from './constants/adapter';
 
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
 // 创建 QueryClient 实例
 const queryClient = new QueryClient();
 
