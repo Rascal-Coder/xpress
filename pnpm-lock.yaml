@@ -405,9 +405,6 @@ catalogs:
     react-hotkeys-hook:
       specifier: ^4.6.1
       version: 4.6.2
-    react-router:
-      specifier: ^7.1.1
-      version: 7.5.0
     react-router-dom:
       specifier: ^7.1.5
       version: 7.5.0
@@ -634,6 +631,9 @@ importers:
       '@rjsf/validator-ajv8':
         specifier: ^5.24.8
         version: 5.24.8(@rjsf/utils@5.24.8(react@18.3.1))
+      '@tanstack/react-query':
+        specifier: ^5.72.2
+        version: 5.72.2(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1097,7 +1097,11 @@ importers:
         specifier: 'catalog:'
         version: 4.0.9
 
-  packages/@core/base/typings: {}
+  packages/@core/base/typings:
+    dependencies:
+      react:
+        specifier: 'catalog:'
+        version: 18.3.1
 
   packages/@core/hooks:
     dependencies:
@@ -1521,9 +1525,6 @@ importers:
       react-hotkeys-hook:
         specifier: 'catalog:'
         version: 4.6.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-router:
-        specifier: 'catalog:'
-        version: 7.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: 'catalog:'
         version: 7.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1636,22 +1637,6 @@ importers:
       '@xpress-core/design':
         specifier: workspace:*
         version: link:../@core/base/design
-
-  packages/types:
-    dependencies:
-      '@xpress-core/typings':
-        specifier: workspace:*
-        version: link:../@core/base/typings
-      react:
-        specifier: 'catalog:'
-        version: 18.3.1
-      react-router-dom:
-        specifier: 'catalog:'
-        version: 7.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: 'catalog:'
-        version: 18.3.20
 
   packages/utils:
     dependencies:
@@ -4219,6 +4204,14 @@ packages:
     resolution: {integrity: sha512-0wDLwCVF5V3x3b1SGXPCDcdsbDHMBe+lkFzBRaHeLvNi+nrrnZ1lA18u+OTWO8iSWU2GxUOCvlXtDuqftc1oiA==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
+
+  '@tanstack/query-core@5.72.2':
+    resolution: {integrity: sha512-fxl9/0yk3mD/FwTmVEf1/H6N5B975H0luT+icKyX566w6uJG0x6o+Yl+I38wJRCaogiMkstByt+seXfDbWDAcA==}
+
+  '@tanstack/react-query@5.72.2':
+    resolution: {integrity: sha512-SVNHzyBUYiis+XiCl+8yiPZmMYei2AKYY94wM/zpvB5l1jxqOo82FQTziSJ4pBi96jtYqvYrTMxWynmbQh3XKw==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tanstack/react-table@8.21.3':
     resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
@@ -12669,6 +12662,13 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.17
 
+  '@tanstack/query-core@5.72.2': {}
+
+  '@tanstack/react-query@5.72.2(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.72.2
+      react: 18.3.1
+
   '@tanstack/react-table@8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/table-core': 8.21.3
@@ -13726,7 +13726,7 @@ snapshots:
   code-inspector-core@0.20.7:
     dependencies:
       '@vue/compiler-dom': 3.5.13
-      chalk: 4.1.1
+      chalk: 4.1.2
       dotenv: 16.4.7
       launch-ide: 1.0.5
       portfinder: 1.0.35
@@ -15810,7 +15810,7 @@ snapshots:
 
   launch-ide@1.0.5:
     dependencies:
-      chalk: 4.1.1
+      chalk: 4.1.2
       dotenv: 16.4.7
 
   lazystream@1.0.1:

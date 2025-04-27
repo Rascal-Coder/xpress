@@ -5,7 +5,7 @@ import { useAccessStore } from '@xpress/stores';
 import { StorageManager } from '@xpress/utils';
 
 import validator from '@rjsf/validator-ajv8';
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { loginApi } from '#/api';
 import Form from '#/components/MForm/src';
@@ -44,7 +44,18 @@ export default function Login() {
   };
 
   const setAccessToken = useAccessStore((state) => state.setAccessToken);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+
+  // 添加登录 mutation
+  const loginMutation = useMutation({
+    mutationFn: loginApi,
+    onSuccess: (res: { accessToken: string }) => {
+      const { accessToken } = res;
+      if (accessToken) {
+        setAccessToken(accessToken);
+      }
+    },
+  });
 
   const transformErrors = (errors: RJSFValidationError[]) => {
     return errors.map((error) => {
@@ -84,9 +95,9 @@ export default function Login() {
     },
     'ui:submitButtonOptions': {
       norender: false,
-      submitText: isLoading ? '登录中...' : '登录',
+      submitText: loginMutation.isPending ? '登录中...' : '登录',
       props: {
-        disabled: isLoading,
+        loading: loginMutation.isPending,
         className: 'mt-6 h-10 w-full bg-primary text-primary-foreground',
       },
     },
@@ -96,33 +107,24 @@ export default function Login() {
 
   // 登录处理函数
   const onSubmit = async (e: any) => {
-    setIsLoading(true);
     const formValues = e.formData;
     try {
-      const res = await loginApi({
+      await loginMutation.mutateAsync({
         username: formValues.username,
         password: formValues.password,
       });
-      const { accessToken } = res;
-      if (accessToken) {
-        setAccessToken(accessToken);
 
-        // 如果勾选了记住密码，将用户凭据保存到存储
-        if (formValues.remember) {
-          storageManager.setItem('remember_username', formValues.username);
-          // 注意：在实际生产环境中，不应该直接存储密码
-          // 这里仅作为示例，实际应用中应该采用更安全的做法
-          storageManager.setItem('remember_password', formValues.password);
-        } else {
-          // 如果未勾选，清除之前保存的凭据
-          storageManager.removeItem('remember_username');
-          storageManager.removeItem('remember_password');
-        }
+      // 如果勾选了记住密码，将用户凭据保存到存储
+      if (formValues.remember) {
+        storageManager.setItem('remember_username', formValues.username);
+        storageManager.setItem('remember_password', formValues.password);
+      } else {
+        // 如果未勾选，清除之前保存的凭据
+        storageManager.removeItem('remember_username');
+        storageManager.removeItem('remember_password');
       }
     } catch (error) {
       console.error('登录失败:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
