@@ -1,4 +1,4 @@
-import { Router } from '@xpress-core/router';
+import { Router } from '@xpress/router';
 
 import { generateAccessRoutes } from './access';
 
@@ -9,4 +9,4 @@ const router = new Router(accessibleRoutes);
 
 export default router;
 
-export * from '@xpress-core/router';
+export * from '@xpress/router';

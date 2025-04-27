@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "@xpress-core/preferences": "workspace:*",
-    "@xpress-core/router": "workspace:*",
     "@xpress-core/shared": "workspace:*",
     "@xpress-core/tabs-ui": "workspace:*",
     "@xpress-core/typings": "workspace:*",
     "nprogress": "catalog:",
+    "react-router-dom": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {

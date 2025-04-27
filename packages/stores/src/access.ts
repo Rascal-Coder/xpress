@@ -1,5 +1,4 @@
-import type { RouteConfig } from '@xpress-core/router';
-import type { MenuRecordRaw } from '@xpress-core/typings';
+import type { MenuRecordRaw, RouteConfig } from '@xpress-core/typings';
 
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';

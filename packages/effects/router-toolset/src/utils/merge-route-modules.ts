@@ -1,4 +1,4 @@
-import type { RouteConfig } from '@xpress-core/router';
+import type { RouteConfig } from '@xpress-core/typings';
 
 // 定义模块类型
 interface RouteModuleType {

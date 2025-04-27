@@ -1,4 +1,6 @@
-import { mergeRouteModules, type RouteConfig } from '@xpress-core/router';
+import type { RouteConfig } from '@xpress-core/typings';
+
+import { mergeRouteModules } from '@xpress/router';
 
 import { constantRoutes, fallBackRoutes, rootRoutes } from './core';
 

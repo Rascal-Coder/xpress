@@ -1,5 +1,5 @@
+import { type Router } from '@xpress/router';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type Router } from '@xpress-core/router';
 import { cn } from '@xpress-core/shared/utils';
 
 import { useMemo } from 'react';

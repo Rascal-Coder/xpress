@@ -1,16 +1,16 @@
-import type { RouteObject } from '@xpress-core/router';
+import type { RouteConfig } from '@xpress-core/typings';
 import type { ReactNode } from 'react';
 
-import type { RouteConfig } from '../types';
-
+import loadable from '@loadable/component';
 import {
   Navigate,
+  type RouteObject,
   useLocation,
   useParams,
   useSearchParams,
-} from '@xpress-core/router';
+} from 'react-router-dom';
 
-import loadable from '@loadable/component';
+import { AuthGuard } from './Auth';
 
 interface FormatRoutesResult {
   flattenRoutes: Map<string, RouteConfig>;
@@ -28,14 +28,14 @@ export function generateReactRoutes(configs?: RouteConfig[]): RouteObject[] {
   return (configs ?? [])
     .filter((configItem) => !configItem.meta?.link)
     .map((configItem) => {
-      const { component, defaultPath, redirect, children } = configItem;
+      const { component, defaultPath, meta, redirect, children } = configItem;
       let element: null | ReactNode = null;
 
       if (redirect) {
         element = <Navigate to={redirect} />;
       } else if (component) {
         const LoadedElement = loadable(component);
-        element = <LoadedElement />;
+        element = <AuthGuard meta={meta}>{<LoadedElement />}</AuthGuard>;
       }
 
       const routeObject: RouteObject = {

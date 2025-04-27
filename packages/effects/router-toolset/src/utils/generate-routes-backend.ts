@@ -3,7 +3,7 @@ import type {
   GenerateMenuAndRoutesOptions,
   RouteConfig,
   RouteRecordStringComponent,
-} from '../types';
+} from '@xpress-core/typings';
 
 import { mapTree } from '@xpress-core/shared/utils';
 

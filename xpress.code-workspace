@@ -61,10 +61,6 @@
       "path": "packages/@core/preferences",
     },
     {
-      "name": "@xpress-core/router",
-      "path": "packages/@core/react-router-toolset",
-    },
-    {
       "name": "@xpress-core/layout-ui",
       "path": "packages/@core/ui-kit/layout-ui",
     },
@@ -103,6 +99,10 @@
     {
       "name": "@xpress/request",
       "path": "packages/effects/request",
+    },
+    {
+      "name": "@xpress/router",
+      "path": "packages/effects/router-toolset",
     },
     {
       "name": "@xpress/icons",

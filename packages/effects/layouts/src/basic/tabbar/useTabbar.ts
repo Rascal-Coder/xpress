@@ -1,6 +1,13 @@
 import type { IContextMenuItem } from '@xpress-core/shadcn-ui';
 import type { TabDefinition } from '@xpress-core/tabs-ui';
 
+import {
+  type Router,
+  useFullPath,
+  useLocation,
+  useNavigate,
+  useRouter,
+} from '@xpress/router';
 import { useTabbar } from '@xpress/stores';
 import {
   ArrowLeftToLine,
@@ -16,13 +23,6 @@ import {
   X,
 } from '@xpress-core/icons';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import {
-  type Router,
-  useFullPath,
-  useLocation,
-  useNavigate,
-  useRouter,
-} from '@xpress-core/router';
 
 import { useEffect, useMemo } from 'react';
 

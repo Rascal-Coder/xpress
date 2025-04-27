@@ -1,8 +1,7 @@
+import { Outlet, type Router, useFullPath, useRouter } from '@xpress/router';
 import { useTabbar } from '@xpress/stores';
 import { type AnimationDirection, useAnimation } from '@xpress-core/hooks';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type Router, useFullPath, useRouter } from '@xpress-core/router';
-import { Outlet } from '@xpress-core/router';
 
 import { motion } from 'framer-motion';
 import { memo } from 'react';

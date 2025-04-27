@@ -14,8 +14,8 @@
     }
   },
   "dependencies": {
-    "@xpress-core/router": "workspace:*",
     "@xpress/constants": "workspace:*",
+    "@xpress/router": "workspace:*",
     "@xpress/stores": "workspace:*",
     "framer-motion": "catalog:",
     "nprogress": "catalog:",

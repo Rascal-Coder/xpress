@@ -1,6 +1,4 @@
-import type { MenuRecordRaw } from '@xpress-core/typings';
-
-import type { RouteConfig } from '../types';
+import type { MenuRecordRaw, RouteConfig } from '@xpress-core/typings';
 
 import { filterTree } from '@xpress-core/shared/utils';
 

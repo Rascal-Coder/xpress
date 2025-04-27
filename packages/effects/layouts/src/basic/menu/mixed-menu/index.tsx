@@ -1,8 +1,8 @@
 import type { MenuRecordRaw } from '@xpress-core/typings';
 
+import { useLocation } from '@xpress/router';
 import { useFindMenu } from '@xpress-core/hooks';
 import { NormalMenu, type NormalMenuProps } from '@xpress-core/react-menu';
-import { useLocation } from '@xpress-core/router';
 
 import { useEffect } from 'react';
 

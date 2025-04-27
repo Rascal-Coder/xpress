@@ -1,4 +1,4 @@
-import type { RouteConfig } from '../types';
+import type { RouteConfig } from '@xpress-core/typings';
 
 import { filterTree, mapTree } from '@xpress-core/shared/utils';
 

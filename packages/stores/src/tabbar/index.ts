@@ -1,7 +1,7 @@
 import type { Preferences } from '@xpress-core/preferences';
 import type { TabDefinition } from '@xpress-core/tabs-ui';
+import type { NavigateFunction } from 'react-router-dom';
 
-import { type NavigateFunction } from '@xpress-core/router';
 import { openRouteInNewWindow } from '@xpress-core/shared/utils';
 
 import NProgress from 'nprogress';

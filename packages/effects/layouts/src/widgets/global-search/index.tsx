@@ -1,7 +1,9 @@
+import type { RouteConfig } from '@xpress-core/typings';
+
 import { Search } from '@xpress/icons';
+import { type Router, useRouter } from '@xpress/router';
 import { Modal } from '@xpress-core/popup-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type RouteConfig, type Router, useRouter } from '@xpress-core/router';
 import { XpressIcon } from '@xpress-core/shadcn-ui';
 import { isWindowsOs } from '@xpress-core/shared/utils';
 

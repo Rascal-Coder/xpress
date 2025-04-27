@@ -1,12 +1,12 @@
-import type { Icon } from '@xpress-core/typings';
 import type { ComponentType } from 'react';
+
+import type { Icon } from './basic';
 
 /**
  * 权限模式
  * backend 后端权限模式
  * frontend 前端权限模式
  */
-type AccessModeType = 'backend' | 'frontend';
 
 interface RouteConfig {
   /** 同react-router */
@@ -142,6 +142,7 @@ interface RouteConfig {
   /** 重定向path */
   redirect?: string;
 }
+export type RouteMeta = RouteConfig['meta'];
 
 type ComponentRecordType = Record<
   string,
@@ -162,7 +163,6 @@ interface GenerateMenuAndRoutesOptions {
 }
 
 export type {
-  AccessModeType,
   ComponentRecordType,
   GenerateMenuAndRoutesOptions,
   RouteConfig,

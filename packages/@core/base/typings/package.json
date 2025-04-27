@@ -26,5 +26,8 @@
         "default": "./dist/index.mjs"
       }
     }
+  },
+  "peerDependencies": {
+    "react": "catalog:"
   }
 }

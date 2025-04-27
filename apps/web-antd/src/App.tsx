@@ -1,4 +1,4 @@
-import { AuthGuard, Progress } from '@xpress/components';
+import { Progress } from '@xpress/components';
 import { usePreferencesContext } from '@xpress-core/preferences';
 
 import { AnimatePresence } from 'framer-motion';
@@ -39,7 +39,8 @@ function App() {
             theme={isDark ? 'dark' : 'light'}
             transition={Bounce}
           />
-          <AuthGuard router={router}>{element}</AuthGuard>
+          {/* <AuthGuard router={router}>{}</AuthGuard> */}
+          {element}
         </AliveScope>
       </AnimatePresence>
     </HelmetProvider>

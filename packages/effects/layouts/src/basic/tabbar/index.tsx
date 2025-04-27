@@ -1,5 +1,5 @@
+import { type Router } from '@xpress/router';
 import { usePreferencesContext } from '@xpress-core/preferences';
-import { type Router } from '@xpress-core/router';
 import {
   type IContextMenuItem,
   type TabDefinition,

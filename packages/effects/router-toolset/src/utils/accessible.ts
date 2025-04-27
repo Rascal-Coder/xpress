@@ -2,7 +2,7 @@ import type {
   AccessModeType,
   GenerateMenuAndRoutesOptions,
   RouteConfig,
-} from '../types';
+} from '@xpress-core/typings';
 
 import { generateRoutesByBackend } from './generate-routes-backend';
 import { generateRoutesByFrontend } from './generate-routes-frontend';

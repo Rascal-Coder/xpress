@@ -1,4 +1,4 @@
-import type { Router } from '@xpress-core/router';
+import type { Router } from '@xpress/router';
 
 import { XpressLayout } from '@xpress-core/layout-ui';
 import { usePreferencesContext } from '@xpress-core/preferences';

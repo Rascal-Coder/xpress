@@ -1,9 +1,9 @@
+import { history, HistoryRouter } from '@xpress/router';
 import {
   type PreferenceManager,
   type Preferences,
   PreferencesProvider,
 } from '@xpress-core/preferences';
-import { history, HistoryRouter } from '@xpress-core/router';
 
 import { ThemeProvider } from '@mui/material';
 import { createRoot } from 'react-dom/client';

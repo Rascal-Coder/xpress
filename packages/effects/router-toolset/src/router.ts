@@ -1,5 +1,5 @@
 /* eslint-disable jsdoc/check-param-names */
-import type { RouteConfig } from './types';
+import type { RouteConfig } from '@xpress-core/typings';
 
 import {
   matchPath,
@@ -7,7 +7,7 @@ import {
   type RouteMatch,
   type RouteObject,
   useLocation,
-} from '@xpress-core/router';
+} from '@xpress/router';
 
 import EventEmitter from 'eventemitter3';
 import { produce } from 'immer';

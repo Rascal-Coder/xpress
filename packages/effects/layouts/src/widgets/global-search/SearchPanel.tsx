@@ -1,5 +1,7 @@
+import type { RouteConfig } from '@xpress-core/typings';
+
+import { useNavigate } from '@xpress/router';
 import { Frown, Smile, X } from '@xpress-core/icons';
-import { type RouteConfig, useNavigate } from '@xpress-core/router';
 import {
   ScrollArea,
   XpressIcon,

@@ -1,4 +1,4 @@
-import { useLocation } from '@xpress-core/router';
+import { useLocation } from '@xpress/router';
 
 import NProgress from 'nprogress';
 import { useEffect, useRef } from 'react';

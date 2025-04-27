@@ -4,7 +4,7 @@ import {
   type AccessModeType,
   type ComponentRecordType,
   generateAccessible,
-} from '@xpress-core/router';
+} from '@xpress/router';
 
 import { baseUrl } from '#/constants/baseurl';
 

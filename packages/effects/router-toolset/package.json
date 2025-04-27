@@ -1,5 +1,5 @@
 {
-  "name": "@xpress-core/router",
+  "name": "@xpress/router",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -30,6 +30,8 @@
   },
   "dependencies": {
     "@loadable/component": "catalog:",
+    "@xpress/constants": "workspace:*",
+    "@xpress/stores": "workspace:*",
     "eventemitter3": "catalog:",
     "history": "catalog:",
     "immer": "catalog:",
