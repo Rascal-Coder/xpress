@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><script src="/_app.config.js?v=1.0.0-1d9046a3"></script><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="icon" href="/images/logo.svg"/><link rel="preload" href="/images/logo.svg" as="image" type="image/svg+xml"/><script>// 仅在生产环境添加预加载链接
+      if (window._XPRESS_ADMIN_PRO_APP_CONF_) {
+        const link = document.createElement('link');
+        link.rel = 'modulepreload';
+        link.href = '/_app.config.js';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }</script><script type="module" crossorigin src="/jse/index-index-CuT9J82M.js"></script><link rel="stylesheet" crossorigin href="/css/index-DmHb1mTi.css"><link rel="manifest" href="/manifest.webmanifest"></head><body><script data-app-loading="inject-js">(function() {
+      var theme = localStorage.getItem('xpress-antd-1.0.0-prod-preferences-theme');
+      document.documentElement.classList.toggle('dark', /dark/.test(theme));
+
+      // 等待CSS变量设置完成后显示loading
+      function showLoading() {
+        var loading = document.querySelector('#__app-loading__');
+        if (loading) {
+          var style = getComputedStyle(document.documentElement);
+          if (style.getPropertyValue('--primary')) {
+            loading.style.visibility = 'visible';
+          } else {
+            requestAnimationFrame(showLoading);
+          }
+        }
+      }
+      requestAnimationFrame(showLoading);
+    })();</script><style data-app-loading="inject-css">html{line-height:1.15}.loading{align-items:center;background-color:#f4f7f9;display:flex;flex-direction:column;height:100%;justify-content:center;left:0;overflow:hidden;position:fixed;top:0;width:100%;z-index:9999}.loading.hidden{opacity:0;pointer-events:none;transition:all .8s ease-out;visibility:hidden}.dark .loading{background:#0d0d10}.title{color:rgba(0,0,0,.85);font-size:28px;font-weight:600;margin-top:66px}.dark .title{color:#fff}.loader{height:48px;position:relative;width:48px}.loader:before{animation:shadow-ani .5s linear infinite;background:rgba(0,128,255,.5);background:hsl(var(--primary,210 100% 50%)/50%);border-radius:50%;height:5px;top:60px;width:48px}.loader:after,.loader:before{content:"";left:0;position:absolute}.loader:after{animation:jump-ani .5s linear infinite;background:#0080ff;background:hsl(var(--primary,210 100% 50%));border-radius:4px;height:100%;top:0;width:100%}@keyframes jump-ani{15%{border-bottom-right-radius:3px}25%{transform:translateY(9px) rotate(22.5deg)}50%{border-bottom-right-radius:40px;transform:translateY(18px) scaleY(.9) rotate(45deg)}75%{transform:translateY(9px) rotate(67.5deg)}to{transform:translateY(0) rotate(90deg)}}@keyframes shadow-ani{0%,to{transform:scale(1)}50%{transform:scaleX(1.2)}}</style><div class="loading" style="visibility:hidden" id="__app-loading__"><div class="loader"></div><div class="title">Xpress Antd</div></div><div id="root" class="h-full w-full"></div></body></html>

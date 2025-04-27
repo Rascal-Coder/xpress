@@ -1,0 +1,1 @@
+window._XPRESS_ADMIN_PRO_APP_CONF_={"VITE_GLOB_API_URL":"https://xpress-backend.ras-cal.cc/api/"};Object.freeze(window._XPRESS_ADMIN_PRO_APP_CONF_);Object.defineProperty(window,"_XPRESS_ADMIN_PRO_APP_CONF_",{configurable:false,writable:false,});
