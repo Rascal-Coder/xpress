@@ -15,6 +15,7 @@ export * from './select';
 export * from './separator';
 export * from './sheet';
 export * from './switch';
+export * from './table';
 export * from './tabs';
 export * from './tabs';
 export * from './toggle';

@@ -7,6 +7,7 @@ const routes: RouteConfig[] = [
       title: '概览',
       badgeType: 'dot',
       icon: 'lucide:layout-dashboard',
+      order: 1,
     },
     defaultPath: 'analysis',
     children: [
@@ -20,6 +21,7 @@ const routes: RouteConfig[] = [
           affixTab: true,
           icon: 'lucide:area-chart',
           // affixTabOrder: 2,
+          order: 2,
         },
       },
       {
@@ -28,6 +30,7 @@ const routes: RouteConfig[] = [
         meta: {
           title: '工作台',
           icon: 'carbon:workspace',
+          order: 3,
           // keepAlive: true,
           // affixTab: true,
         },

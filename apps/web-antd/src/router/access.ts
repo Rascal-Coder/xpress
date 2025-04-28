@@ -1,10 +1,7 @@
+import type { AccessModeType, ComponentRecordType } from '@xpress-core/typings';
 import type { ComponentType } from 'react';
 
-import {
-  type AccessModeType,
-  type ComponentRecordType,
-  generateAccessible,
-} from '@xpress/router';
+import { generateAccessible } from '@xpress/router';
 
 import { baseUrl } from '#/constants/baseurl';
 

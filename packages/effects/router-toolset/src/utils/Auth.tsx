@@ -1,3 +1,5 @@
+import type { RouteMeta } from '@xpress-core/typings';
+
 import {
   CORE_ROUTE_NAMES,
   DEFAULT_HOME_PATH,
@@ -5,7 +7,6 @@ import {
 } from '@xpress/constants';
 import {
   Navigate,
-  type RouteMeta,
   useFullPath,
   useLocation,
   useSearchParams,
