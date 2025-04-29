@@ -7,6 +7,7 @@ export {
   ArrowRightLeft,
   ArrowRightToLine,
   ArrowUp,
+  ArrowUpDown,
   ArrowUpToLine,
   Bell,
   BookOpenText,

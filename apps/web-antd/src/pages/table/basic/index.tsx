@@ -98,10 +98,7 @@ export const keywordColumns: ColumnDef<KeywordItem>[] = [
     accessorKey: 'traffic',
     cell: ({ row }) => {
       const traffic = Number.parseInt(row.getValue('traffic'));
-      return new Intl.NumberFormat('en-US', {
-        notation: 'compact',
-        maximumFractionDigits: 1,
-      }).format(traffic);
+      return <div>{traffic}</div>;
     },
     meta: {
       filterVariant: 'range',
@@ -110,6 +107,7 @@ export const keywordColumns: ColumnDef<KeywordItem>[] = [
   {
     header: 'Link',
     accessorKey: 'link',
+    size: 200,
     cell: ({ row }) => (
       <a className="inline-flex items-center gap-1 hover:underline" href="#">
         {row.getValue('link')} <ExternalLinkIcon aria-hidden="true" size={12} />
@@ -204,6 +202,7 @@ export default function KeywordTableExample() {
         columns={keywordColumns}
         data={keywordItems}
         filterableColumns={['keyword', 'intents', 'volume', 'cpc', 'traffic']}
+        fullWidth={true}
         initialSorting={[{ id: 'traffic', desc: false }]}
         onSelectedKeysChange={(keys) => {
           setSelectedKeys(keys as string[]);
@@ -216,6 +215,7 @@ export default function KeywordTableExample() {
         selectKey="id"
         showIndex={true}
         showSelect={true}
+        textAlign="center"
       />
       <p className="text-muted-foreground mt-4 text-center text-sm">
         Data table with filters made with{' '}

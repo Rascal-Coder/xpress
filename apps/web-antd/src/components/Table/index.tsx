@@ -1,5 +1,10 @@
 /* eslint-disable unicorn/no-nested-ternary */
-import { ChevronDownIcon, ChevronUpIcon, SearchIcon } from '@xpress/icons';
+import {
+  ArrowUpDown,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  SearchIcon,
+} from '@xpress/icons';
 import { cn } from '@xpress/utils';
 import {
   Checkbox,
@@ -36,7 +41,6 @@ import {
 import { useId, useMemo, useState } from 'react';
 
 declare module '@tanstack/react-table' {
-  // allows us to define custom properties for our columns
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: 'range' | 'select' | 'text';
@@ -67,6 +71,7 @@ function Filter<T>({ column }: { column: Column<T, unknown> }) {
 
     // Get unique values and sort them
     return [...new Set(flattenedValues)].sort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [column.getFacetedUniqueValues(), filterVariant]);
 
   if (filterVariant === 'range') {
@@ -167,6 +172,10 @@ export interface DataTableProps<TData extends RowData> {
   selectKey?: keyof TData;
   selectedKeys?: (number | string)[];
   onSelectedKeysChange?: (selectedKeys: (number | string)[]) => void;
+  fullWidth?: boolean;
+  showBorder?: boolean;
+  textAlign?: 'center' | 'left' | 'right';
+  enableSortingRemoval?: boolean;
 }
 
 export function DataTable<TData extends RowData>({
@@ -179,6 +188,10 @@ export function DataTable<TData extends RowData>({
   onSelectionChange,
   selectKey = 'index' as keyof TData,
   onSelectedKeysChange,
+  fullWidth = false,
+  showBorder = true,
+  textAlign = 'left',
+  enableSortingRemoval = true,
 }: DataTableProps<TData>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>(initialSorting);
@@ -211,7 +224,6 @@ export function DataTable<TData extends RowData>({
     ),
     size: 48,
     enableSorting: false,
-    enableHiding: false,
   };
 
   // 动态插入序号和选择列
@@ -272,17 +284,11 @@ export function DataTable<TData extends RowData>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
     onSortingChange: setSorting,
-    enableSortingRemoval: false,
+    enableSortingRemoval,
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
     onColumnSizingChange: setColumnSizing,
-    getRowId: (row: any, index: number) => String(index),
   });
-
-  // 监听resize事件
-  const handleResizeMouseDown = (e: React.MouseEvent, resizeHandler: any) => {
-    resizeHandler?.(e);
-  };
 
   return (
     <div className="space-y-6" style={{ position: 'relative' }}>
@@ -305,15 +311,13 @@ export function DataTable<TData extends RowData>({
         <Table
           className="table-fixed"
           style={{
-            width: table.getCenterTotalSize(),
+            width: fullWidth ? '100%' : table.getCenterTotalSize(),
           }}
         >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow className="bg-muted/50" key={headerGroup.id}>
-                {headerGroup.headers.map((header, idx) => {
-                  const width = header.getSize?.() || undefined;
-                  const isLast = idx === headerGroup.headers.length - 1;
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       aria-sort={
@@ -324,84 +328,109 @@ export function DataTable<TData extends RowData>({
                             : 'none'
                       }
                       className={cn(
-                        'relative h-10 select-none border-t',
-                        !isLast && 'border-r',
-                        'last:[&>.cursor-col-resize]:opacity-0',
+                        'relative h-10 select-none border-r',
+                        showBorder && 'border',
+                        textAlign === 'center' && 'text-center',
+                        textAlign === 'right' && 'text-right',
                       )}
                       key={header.id}
-                      style={{
-                        width,
-                        minWidth: header.column.columnDef.minSize ?? 40,
-                        maxWidth: header.column.columnDef.maxSize ?? 400,
-                        position: 'relative',
+                      {...{
+                        colSpan: header.colSpan,
+                        style: {
+                          width: header.getSize(),
+                        },
                       }}
                     >
-                      {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                        <div
-                          className={cn(
-                            header.column.getCanSort() &&
-                              'flex h-full cursor-pointer select-none items-center justify-between gap-2',
-                          )}
-                          onClick={header.column.getToggleSortingHandler()}
-                          onKeyDown={(e) => {
-                            if (
-                              header.column.getCanSort() &&
-                              (e.key === 'Enter' || e.key === ' ')
-                            ) {
-                              e.preventDefault();
-                              header.column.getToggleSortingHandler()?.(e);
-                            }
-                          }}
-                          tabIndex={header.column.getCanSort() ? 0 : undefined}
-                        >
-                          <span className="truncate">
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                          </span>
-                          {{
-                            asc: (
-                              <ChevronUpIcon
-                                aria-hidden="true"
-                                className="shrink-0 opacity-60"
-                                size={16}
-                              />
-                            ),
-                            desc: (
-                              <ChevronDownIcon
-                                aria-hidden="true"
-                                className="shrink-0 opacity-60"
-                                size={16}
-                              />
-                            ),
-                          }[header.column.getIsSorted() as string] ?? (
-                            <span aria-hidden="true" className="size-4" />
-                          )}
-                        </div>
-                      ) : (
-                        <span className="truncate">
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                        </span>
-                      )}
-                      {header.column.getCanResize &&
-                        header.column.getCanResize() && (
+                      <div className="relative flex h-full w-full items-center">
+                        {header.isPlaceholder ? null : (
                           <div
-                            className="user-select-none before:bg-border absolute -right-2 top-0 z-10 flex h-full w-4 cursor-col-resize touch-none justify-center before:absolute before:inset-y-0 before:w-px before:translate-x-px"
-                            onClick={(e) => e.stopPropagation()}
-                            onDoubleClick={() => header.column.resetSize()}
-                            onMouseDown={(e) =>
-                              handleResizeMouseDown(
-                                e,
-                                header.getResizeHandler(),
-                              )
+                            className={cn(
+                              'flex h-full w-full items-center',
+                              header.column.getCanSort() &&
+                                'cursor-pointer select-none gap-2',
+                              !header.column.getCanSort() &&
+                                textAlign === 'center' &&
+                                'justify-center',
+                              !header.column.getCanSort() &&
+                                textAlign === 'right' &&
+                                'justify-end',
+                            )}
+                            onClick={header.column.getToggleSortingHandler()}
+                            onKeyDown={(e) => {
+                              // Enhanced keyboard handling for sorting
+                              if (
+                                header.column.getCanSort() &&
+                                (e.key === 'Enter' || e.key === ' ')
+                              ) {
+                                e.preventDefault();
+                                header.column.getToggleSortingHandler()?.(e);
+                              }
+                            }}
+                            tabIndex={
+                              header.column.getCanSort() ? 0 : undefined
                             }
-                            onTouchStart={header.getResizeHandler()}
-                          />
+                          >
+                            <div
+                              className={cn(
+                                'flex items-center gap-2 truncate',
+                                header.column.getCanSort() &&
+                                  textAlign === 'center' &&
+                                  'mx-auto',
+                                header.column.getCanSort() &&
+                                  textAlign === 'right' &&
+                                  'ml-auto',
+                              )}
+                            >
+                              <div className="truncate">
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                              </div>
+                              {header.column.getCanSort() && (
+                                <>
+                                  {{
+                                    asc: (
+                                      <ChevronUpIcon
+                                        aria-hidden="true"
+                                        className="shrink-0 opacity-60"
+                                        size={16}
+                                      />
+                                    ),
+                                    desc: (
+                                      <ChevronDownIcon
+                                        aria-hidden="true"
+                                        className="shrink-0 opacity-60"
+                                        size={16}
+                                      />
+                                    ),
+                                  }[header.column.getIsSorted() as string] ?? (
+                                    <ArrowUpDown
+                                      aria-hidden="true"
+                                      className="shrink-0 opacity-60"
+                                      size={16}
+                                    />
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
                         )}
+                      </div>
+                      {header.column.getCanResize() && (
+                        <div
+                          {...{
+                            onDoubleClick: () => header.column.resetSize(),
+                            onMouseDown: header.getResizeHandler(),
+                            onTouchStart: header.getResizeHandler(),
+                            className:
+                              'absolute top-0 right-0 h-full w-1 cursor-col-resize user-select-none touch-none z-10',
+                            style: {
+                              backgroundColor: 'var(--border)',
+                            },
+                          }}
+                        />
+                      )}
                     </TableHead>
                   );
                 })}
@@ -417,7 +446,15 @@ export function DataTable<TData extends RowData>({
                   key={row.id}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="truncate" key={cell.id}>
+                    <TableCell
+                      className={cn(
+                        'truncate',
+                        showBorder && 'border',
+                        textAlign === 'center' && 'text-center',
+                        textAlign === 'right' && 'text-right',
+                      )}
+                      key={cell.id}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -430,7 +467,7 @@ export function DataTable<TData extends RowData>({
               table.getRowModel().rows.length === 0) && (
               <TableRow>
                 <TableCell
-                  className="h-24 text-center"
+                  className={cn('h-24 text-center', showBorder && 'border')}
                   colSpan={finalColumns.length}
                 >
                   No results.
