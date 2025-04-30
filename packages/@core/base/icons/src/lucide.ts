@@ -58,6 +58,7 @@ export {
   SearchX,
   Settings,
   Shrink,
+  SlidersHorizontal,
   Smile,
   Sun,
   SunMoon,

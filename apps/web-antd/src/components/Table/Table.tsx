@@ -3,18 +3,16 @@ import {
   ArrowUpDown,
   ChevronDownIcon,
   ChevronUpIcon,
-  SearchIcon,
+  SlidersHorizontal,
 } from '@xpress/icons';
 import { cn } from '@xpress/utils';
 import {
+  Button,
   Checkbox,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
   Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Table,
   TableBody,
   TableCell,
@@ -37,125 +35,15 @@ import {
   type RowData,
   type SortingState,
   useReactTable,
+  type VisibilityState,
 } from '@tanstack/react-table';
-import { useId, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
     filterVariant?: 'range' | 'select' | 'text';
   }
-}
-
-// 表格过滤器组件
-function Filter<T>({ column }: { column: Column<T, unknown> }) {
-  const id = useId();
-  const columnFilterValue = column.getFilterValue();
-  const { filterVariant } = column.columnDef.meta ?? {};
-  const columnHeader =
-    typeof column.columnDef.header === 'string' ? column.columnDef.header : '';
-  const sortedUniqueValues = useMemo(() => {
-    if (filterVariant === 'range') return [];
-
-    // Get all unique values from the column
-    const values = [...column.getFacetedUniqueValues().keys()];
-
-    // If the values are arrays, flatten them and get unique items
-    // eslint-disable-next-line unicorn/no-array-reduce
-    const flattenedValues = values.reduce((acc: string[], curr) => {
-      if (Array.isArray(curr)) {
-        return [...acc, ...curr];
-      }
-      return [...acc, curr];
-    }, []);
-
-    // Get unique values and sort them
-    return [...new Set(flattenedValues)].sort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [column.getFacetedUniqueValues(), filterVariant]);
-
-  if (filterVariant === 'range') {
-    return (
-      <div className="*:not-first:mt-2">
-        <Label>{columnHeader}</Label>
-        <div className="flex">
-          <Input
-            aria-label={`${columnHeader} min`}
-            className="flex-1 rounded-e-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-            id={`${id}-range-1`}
-            onChange={(e) =>
-              column.setFilterValue((old: [number, number]) => [
-                e.target.value ? Number(e.target.value) : undefined,
-                old?.[1],
-              ])
-            }
-            placeholder="Min"
-            type="number"
-            value={(columnFilterValue as [number, number])?.[0] ?? ''}
-          />
-          <Input
-            aria-label={`${columnHeader} max`}
-            className="-ms-px flex-1 rounded-s-none [-moz-appearance:_textfield] focus:z-10 [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none"
-            id={`${id}-range-2`}
-            onChange={(e) =>
-              column.setFilterValue((old: [number, number]) => [
-                old?.[0],
-                e.target.value ? Number(e.target.value) : undefined,
-              ])
-            }
-            placeholder="Max"
-            type="number"
-            value={(columnFilterValue as [number, number])?.[1] ?? ''}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  if (filterVariant === 'select') {
-    return (
-      <div className="*:not-first:mt-2">
-        <Label htmlFor={`${id}-select`}>{columnHeader}</Label>
-        <Select
-          onValueChange={(value) => {
-            column.setFilterValue(value === 'all' ? undefined : value);
-          }}
-          value={columnFilterValue?.toString() ?? 'all'}
-        >
-          <SelectTrigger id={`${id}-select`}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {sortedUniqueValues.map((value) => (
-              <SelectItem key={String(value)} value={String(value)}>
-                {String(value)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-    );
-  }
-
-  return (
-    <div className="*:not-first:mt-2">
-      <Label htmlFor={`${id}-input`}>{columnHeader}</Label>
-      <div className="relative">
-        <Input
-          className="peer ps-9"
-          id={`${id}-input`}
-          onChange={(e) => column.setFilterValue(e.target.value)}
-          placeholder={`Search ${columnHeader.toLowerCase()}`}
-          type="text"
-          value={(columnFilterValue ?? '') as string}
-        />
-        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-          <SearchIcon size={16} />
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export interface DataTableProps<TData extends RowData> {
@@ -176,6 +64,11 @@ export interface DataTableProps<TData extends RowData> {
   showBorder?: boolean;
   textAlign?: 'center' | 'left' | 'right';
   enableSortingRemoval?: boolean;
+  filterRender?: <T extends RowData>(
+    column: Column<T, unknown>,
+  ) => React.ReactNode;
+  tools?: React.ReactNode;
+  initialColumnVisibility?: VisibilityState;
 }
 
 export function DataTable<TData extends RowData>({
@@ -192,11 +85,18 @@ export function DataTable<TData extends RowData>({
   showBorder = true,
   textAlign = 'left',
   enableSortingRemoval = true,
+  filterRender,
+  tools,
+  initialColumnVisibility,
 }: DataTableProps<TData>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = useState<SortingState>(initialSorting);
   const [columnSizing, setColumnSizing] = useState({});
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
+    initialColumnVisibility || {},
+  );
+  const [columnSearchQuery, setColumnSearchQuery] = useState('');
 
   // 内置选择列
   const selectColumn: ColumnDef<TData> = {
@@ -256,6 +156,7 @@ export function DataTable<TData extends RowData>({
       columnFilters,
       columnSizing,
       rowSelection,
+      columnVisibility,
     },
     onRowSelectionChange: (updater) => {
       const newRowSelection =
@@ -277,6 +178,7 @@ export function DataTable<TData extends RowData>({
       }
     },
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -286,37 +188,153 @@ export function DataTable<TData extends RowData>({
     onSortingChange: setSorting,
     enableSortingRemoval,
     enableColumnResizing: true,
-    columnResizeMode: 'onChange',
+    columnResizeMode: 'onEnd',
     onColumnSizingChange: setColumnSizing,
   });
 
-  return (
-    <div className="space-y-6" style={{ position: 'relative' }}>
-      {/* 过滤器区域 */}
-      {filterableColumns.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {filterableColumns.map((columnName) => {
-            const column = table.getColumn(columnName as string);
-            if (!column) return null;
-            return (
-              <div className="w-36" key={columnName as string}>
-                <Filter column={column} />
-              </div>
-            );
-          })}
-        </div>
-      )}
+  // 列选择控制器
+  const columnToggle = useMemo(() => {
+    const allColumns = table
+      .getAllColumns()
+      .filter(
+        (column) =>
+          column.id !== 'select' &&
+          (columnSearchQuery === '' ||
+            column.columnDef.header
+              ?.toString()
+              .toLowerCase()
+              .includes(columnSearchQuery.toLowerCase())),
+      );
 
-      <div className="rounded-md border">
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="ml-2 h-7 w-7 p-0" size="sm" variant="outline">
+            <SlidersHorizontal className="h-3.5 w-3.5" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-56 p-2">
+          <div className="space-y-2">
+            <h4 className="font-medium">显示列</h4>
+            <Input
+              className="mb-2 h-8"
+              onChange={(e) => setColumnSearchQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              placeholder="搜索列..."
+              value={columnSearchQuery}
+            />
+            <div className="max-h-60 space-y-1 overflow-y-auto">
+              {allColumns.map((column) => {
+                // 检查列是否有header属性
+                const header = column.columnDef.header?.toString() || column.id;
+
+                return (
+                  <div
+                    className="flex items-center space-x-2"
+                    key={column.id}
+                    onClick={(e) => {
+                      // 防止事件冒泡到父元素
+                      e.stopPropagation();
+                    }}
+                  >
+                    <Checkbox
+                      checked={column.getIsVisible()}
+                      id={`column-${column.id}`}
+                      onCheckedChange={(value) => {
+                        column.toggleVisibility(!!value);
+                      }}
+                    />
+                    <label
+                      className="flex-1 cursor-pointer truncate text-sm"
+                      htmlFor={`column-${column.id}`}
+                      onClick={(e) => {
+                        // 确保点击label也能切换复选框状态
+                        e.preventDefault();
+                        e.stopPropagation();
+                        column.toggleVisibility(!column.getIsVisible());
+                      }}
+                    >
+                      {header}
+                    </label>
+                  </div>
+                );
+              })}
+            </div>
+            <div
+              className="flex justify-between border-t pt-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  table.toggleAllColumnsVisible(false);
+                }}
+                size="sm"
+                variant="outline"
+              >
+                全部隐藏
+              </Button>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  table.toggleAllColumnsVisible(true);
+                }}
+                size="sm"
+                variant="outline"
+              >
+                全部显示
+              </Button>
+            </div>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }, [table, columnSearchQuery]);
+
+  return (
+    <div
+      className="space-y-2 transition-colors duration-200"
+      style={{ position: 'relative' }}
+    >
+      {/* 顶部工具栏和过滤器区域 */}
+      <div className="flex items-center justify-between">
+        {/* 过滤器区域 */}
+        {filterableColumns.length > 0 && filterRender ? (
+          <div className="flex flex-wrap gap-3">
+            {filterableColumns.map((columnName) => {
+              const column = table.getColumn(columnName as string);
+              if (!column) return null;
+              return (
+                <div className="w-36" key={columnName as string}>
+                  {filterRender(column)}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div></div> /* 左侧没有过滤器时占位，确保工具栏在右侧 */
+        )}
+
+        {/* 工具栏区域 - 固定在右上角 */}
+        <div className="flex items-center gap-2">
+          {tools}
+          {columnToggle}
+        </div>
+      </div>
+
+      <div className="rounded-md border transition-colors duration-200">
         <Table
-          className="table-fixed"
+          className="table-fixed transition-colors duration-200"
           style={{
             width: fullWidth ? '100%' : table.getCenterTotalSize(),
           }}
         >
-          <TableHeader>
+          <TableHeader className="transition-colors duration-200">
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className="bg-muted/50" key={headerGroup.id}>
+              <TableRow
+                className="bg-muted/50 transition-colors duration-200"
+                key={headerGroup.id}
+              >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
@@ -328,7 +346,7 @@ export function DataTable<TData extends RowData>({
                             : 'none'
                       }
                       className={cn(
-                        'relative h-10 select-none border-r',
+                        'relative h-10 select-none border-r transition-colors duration-200',
                         showBorder && 'border',
                         textAlign === 'center' && 'text-center',
                         textAlign === 'right' && 'text-right',
@@ -341,11 +359,11 @@ export function DataTable<TData extends RowData>({
                         },
                       }}
                     >
-                      <div className="relative flex h-full w-full items-center">
+                      <div className="relative flex h-full w-full items-center transition-colors duration-200">
                         {header.isPlaceholder ? null : (
                           <div
                             className={cn(
-                              'flex h-full w-full items-center',
+                              'flex h-full w-full items-center transition-colors duration-200',
                               header.column.getCanSort() &&
                                 'cursor-pointer select-none gap-2',
                               !header.column.getCanSort() &&
@@ -372,7 +390,7 @@ export function DataTable<TData extends RowData>({
                           >
                             <div
                               className={cn(
-                                'flex items-center gap-2 truncate',
+                                'flex items-center gap-2 truncate transition-colors duration-200',
                                 header.column.getCanSort() &&
                                   textAlign === 'center' &&
                                   'mx-auto',
@@ -423,10 +441,21 @@ export function DataTable<TData extends RowData>({
                             onDoubleClick: () => header.column.resetSize(),
                             onMouseDown: header.getResizeHandler(),
                             onTouchStart: header.getResizeHandler(),
-                            className:
-                              'absolute top-0 right-0 h-full w-1 cursor-col-resize user-select-none touch-none z-10',
+                            className: cn(
+                              'absolute top-0 right-0 h-full w-1.5 cursor-col-resize user-select-none touch-none z-10 transition-colors duration-200',
+                              header.column.getIsResizing()
+                                ? 'bg-primary opacity-100'
+                                : 'bg-muted/50 hover:bg-primary/70 hover:opacity-100 opacity-0',
+                            ),
                             style: {
-                              backgroundColor: 'var(--border)',
+                              transform:
+                                table.options.columnResizeMode === 'onEnd' &&
+                                header.column.getIsResizing()
+                                  ? `translateX(${
+                                      table.getState().columnSizingInfo
+                                        .deltaOffset ?? 0
+                                    }px)`
+                                  : '',
                             },
                           }}
                         />
@@ -437,18 +466,19 @@ export function DataTable<TData extends RowData>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="transition-colors duration-200">
             {table.getRowModel().rows?.length &&
               table.getRowModel().rows.length > 0 &&
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="transition-colors duration-200"
                   data-state={row.getIsSelected() && 'selected'}
                   key={row.id}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       className={cn(
-                        'truncate',
+                        'truncate transition-colors duration-200',
                         showBorder && 'border',
                         textAlign === 'center' && 'text-center',
                         textAlign === 'right' && 'text-right',
@@ -465,9 +495,12 @@ export function DataTable<TData extends RowData>({
               ))}
             {(!table.getRowModel().rows ||
               table.getRowModel().rows.length === 0) && (
-              <TableRow>
+              <TableRow className="duration-60 transition-colors">
                 <TableCell
-                  className={cn('h-24 text-center', showBorder && 'border')}
+                  className={cn(
+                    'duration-60 h-24 text-center transition-colors',
+                    showBorder && 'border',
+                  )}
                   colSpan={finalColumns.length}
                 >
                   No results.
